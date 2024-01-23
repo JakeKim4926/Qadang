@@ -1,6 +1,6 @@
 <template>
     <div>
-      <h2>Hello header</h2>
+      <h2>Hello Home</h2>
     </div>
   </template>
   
@@ -9,4 +9,4 @@
   </script>
   
   <style scoped>
-</style>
+  </style>
