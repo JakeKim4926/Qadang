@@ -3,8 +3,8 @@ import { defineStore } from "pinia";
 import router from "@/router";
 import axios from "axios";
 
-export const useDiaryStore = defineStore(
-  "diary",
+export const useuserStore = defineStore(
+  "user",
   () => {
     // =========== STATE ===============
 
@@ -47,8 +47,7 @@ export const useDiaryStore = defineStore(
           method: "get",
         })
           .then((res) => {
-            // res 활용하여 id, nickname 받기
-            // 아마 login, logout 으로 나눌 듯
+            user.value = res.data
           })
           .catch((err) => {
             console.log(err);
@@ -79,19 +78,23 @@ export const useDiaryStore = defineStore(
             console.log(err);
           });
       };
+    
+    const isAdditionalInfoFilled = computed(() => {
+      return user.value.additionalInfo && user.value.additionalInfo.trim() !== '';
+    }); // 추가정보가 입력되어있는지 아닌지 확인하기 위한 함수
 
     return {
-      recentDiary,
-      getRecentDairy,
-      getAxiosRecent,
-      diaryList,
-      getCurrentPage,
-      getTotalPage,
-      getPaginatedDiarylist,
-      getDiaryList,
-      goToPage,
-      getList,
-    };
-  },
-  { persist: true }
+      user,
+      userId,
+      userName,
+      getUser,
+      getUserId,
+      getUserName,
+      createUser,
+      researchUser,
+      updateUser,
+      deleteUser,
+      isAdditionalInfoFilled,
+    }
+  },  
 );
