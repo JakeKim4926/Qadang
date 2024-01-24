@@ -4,19 +4,23 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.sql.Timestamp;
 
 @Entity
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Cafe {
+@AllArgsConstructor
+@NoArgsConstructor
+public class SearchLogs {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long cafeId;
+    private Long searchId;
 
-    private String cafeName;
-    private String cafeUrl;
+    private String searchKeyword;
+    private Long userId;
+
+    @CreationTimestamp
+    private Timestamp searchTime;
 }
