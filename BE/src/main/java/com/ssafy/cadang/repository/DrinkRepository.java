@@ -1,0 +1,8 @@
+package com.ssafy.cadang.repository;
+
+import com.ssafy.cadang.domain.Drinks;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface DrinkRepository extends JpaRepository<Drinks, Long> {
+    Drinks findByDrinkId(Long id);
+}
