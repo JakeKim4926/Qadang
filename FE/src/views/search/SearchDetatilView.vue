@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>Hello Search</h2>
+    <h2>Hello Search Detail</h2>
   </div>
 </template>
 
