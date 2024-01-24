@@ -3,98 +3,242 @@ import { defineStore } from "pinia";
 import router from "@/router";
 import axios from "axios";
 
-export const useuserStore = defineStore(
-  "user",
-  () => {
-    // =========== STATE ===============
+export const useuserStore = defineStore("user", () => {
+  // =========== STATE ===============
 
-    const user = ref({});
-    const userId = ref('');
-    const userName = ref('');
+  const user = ref({});
+  const userId = ref("");
+  const userName = ref("");
 
-    // =========== GETTER ===============
+  const userRDI = ref({}); // RDI - Recommended Daily Intake (당일 권장량)
+  const userRDICaffeine = ref(0.0);
+  const userRDISugar = ref(0.0);
 
-    const getUser = computed(() => {
-      return user.value;
-    });
+  const userMax = ref({});
+  const userMaxCaffeine = ref(0.0);
+  const userMaxCaffeineDate = ref("");
+  const userMaxSugar = ref(0.0);
+  const userMaxSugarDate = ref("");
 
-    const getUserId = computed(() => {
-      return userId.value;
-    });
+  const recommendedCaffeine = ref({});
+  const recommendedSugar = ref({});
 
-    const getUserName = computed(() => {
-      return userName.value;
-    });
+  // =========== GETTER ===============
 
-    // =========== ACTION ===============
+  const getUser = computed(() => {
+    return user.value;
+  });
 
-    const createUser = function (user) {
-      axios({
-        url: import.meta.env.REST_USER_API,
-        method: "POST",
-        data: user,
+  const getUserId = computed(() => {
+    return userId.value;
+  });
+
+  const getUserName = computed(() => {
+    return userName.value;
+  });
+
+  const getUserRDI = computed(() => {
+    return userRDI.value;
+  });
+
+  const getUserRDICaffeine = computed(() => {
+    return userRDICaffeine.value;
+  });
+
+  const getUserRDISugar = computed(() => {
+    return userRDISugar.value;
+  });
+
+  const getUserMax = computed(() => {
+    return userMax.value;
+  });
+
+  const getUserMaxCaffeine = computed(() => {
+    return userMaxCaffeine.value;
+  });
+
+  const getUserMaxCaffeineDate = computed(() => {
+    return userMaxCaffeineDate.value;
+  });
+
+  const getUserMaxSugar = computed(() => {
+    return userMaxSugar.value;
+  });
+
+  const getUserMaxSugarDate = computed(() => {
+    return userMaxSugarDate.value;
+  });
+
+  const getRecommendedCaffeine = computed(() => {
+    return recommendedCaffeine.value;
+  });
+
+  const getRecommendedSugar = computed(() => {
+    return recommendedSugar.value;
+  });
+
+  // =========== ACTION ===============
+
+  const sendKakaoToken = function (token) {
+    axios({
+      url: `${import.meta.env.REST_USER_API}/social-login`,
+      method: "POST",
+      data: user,
+    })
+      .then(() => {
+        // 카카오 에서 받아온 토큰을 백으로 전달
       })
-        .then(() => {
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
-    const researchUser = function () {
-        axios({
-          url: import.meta.env.REST_USER_API,
-          method: "get",
-        })
-          .then((res) => {
-            user.value = res.data
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      };
+  const createUser = function (user) {
+    axios({
+      url: import.meta.env.REST_USER_API,
+      method: "POST",
+      data: user,
+    })
+      .then(() => {})
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
-    const updateUser = function () {
-      axios({
-        url: import.meta.env.REST_USER_API,
-        method: "PUT",
-        data: user.value,
+  const researchUser = function () {
+    axios({
+      url: import.meta.env.REST_USER_API,
+      method: "GET",
+    })
+      .then((res) => {
+        user.value = res.data;
       })
-        .then(() => {
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
-    const deleteUser = function () {
-        axios({
-          url: import.meta.env.REST_USER_API,
-          method: "DELETE",
-        })
-          .then(() => {
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      };
-    
-    const isAdditionalInfoFilled = computed(() => {
-      return user.value.additionalInfo && user.value.additionalInfo.trim() !== '';
-    }); // 추가정보가 입력되어있는지 아닌지 확인하기 위한 함수
+  const researchAmount = function () {
+    axios({
+      url: `${import.meta.env.REST_USER_API}/amount`,
+      method: "GET",
+    })
+      .then((res) => {
+        userRDI.value = res.data;
+        userRDICaffeine.value = userRDI.value.userCaffeine;
+        userRDISugar.value = userRDI.value.userSugar;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
-    return {
-      user,
-      userId,
-      userName,
-      getUser,
-      getUserId,
-      getUserName,
-      createUser,
-      researchUser,
-      updateUser,
-      deleteUser,
-      isAdditionalInfoFilled,
-    }
-  },  
-);
+  const researchMax = function () {
+    axios({
+      url: `${import.meta.env.REST_USER_API}/max`,
+      method: "GET",
+    })
+      .then((res) => {
+        userMax.value = res.data;
+        userMaxCaffeine.value = userMax.value.maxCaffeineValue;
+        userMaxCaffeineDate.value = userMax.value.maxCaffeineDate;
+        userMaxSugar.value = userMax.value.maxSugarValue;
+        userMaxSugarDate.value = userMax.value.maxSugarDate;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const updateUser = function () {
+    axios({
+      url: import.meta.env.REST_USER_API,
+      method: "PUT",
+      data: user.value,
+    })
+      .then(() => {})
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const deleteUser = function () {
+    axios({
+      url: import.meta.env.REST_USER_API,
+      method: "DELETE",
+    })
+      .then(() => {})
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const researchRecommendSugar = function () {
+    axios({
+      url: `${import.meta.env.REST_USER_API}/recommendsugar`,
+      method: "GET",
+    })
+      .then((res) => {
+        recommendedSugar.value = res.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const researchRecommendCaffeine = function () {
+    axios({
+      url: `${import.meta.env.REST_USER_API}/recommendcaffeine`,
+      method: "GET",
+    })
+      .then((res) => {
+        recommendedCaffeine.value = res.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const isAdditionalInfoFilled = computed(() => {
+    return user.value.additionalInfo && user.value.additionalInfo.trim() !== "";
+  }); // 추가정보가 입력되어있는지 아닌지 확인하기 위한 함수
+
+  return {
+    user,
+    userId,
+    userName,
+    userRDI,
+    userRDICaffeine,
+    userRDISugar,
+    userMax,
+    userMaxCaffeine,
+    userMaxCaffeineDate,
+    userMaxSugar,
+    userMaxSugarDate,
+    recommendedCaffeine,
+    recommendedSugar,
+    getUser,
+    getUserId,
+    getUserName,
+    getUserRDI,
+    getUserRDICaffeine,
+    getUserRDISugar,
+    getUserMax,
+    getUserMaxCaffeine,
+    getUserMaxCaffeineDate,
+    getUserMaxSugar,
+    getUserMaxSugarDate,
+    getRecommendedCaffeine,
+    getRecommendedSugar,
+    sendKakaoToken,
+    createUser,
+    researchUser,
+    researchAmount,
+    researchMax,
+    updateUser,
+    deleteUser,
+    researchRecommendSugar,
+    researchRecommendCaffeine,
+    isAdditionalInfoFilled,
+  };
+});
