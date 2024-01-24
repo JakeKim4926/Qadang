@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RecordReporsitory extends JpaRepository<Records, Long> {
 
+    Records findByRecordId(Long recordId);
 }

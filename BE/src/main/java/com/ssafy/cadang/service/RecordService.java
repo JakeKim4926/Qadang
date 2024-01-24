@@ -13,4 +13,12 @@ public class RecordService {
     public void create(Records record) {
         recordReporsitory.save(record);
     }
+
+    public Records readRecord(Long recordId) {
+        return recordReporsitory.findByRecordId(recordId);
+    }
+
+    public void delete(Long recordId) {
+        recordReporsitory.deleteById(recordId);
+    }
 }

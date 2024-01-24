@@ -40,11 +40,16 @@ public class AccumulateService {
         else{
             accumulate = Accumulates.builder()
                     .accumulatePK(accumulatePK)
-                    .accumulateCalorie(0)
-                    .accumulateCaffeine(0)
-                    .accumulateSugar(0)
+                    .accumulateCalorie(facts.getCalorie())
+                    .accumulateCaffeine(facts.getCaffeine())
+                    .accumulateSugar(facts.getSugar())
                     .build();
         }
         create(accumulate);
+    }
+
+    public Accumulates readDate(Long uId) {
+        AccumulatePK accumulatePK = new AccumulatePK(uId, LocalDate.now());
+        return accumulateRepository.findByAccumulatePK(accumulatePK);
     }
 }
