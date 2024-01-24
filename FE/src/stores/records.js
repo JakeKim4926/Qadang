@@ -6,12 +6,18 @@ import axios from "axios";
 export const useRecordsStore = defineStore("records", () => {
   // =========== STATE ===============
 
+  const dayDrink = ref([]);
+
   const cafeDrink = ref({});
   const myDrink = ref({});
   const maxSugar = ref({});
   const maxCaffeine = ref({});
 
   // =========== GETTER ===============
+
+  const getDayDrink = computed(() => {
+    return dayDrink.value;
+  });
 
   const getCafeDrink = computed(() => {
     return cafeDrink.value;
@@ -28,7 +34,6 @@ export const useRecordsStore = defineStore("records", () => {
   const getMaxCaffeine = computed(() => {
     return maxCaffeine.value;
   });
-
 
   // =========== ACTION ===============
   // params는 요청과 함께 전송되는 파라미터 (쿼리스트링)
@@ -60,7 +65,7 @@ export const useRecordsStore = defineStore("records", () => {
   const updateCafeDrink = function (drink) {
     axios({
       url: `${import.meta.env.REST_RECORDS_API}/drink`,
-      method: "POST",
+      method: "",
       data: drink,
     })
       .then((res) => {})
@@ -92,7 +97,22 @@ export const useRecordsStore = defineStore("records", () => {
         console.log(err);
       });
   };
-  
+
+  // date example) 20240124
+  const researchDayDrink = function (date) {
+    axios({
+      url: `${import.meta.env.REST_RECORDS_API}`,
+      method: "GET",
+      params: { date: date },
+    })
+      .then((res) => {
+        dayDrink.value = res.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const researchMaxSugar = function () {
     axios({
       url: `${import.meta.env.REST_RECORDS_API}/maxsugar`,
@@ -120,10 +140,12 @@ export const useRecordsStore = defineStore("records", () => {
   };
 
   return {
+    dayDrink,
     cafeDrink,
     myDrink,
     maxSugar,
     maxCaffeine,
+    getDayDrink,
     getCafeDrink,
     getMyDrink,
     getMaxSugar,
@@ -133,6 +155,7 @@ export const useRecordsStore = defineStore("records", () => {
     updateCafeDrink,
     updateMyDrink,
     deleteDrink,
+    researchDayDrink,
     researchMaxSugar,
     researchMaxCaffeine,
   };
