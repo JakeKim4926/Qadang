@@ -1,15 +1,20 @@
 package com.ssafy.cadang.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("api/user")
 public class UserController {
 
-    // 프론트에서 넘겨준 인가코드 이용해서 토큰 정보 받기
+    // 프론트로부터 인가코드 받기
     @ResponseBody
-    @GetMapping("/api/user/social-login")
-    public void kakao(@RequestParam String code){
-        String accessToken = userService.getKaKaoAccessToken(code);
+    @GetMapping("/social-login")
+    public void KakaoCode(@RequestParam String code){
+        System.out.printf("code : "+code);
     }
 }
+
+
