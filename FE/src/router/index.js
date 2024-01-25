@@ -6,6 +6,7 @@ import MainView from '@/views/main/MainView.vue'
 import MypageView from '@/views/mypage/MypageView.vue'
 import SearchDetatilView from '@/views/search/SearchDetatilView.vue'
 import SearchRank from '@/views/search/SearchRank.vue'
+import InputView from '@/views/input/InputView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -50,6 +51,11 @@ const router = createRouter({
       path: '/searchRank',
       name: 'searchRank',
       component: SearchRank
+    },
+    {
+      path: '/input',
+      name: 'input',
+      component: InputView
     },
   ]
 })

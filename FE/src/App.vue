@@ -3,6 +3,7 @@
     <div>
       <TheHeader />
     </div>
+      <RouterView />
     <div>
       <TheFooter />
     </div>
