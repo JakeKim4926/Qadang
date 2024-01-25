@@ -5,10 +5,7 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class TodayAccumulateResponseDTO {
-    private double userCaffeine;
-    private double userSugar;
+public class DayAccumulateResponseDTO {
     private double accumulateCaffeine;
     private double accumulateSugar;
-    private double accumulateCalorie;
 }
