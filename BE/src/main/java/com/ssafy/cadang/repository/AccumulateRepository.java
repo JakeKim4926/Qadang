@@ -17,4 +17,7 @@ public interface AccumulateRepository extends JpaRepository<Accumulates, Accumul
             "AND b.accumulatePK.accumulateDate BETWEEN :start AND :end")
     List<Accumulates> findAllByUserIdAndAccumulateDateBetween(Long userId, LocalDate start, LocalDate end);
 
+    @Query("SELECT b FROM Accumulates b " +
+            "WHERE b.accumulatePK.accumulateDate =:date")
+    List<Accumulates> findByDay(LocalDate date);
 }
