@@ -7,6 +7,7 @@ import com.ssafy.cadang.request.DrinkRecordRequestDTO;
 import com.ssafy.cadang.request.DrinkRecordUpdateRequestDTO;
 import com.ssafy.cadang.request.MakeRecordRequestDTO;
 import com.ssafy.cadang.request.MakeRecordUpdateRequestDTO;
+import com.ssafy.cadang.response.DayRecordListResponseDTO;
 import com.ssafy.cadang.service.AccumulateService;
 import com.ssafy.cadang.service.DrinkService;
 import com.ssafy.cadang.service.RecordService;
@@ -16,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Objects;
 
 @CrossOrigin
@@ -76,6 +79,8 @@ public class RecordController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
         Records record = Records.builder()
+                .userId(userId)
+                .recordDate(LocalDate.now())
                 .cafeName(makeRecordRequestDTO.getCafeName())
                 .drinkName(makeRecordRequestDTO.getDrinkName())
                 .drinkCaffeine(makeRecordRequestDTO.getDrinkCaffeine())
@@ -242,4 +247,16 @@ public class RecordController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping("day")
+    public List<DayRecordListResponseDTO> drinkListRead(@RequestParam String date){
+        //user check
+        Long userId = 1L;
+        if(userId == 0)
+            return null;
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        LocalDate localDate = LocalDate.parse(date, formatter);
+
+        return recordService.readDayRecord(userId,localDate);
+    }
 }

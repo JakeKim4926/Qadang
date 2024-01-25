@@ -10,6 +10,6 @@ public class UserController {
     @ResponseBody
     @GetMapping("/api/user/social-login")
     public void kakao(@RequestParam String code){
-        String accessToken = userService.getKaKaoAccessToken(code);
+        //String accessToken = userService.getKaKaoAccessToken(code);
     }
 }

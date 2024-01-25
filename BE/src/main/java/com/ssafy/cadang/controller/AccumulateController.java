@@ -44,4 +44,9 @@ public class AccumulateController {
 //    public List<DurationAccumulateResponseDTO> ReadDurationAccumulate(){
 //
 //    }
+
+    //    @GetMapping("/month")
+//    public List<DurationAccumulateResponseDTO> ReadDurationAccumulate(){
+//
+//    }
 }
