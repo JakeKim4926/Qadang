@@ -1,11 +1,11 @@
-import HomeViewVue from '@/views/HomeView.vue'
-import CalendarViewVue from '@/views/calendar/CalendarView.vue'
-import ChatViewVue from '@/views/chat/ChatView.vue'
-import DrinkViewVue from '@/views/drink/DrinkView.vue'
-import MainViewVue from '@/views/main/MainView.vue'
-import MypageViewVue from '@/views/mypage/MypageView.vue'
-import SearchDetatilViewVue from '@/views/search/SearchDetatilView.vue'
-import SearchRankVue from '@/views/search/SearchRank.vue'
+import HomeView from '@/views/HomeView.vue'
+import CalendarView from '@/views/calendar/CalendarView.vue'
+import ChatView from '@/views/chat/ChatView.vue'
+import DrinkView from '@/views/drink/DrinkView.vue'
+import MainView from '@/views/main/MainView.vue'
+import MypageView from '@/views/mypage/MypageView.vue'
+import SearchDetatilView from '@/views/search/SearchDetatilView.vue'
+import SearchRank from '@/views/search/SearchRank.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -14,42 +14,42 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeViewVue
+      component: HomeView
     },
     {
       path: '/calendar',
       name: 'calendar',
-      component: CalendarViewVue
+      component: CalendarView
     },
     {
       path: '/chat',
       name: 'chat',
-      component: ChatViewVue
+      component: ChatView
     },
     {
       path: '/drink',
       name: 'drink',
-      component: DrinkViewVue
+      component: DrinkView
     },
     {
       path: '/main',
       name: 'main',
-      component: MainViewVue
+      component: MainView
     },
     {
       path: '/mypage',
       name: 'mypage',
-      component: MypageViewVue
+      component: MypageView
     },
     {
       path: '/searchDetail',
       name: 'searchDetail',
-      component: SearchDetatilViewVue
+      component: SearchDetatilView
     },
     {
       path: '/searchRank',
       name: 'searchRank',
-      component: SearchRankVue
+      component: SearchRank
     },
   ]
 })
