@@ -4,8 +4,12 @@
       <TheHeader />
     </div>
     <div>
+      <RouterView />
+    </div>
+    <div>
       <TheFooter />
     </div>
+    
   </div>
 </template>
 

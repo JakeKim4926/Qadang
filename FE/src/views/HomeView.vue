@@ -1,12 +1,17 @@
 <template>
+  <div>
+    <h2>hello home</h2>
     <div>
-      <h2>Hello Home</h2>
+      <RouterLink to="/calendar">캘린더 보기</RouterLink>
+      <div>
+        <RouterView />
+      </div>
     </div>
-  </template>
+  </div>
+</template>
   
-  <script setup>
+<script setup>
+
+</script>
   
-  </script>
-  
-  <style scoped>
-  </style>
+<style scoped></style>

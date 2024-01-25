@@ -40,7 +40,7 @@ export const useDrinksStore = defineStore("drinks", () => {
 
   const researchCafeDrinks = function (id) {
     axios({
-      url: `${import.meta.env.REST_DRINKS_API}/cafe`,
+      url: `${import.meta.env.REST_DRINKS_API}/drink`,
       method: "GET",
       params: { cafeId: id },
     })

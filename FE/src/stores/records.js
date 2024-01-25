@@ -6,6 +6,7 @@ import axios from "axios";
 export const useRecordsStore = defineStore("records", () => {
   // =========== STATE ===============
 
+  const days = ref(['일', '월', '화', '수', '목', '금', '토']);
   const dayDrink = ref([]);
 
   const cafeDrink = ref({});
@@ -13,6 +14,7 @@ export const useRecordsStore = defineStore("records", () => {
   const maxSugar = ref({});
   const maxCaffeine = ref({});
 
+  const recordDate = ref("");
   // =========== GETTER ===============
 
   const getDayDrink = computed(() => {
@@ -33,6 +35,10 @@ export const useRecordsStore = defineStore("records", () => {
 
   const getMaxCaffeine = computed(() => {
     return maxCaffeine.value;
+  });
+
+  const getRecordDate = computed(() => {
+    return recordDate.value;
   });
 
   // =========== ACTION ===============
@@ -101,7 +107,7 @@ export const useRecordsStore = defineStore("records", () => {
   // date example) 20240124
   const researchDayDrink = function (date) {
     axios({
-      url: `${import.meta.env.REST_RECORDS_API}`,
+      url: `${import.meta.env.REST_RECORDS_API}/day`,
       method: "GET",
       params: { date: date },
     })
@@ -140,16 +146,20 @@ export const useRecordsStore = defineStore("records", () => {
   };
 
   return {
+    days,
     dayDrink,
     cafeDrink,
     myDrink,
     maxSugar,
     maxCaffeine,
+    dayDrink,
+    recordDate,
     getDayDrink,
     getCafeDrink,
     getMyDrink,
     getMaxSugar,
     getMaxCaffeine,
+    getRecordDate,
     createCafeDrink,
     createMyDrink,
     updateCafeDrink,
@@ -159,4 +169,4 @@ export const useRecordsStore = defineStore("records", () => {
     researchMaxSugar,
     researchMaxCaffeine,
   };
-});
+}, {persist:true});

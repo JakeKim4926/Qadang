@@ -9,10 +9,10 @@
 
 <script setup>
 import { ref, onMounted,computed } from 'vue';
-import { useuserStore } from '../../stores/user'; 
+import { useUserStore } from '../../stores/user'; 
 
 
-const store = useuserStore();
+const store = useUserStore();
 
 const maxCaffeine = ref(0);
 const maxCaffeineDate = ref('');
