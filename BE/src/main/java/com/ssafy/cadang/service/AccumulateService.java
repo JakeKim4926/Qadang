@@ -4,10 +4,15 @@ import com.ssafy.cadang.domain.AccumulatePK;
 import com.ssafy.cadang.domain.Accumulates;
 import com.ssafy.cadang.dto.Facts;
 import com.ssafy.cadang.repository.AccumulateRepository;
+import com.ssafy.cadang.response.DayAccumulateResponseDTO;
+import com.ssafy.cadang.response.DurationAccumulateResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -51,5 +56,39 @@ public class AccumulateService {
     public Accumulates readDate(Long uId) {
         AccumulatePK accumulatePK = new AccumulatePK(uId, LocalDate.now());
         return accumulateRepository.findByAccumulatePK(accumulatePK);
+    }
+
+    public Accumulates readDay(Long userId, LocalDate day) {
+        AccumulatePK accumulatePK = new AccumulatePK(userId, day);
+        return accumulateRepository.findByAccumulatePK(accumulatePK);
+    }
+
+    public List<DurationAccumulateResponseDTO> readDuration(Long userId) {
+        LocalDate start = LocalDate.now().minusMonths(3);
+        LocalDate end = LocalDate.now();
+
+        List<Accumulates> accumulates = accumulateRepository.findAllByUserIdAndAccumulateDateBetween(userId,start,end);
+
+        return transDurationDto(accumulates);
+    }
+
+    public List<DurationAccumulateResponseDTO> readMonth(Long userId, YearMonth ym) {
+        LocalDate start = ym.atDay(1);
+        LocalDate end = ym.atEndOfMonth();
+
+        List<Accumulates> accumulates = accumulateRepository.findAllByUserIdAndAccumulateDateBetween(userId,start,end);
+        return transDurationDto(accumulates);
+    }
+
+    public List<DurationAccumulateResponseDTO> transDurationDto(List<Accumulates> accumulates){
+        List<DurationAccumulateResponseDTO> result = new ArrayList<>();
+        for(Accumulates accum : accumulates){
+            result.add(DurationAccumulateResponseDTO.builder()
+                    .accumulateDate(accum.getAccumulatePK().getAccumulateDate())
+                    .accumulateCaffeine(accum.getAccumulateCaffeine())
+                    .accumulateSugar(accum.getAccumulateSugar())
+                    .build());
+        }
+        return result;
     }
 }
