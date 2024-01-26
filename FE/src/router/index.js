@@ -8,6 +8,9 @@ import MypageView from '@/views/mypage/MypageView.vue'
 import SearchDetatilView from '@/views/search/SearchDetatilView.vue'
 import SearchRank from '@/views/search/SearchRank.vue'
 import InputView from '@/views/input/InputView.vue'
+import UserUpdateView from '@/views/mypage/UserUpdateView.vue'
+import SearchDetatilView from '@/views/search/SearchDetatilView.vue'
+import SearchRank from '@/views/search/SearchRank.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -47,6 +50,11 @@ const router = createRouter({
       path: '/mypage',
       name: 'mypage',
       component: MypageView,
+    },
+    {
+      path: '/mypage/editinfo',
+      name: 'editinfo',
+      component: UserUpdateView
     },
     {
       path: '/searchDetail',

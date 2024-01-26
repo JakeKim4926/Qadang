@@ -199,9 +199,11 @@ export const useUserStore = defineStore("user", () => {
       });
   };
 
-  const isAdditionalInfoFilled = computed(() => {
-    return user.value.additionalInfo && user.value.additionalInfo.trim() !== "";
-  }); // 추가정보가 입력되어있는지 아닌지 확인하기 위한 함수
+  const infoFilled = computed(() => {
+    return user.value.userHeight && user.value.userHeight !== 0 &&
+         user.value.userWeight && user.value.userWeight !== 0 &&
+         user.value.userHealth && user.value.userHealth !== 0
+})
 
   return {
     user,
@@ -239,6 +241,6 @@ export const useUserStore = defineStore("user", () => {
     deleteUser,
     researchRecommendSugar,
     researchRecommendCaffeine,
-    isAdditionalInfoFilled,
+    infoFilled,
   };
 });
