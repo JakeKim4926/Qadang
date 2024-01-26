@@ -6,6 +6,8 @@
       <div>
         <RouterView />
       </div>
+      <h2>Hello Home</h2>
+      <RouterLink :to="{name: 'input'}">input</RouterLink>
     </div>
   </div>
 </template>
