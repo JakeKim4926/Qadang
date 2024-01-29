@@ -16,7 +16,7 @@
   </div>
 
   <div>
-    음료선택
+    <RouterLink :to="{name: 'input'}">음료선택</RouterLink>
     물음표 버튼
     입력완료
   </div>
