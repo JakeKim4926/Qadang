@@ -150,17 +150,21 @@ export const useUserStore = defineStore("user", () => {
       });
   };
 
-  const updateUser = function () {
+  const updateUser = function (updateData) {
     axios({
       url: import.meta.env.REST_USER_API,
       method: "PUT",
-      data: user.value,
+      data: updateData, 
     })
-      .then(() => {})
-      .catch((err) => {
-        console.log(err);
-      });
+    .then(() => {
+      alert('사용자 정보가 성공적으로 업데이트되었습니다.');
+      router.push('/mypage'); 
+    })
+    .catch((err) => {
+      console.error("Error updating user:", err);
+    });
   };
+  
 
   const deleteUser = function () {
     axios({
@@ -198,12 +202,19 @@ export const useUserStore = defineStore("user", () => {
         console.log(err);
       });
   };
-
-  const infoFilled = computed(() => {
-    return user.value.userHeight && user.value.userHeight !== 0 &&
-         user.value.userWeight && user.value.userWeight !== 0 &&
-         user.value.userHealth && user.value.userHealth !== 0
-})
+  
+  const infoFilled = computed(() => {     
+    const userInfo = user.value;   
+    if (!userInfo) {
+      return false;
+    }
+    // 모든 필요한 속성이 존재하는지 확인
+    return userInfo.hasOwnProperty('userHeight') && userInfo.userHeight !== 0 &&
+           userInfo.hasOwnProperty('userWeight') && userInfo.userWeight !== 0 &&
+           userInfo.hasOwnProperty('userHealth') && userInfo.userHealth !== 0;
+  });
+  
+  
 
   return {
     user,
