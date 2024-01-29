@@ -78,6 +78,7 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
         chatRoomSession.removeIf(sess -> !sessions.contains(sess));
     }
 
+    //병렬로 채팅방에 있는 모든 사용자 send
     private void sendMessageToChatRoom(ChatMessageDTO chatMessageDTO, Set<WebSocketSession> chatRoomSession) {
         //user Name add
         //ChatMessageDTO userName
