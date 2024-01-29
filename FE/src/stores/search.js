@@ -13,6 +13,7 @@ export const useSearchStore = defineStore("search", () => {
   const getSearchDrinkList = computed(() => {
     return searchDrinkList.value;
   });
+  
 
   // =========== ACTION ===============
   const researchKeywordRank = function (word) {
