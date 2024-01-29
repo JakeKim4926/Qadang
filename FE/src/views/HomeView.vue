@@ -7,11 +7,8 @@
         <RouterView />
       </div>
       <h2>Hello Home</h2>
-<<<<<<< HEAD
-      <RouterLink :to="{name: 'input'}">input</RouterLink>
-=======
       <RouterLink :to="{name: 'mypage'}">마이페이지</RouterLink>
->>>>>>> origin/feature/FE-mypage
+      <RouterLink :to="{name: 'searchRank'}">검색</RouterLink>
     </div>
   </div>
 </template>

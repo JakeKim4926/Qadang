@@ -6,11 +6,10 @@ import DrinkView from '@/views/drink/DrinkView.vue'
 import MainView from '@/views/main/MainView.vue'
 import MypageView from '@/views/mypage/MypageView.vue'
 import SearchDetatilView from '@/views/search/SearchDetatilView.vue'
-import SearchRank from '@/views/search/SearchRank.vue'
+import SearchRankView from '@/views/search/SearchRankView.vue'
+import DrinkDetailView from '@/views/search/DrinkDetailView.vue'
 import InputView from '@/views/input/InputView.vue'
 import UserUpdateView from '@/views/mypage/UserUpdateView.vue'
-import SearchDetatilView from '@/views/search/SearchDetatilView.vue'
-import SearchRank from '@/views/search/SearchRank.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -64,7 +63,12 @@ const router = createRouter({
     {
       path: '/searchRank',
       name: 'searchRank',
-      component: SearchRank,
+      component: SearchRankView,
+    },
+    {
+      path: '/drinkDetail',
+      name: 'drinkDetail',
+      component: DrinkDetailView
     },
     {
       path: '/input',
