@@ -1,16 +1,12 @@
 <template>
-  <div>
-    <div>
+  <div id="v-app">
+    <v-app id="inspire">
       <TheHeader />
-    </div>      
-    
-    <div>
-      <RouterView/>
-    </div>
-    <div>
+      <div>
+        <RouterView />
+      </div>
       <TheFooter />
-    </div>
-    
+    </v-app>
   </div>
 </template>
 
@@ -22,6 +18,4 @@ import { RouterLink, RouterView } from 'vue-router'
 
 </script>
 
-<style>
-
-</style>
+<style></style>
