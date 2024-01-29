@@ -9,6 +9,7 @@ import SearchDetatilView from '@/views/search/SearchDetatilView.vue'
 import SearchRankView from '@/views/search/SearchRankView.vue'
 import DrinkDetailView from '@/views/search/drinkDetailView.vue'
 import InputView from '@/views/input/InputView.vue'
+import InputNothingView from '@/views/input/InputNothingView.vue'
 import UserUpdateView from '@/views/mypage/UserUpdateView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -74,6 +75,11 @@ const router = createRouter({
       path: '/input',
       name: 'input',
       component: InputView
+    },
+    {
+      path: '/inputNothing',
+      name: 'inputNothing',
+      component: InputNothingView
     },
   ],
 })
