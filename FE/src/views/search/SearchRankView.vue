@@ -38,10 +38,10 @@
     <div class="sort-buttons">
       <button @click="toggleSortMenu">정렬</button>
       <div v-if="showSortMenu" class="sort-menu">
-        <button @click="sortResults('sugar', 'asc')">당↑ (오름차순)</button>
-        <button @click="sortResults('sugar', 'desc')">당↓ (내림차순)</button>
-        <button @click="sortResults('caffeine', 'asc')">카페인↑ (오름차순)</button>
-        <button @click="sortResults('caffeine', 'desc')">카페인↓ (내림차순)</button>
+        <button @click="sortResults('drinkSugar', 'asc')">당↑ (오름차순)</button>
+        <button @click="sortResults('drinkSugar', 'desc')">당↓ (내림차순)</button>
+        <button @click="sortResults('drinkCaffeine', 'asc')">카페인↑ (오름차순)</button>
+        <button @click="sortResults('drinkCaffeine', 'desc')">카페인↓ (내림차순)</button>
       </div>
     </div>
     <div class="search-results-container">
@@ -112,11 +112,18 @@ const toggleSortMenu = () => {
 };
 
 const sortResults = (key, order) => {
-  searchResults.value.sort((a, b) => {
+  searchResults.value.sort((a, b) => {    
+    const keyMap = {
+      'sugar': 'drinkSugar',
+      'caffeine': 'drinkCaffeine'
+    };
+    
+    const actualKey = keyMap[key];
+    
     if (order === 'asc') {
-      return a[key] - b[key];
+      return a[actualKey] - b[actualKey];
     } else {
-      return b[key] - a[key];
+      return b[actualKey] - a[actualKey];
     }
   });
 };
