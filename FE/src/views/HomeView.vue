@@ -6,7 +6,8 @@
 </template>
   
 <script setup>
-
+import '../components/font/font.css';
 </script>
   
-<style scoped></style>
+<style scoped>
+</style>
