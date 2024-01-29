@@ -3,12 +3,8 @@
     <div>
       <TheHeader />
     </div>
-      <RouterView />
     <div>
       <RouterView />
-    </div>
-    <div>
-      <RouterView/>
     </div>
     <div>
       <TheFooter />
