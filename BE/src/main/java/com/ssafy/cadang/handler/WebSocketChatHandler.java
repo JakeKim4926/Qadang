@@ -61,8 +61,8 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
             //afterConnectionClosed(session);
             chatRoomSession.remove(session);
         }
-
-        sendMessageToChatRoom(chatMessageDTO, chatRoomSession);
+        else
+            sendMessageToChatRoom(chatMessageDTO, chatRoomSession);
 
     }
 
