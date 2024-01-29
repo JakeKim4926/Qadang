@@ -6,18 +6,19 @@
       <div>
         <RouterView />
       </div>
-      <h2>Hello Home</h2>
-<<<<<<< HEAD
-      <RouterLink :to="{name: 'input'}">input</RouterLink>
-=======
+      <h1 class="superbig-font">Hello Home</h1>
+      <h2 class="big-font">Hello Home</h2>
+      <h3 class="mid-font">Hello Home</h3>
+      <h4 class="small-font">Hello Home</h4>
+      
       <RouterLink :to="{name: 'mypage'}">마이페이지</RouterLink>
->>>>>>> origin/feature/FE-mypage
     </div>
   </div>
 </template>
   
 <script setup>
-
+import '../components/font/font.css';
 </script>
   
-<style scoped></style>
+<style scoped>
+</style>

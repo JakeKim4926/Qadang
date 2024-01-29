@@ -2,11 +2,8 @@
   <div>
     <div>
       <TheHeader />
-    </div>
-      <RouterView />
-    <div>
-      <RouterView />
-    </div>
+    </div>      
+    
     <div>
       <RouterView/>
     </div>
