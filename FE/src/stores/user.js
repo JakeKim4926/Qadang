@@ -81,7 +81,7 @@ export const useUserStore = defineStore("user", () => {
 
   const sendKakaoToken = function (token) {
     axios({
-      url: `${import.meta.env.REST_USER_API}/social-login`,
+      url: `${import.meta.env.VITE_REST_USER_API}/social-login`,
       method: "POST",
       data: user,
     })
@@ -96,7 +96,7 @@ export const useUserStore = defineStore("user", () => {
 
   const createUser = function (user) {
     axios({
-      url: import.meta.env.REST_USER_API,
+      url: import.meta.env.VITE_REST_USER_API,
       method: "POST",
       data: user,
     })
@@ -122,7 +122,7 @@ export const useUserStore = defineStore("user", () => {
 
   const researchUser = function () {
     axios({
-      url: import.meta.env.REST_USER_API,
+      url: import.meta.env.VITE_REST_USER_API,
       method: "GET",
     })
       .then((res) => {
@@ -135,7 +135,7 @@ export const useUserStore = defineStore("user", () => {
 
   const researchAmount = function () {
     axios({
-      url: `${import.meta.env.REST_USER_API}/amount`,
+      url: `${import.meta.env.VITE_REST_USER_API}/amount`,
       method: "GET",
     })
       .then((res) => {
@@ -150,7 +150,7 @@ export const useUserStore = defineStore("user", () => {
 
   const researchMax = function () {
     axios({
-      url: `${import.meta.env.REST_USER_API}/max`,
+      url: `${import.meta.env.VITE_REST_USER_API}/max`,
       method: "GET",
     })
       .then((res) => {
@@ -167,7 +167,7 @@ export const useUserStore = defineStore("user", () => {
 
   const updateUser = function (updateData) {
     axios({
-      url: import.meta.env.REST_USER_API,
+      url: import.meta.env.VITE_REST_USER_API,
       method: "PUT",
       data: updateData, 
     })
@@ -183,7 +183,7 @@ export const useUserStore = defineStore("user", () => {
 
   const deleteUser = function () {
     axios({
-      url: import.meta.env.REST_USER_API,
+      url: import.meta.env.VITE_REST_USER_API,
       method: "DELETE",
     })
       .then(() => {})
@@ -194,7 +194,7 @@ export const useUserStore = defineStore("user", () => {
 
   const researchRecommendSugar = function () {
     axios({
-      url: `${import.meta.env.REST_USER_API}/recommendsugar`,
+      url: `${import.meta.env.VITE_REST_USER_API}/recommendsugar`,
       method: "GET",
     })
       .then((res) => {
@@ -207,7 +207,7 @@ export const useUserStore = defineStore("user", () => {
 
   const researchRecommendCaffeine = function () {
     axios({
-      url: `${import.meta.env.REST_USER_API}/recommendcaffeine`,
+      url: `${import.meta.env.VITE_REST_USER_API}/recommendcaffeine`,
       method: "GET",
     })
       .then((res) => {
