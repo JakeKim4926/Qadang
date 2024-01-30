@@ -46,7 +46,7 @@ export const useRecordsStore = defineStore("records", () => {
   // data는 요청 바디로 전송될 데이터 (JSON)
   const createCafeDrink = function (drink) {
     axios({
-      url: `${import.meta.env.REST_RECORDS_API}/drink`,
+      url: `${import.meta.env.VITE_REST_RECORDS_API}/drink`,
       method: "POST",
       data: drink,
     })
@@ -58,7 +58,7 @@ export const useRecordsStore = defineStore("records", () => {
 
   const createMyDrink = function (drink) {
     axios({
-      url: `${import.meta.env.REST_RECORDS_API}/make`,
+      url: `${import.meta.env.VITE_REST_RECORDS_API}/make`,
       method: "POST",
       data: drink,
     })
@@ -70,7 +70,7 @@ export const useRecordsStore = defineStore("records", () => {
 
   const updateCafeDrink = function (drink) {
     axios({
-      url: `${import.meta.env.REST_RECORDS_API}/drink`,
+      url: `${import.meta.env.VITE_REST_RECORDS_API}/drink`,
       method: "",
       data: drink,
     })
@@ -82,7 +82,7 @@ export const useRecordsStore = defineStore("records", () => {
 
   const updateMyDrink = function (drink) {
     axios({
-      url: `${import.meta.env.REST_RECORDS_API}/make`,
+      url: `${import.meta.env.VITE_REST_RECORDS_API}/make`,
       method: "PUT",
       data: drink,
     })
@@ -94,7 +94,7 @@ export const useRecordsStore = defineStore("records", () => {
 
   const deleteDrink = function (recordId) {
     axios({
-      url: `${import.meta.env.REST_RECORDS_API}`,
+      url: `${import.meta.env.VITE_REST_RECORDS_API}`,
       method: "DELETE",
       params: { recordId: recordId },
     })
@@ -107,7 +107,7 @@ export const useRecordsStore = defineStore("records", () => {
   // date example) 20240124
   const researchDayDrink = function (date) {
     axios({
-      url: `${import.meta.env.REST_RECORDS_API}/day`,
+      url: `${import.meta.env.VITE_REST_RECORDS_API}/day`,
       method: "GET",
       params: { date: date },
     })
@@ -121,7 +121,7 @@ export const useRecordsStore = defineStore("records", () => {
 
   const researchMaxSugar = function () {
     axios({
-      url: `${import.meta.env.REST_RECORDS_API}/maxsugar`,
+      url: `${import.meta.env.VITE_REST_RECORDS_API}/maxsugar`,
       method: "GET",
     })
       .then((res) => {
@@ -134,7 +134,7 @@ export const useRecordsStore = defineStore("records", () => {
 
   const researchMaxCaffeine = function () {
     axios({
-      url: `${import.meta.env.REST_RECORDS_API}/maxcaffeine`,
+      url: `${import.meta.env.VITE_REST_RECORDS_API}/maxcaffeine`,
       method: "GET",
     })
       .then((res) => {

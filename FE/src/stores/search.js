@@ -30,7 +30,7 @@ export const useSearchStore = defineStore("search", () => {
   // actions
   const researchKeywordRank = function (word) {
     axios({
-      url: `${import.meta.env.REST_SEARCH_API}`,
+      url: `${import.meta.env.VITE_REST_SEARCH_API}`,
       method: "GET",
       params: { keyword: word },
     })
@@ -44,7 +44,7 @@ export const useSearchStore = defineStore("search", () => {
 
   const bringKeywordRanking = function () {
     axios({
-      url: `${import.meta.env.REST_RANK_API}/keywordranking`,
+      url: `${import.meta.env.VITE_REST_RANK_API}/keywordranking`,
       method: "GET"
     })
     .then((res) => {
@@ -57,7 +57,7 @@ export const useSearchStore = defineStore("search", () => {
 
   const bringRecordRanking = function () {
     axios({
-      url: `${import.meta.env.REST_RANK_API}/recordranking`,
+      url: `${import.meta.env.VITE_REST_RANK_API}/recordranking`,
       method: "GET"
     })
     .then((res) => {
@@ -70,7 +70,7 @@ export const useSearchStore = defineStore("search", () => {
 
   const bringAllDrinks = function () {
     axios({
-      url: import.meta.env.REST_DRINK_API,
+      url: import.meta.env.VITE_REST_DRINK_API,
       method: "GET"
     })
     .then((res) => {
@@ -83,7 +83,7 @@ export const useSearchStore = defineStore("search", () => {
 
   const bringTodayAccumulate = function () {
     axios({
-      url: `${import.meta.env.REST_ACCUMULATE_API}/today`,
+      url: `${import.meta.env.VITE_REST_ACCUMULATE_API}/today`,
       method: "GET"
     })
     .then((res) => {
