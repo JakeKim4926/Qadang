@@ -1,29 +1,14 @@
 package com.ssafy.cadang.dto;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.Data;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-
-@ToString
-@Getter
-@NoArgsConstructor
-@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
+@Data
 public class KakaoToken {
-    private String tokenType;
-    private String accessToken;
-    private String refreshToken;
-    private Long expiresIn;
-    private Long refreshTokenExpiresIn;
+    private String access_token;
+    private String refresh_token;
+    private String token_type;
+    private int expires_in; // 유효시간
 
-    public static KakaoToken fail() {
-        return new KakaoToken(null, null);
-    }
-
-    private KakaoToken(final String accessToken, final String refreshToken) {
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
-    }
+    private String scope;
+    private int refresh_token_expires_in;
 }

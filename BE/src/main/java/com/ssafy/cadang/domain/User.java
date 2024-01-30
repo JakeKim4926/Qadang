@@ -2,7 +2,6 @@ package com.ssafy.cadang.domain;
 
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -12,34 +11,32 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
-import static jakarta.persistence.GenerationType.IDENTITY;
-import static lombok.AccessLevel.PROTECTED;
-
 @Entity
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class User {
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+//    @GeneratedValue(strategy = IDENTITY)
     @NotNull
     private Long userId;
 
-    private String userName;
-    private String userEmail; // 필요할까..?
-    private Date userBirth;
-    private int userHeight;
-    private int userweight;
-    private double userCaffeine;
-    private double userSugar;
+    private String userName; // 닉네임
+    private int userBirth; // 생년
+    private int userHeight; // 키
+    private int userweight; // 몸무게
     private int userGender; // 남자(1), 여자(2)
-    private Date registerDatetime;
-    private int userHealth; // 활동량 : 1~4
-    private double maxSugarValue;
-    private double maxCaffeineValue;
-    private Date maxSugarDate;
-    private Date maxCaffeineDate;
-    private String refreshToken;
+    private int userHealth; // 활동량 : 1~4 (낮은순)
+    private Date registerDatetime; // 연동일자
+    private double userCaffeine; // 카페인 권장량
+    private double userSugar; // 당 권장량
+    private double maxCaffeineValue; // 카페인 최고 섭취량
+    private double maxSugarValue; // 당 최고 섭취량
+    private Date maxCaffeineDate; // 카페인 최고량 섭취 일자
+    private Date maxSugarDate; // 당 최고량 섭취 일자
+    private String kakaoRefreshToken; // kakao refresh token
+    private String jwtRefreshToken; // jwt refresh token
 
 }
