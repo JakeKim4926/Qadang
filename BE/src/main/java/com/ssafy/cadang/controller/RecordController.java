@@ -248,15 +248,15 @@ public class RecordController {
     }
 
     @GetMapping("day")
-    public List<DayRecordListResponseDTO> drinkListRead(@RequestParam String date){
+    public ResponseEntity<List<DayRecordListResponseDTO>> drinkListRead(@RequestParam String date){
         //user check
         Long userId = 1L;
         if(userId == 0)
-            return null;
+            return new ResponseEntity<List<DayRecordListResponseDTO>>((List<DayRecordListResponseDTO>) null,HttpStatus.UNAUTHORIZED);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         LocalDate localDate = LocalDate.parse(date, formatter);
 
-        return recordService.readDayRecord(userId,localDate);
+        return new ResponseEntity<List<DayRecordListResponseDTO>>(recordService.readDayRecord(userId,localDate), HttpStatus.OK);
     }
 }
