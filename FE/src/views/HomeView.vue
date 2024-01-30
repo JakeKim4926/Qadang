@@ -11,6 +11,12 @@
 </template>
   
 <script setup>
+import '../components/font/font.css';
+import { onMounted } from "vue";
+
+onMounted(() => {
+
+})
 
 </script>
   
