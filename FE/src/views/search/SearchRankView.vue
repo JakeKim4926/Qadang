@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div class="search-frame">
     <div class="search-bar">
       <input v-model="searchQuery" placeholder="Search for...">
       <button @click="keywordSearch">검색</button>
     </div>
-    <button @click="goToFullList">전체보기</button>
+    <a @click="goToFullList">전체보기</a>
 
     <div v-if="!searchResults.length">
       <div class="rankings">
@@ -36,7 +36,20 @@
 
     <div>
     <div class="sort-buttons">
-      <button @click="toggleSortMenu">정렬</button>
+      <button
+        :class="{ 'active': comparisonStore.basket.length >= 2 }"
+        :disabled="comparisonStore.basket.length < 2"
+        @click="compareDrinks">
+        비교하기
+      </button>
+      <button @click="toggleSortMenu" class="button_select">정렬</button>
+      <div v-if="comparisonStore.basket.length" class="comparison-basket">
+        <div v-for="(item, index) in comparisonStore.basket" :key="item.drinkId" class="basket-item">
+          {{ item.drinkName }} - {{ item.drinkSugar }}g, {{ item.drinkCaffeine }}mg
+          <button @click="comparisonStore.removeFromBasket(index)">X</button>
+        </div>
+      </div>
+
       <div v-if="showSortMenu" class="sort-menu">
         <button @click="sortResults('drinkSugar', 'asc')">당↑ (오름차순)</button>
         <button @click="sortResults('drinkSugar', 'desc')">당↓ (내림차순)</button>
@@ -62,12 +75,13 @@
             <td>{{ drink.drinkName }}</td>
             <td :class="{ 'high-sugar': drink.drinkSugar + userRDI.value.accumulateSugar > userRDI.value.userSugar, 'low-sugar': drink.drinkSugar + userRDI.value.accumulateSugar <= userRDI.value.userSugar }">{{ drink.drinkSugar }} g</td>
             <td :class="{ 'high-caffeine': drink.drinkCaffeine + userRDI.value.accumulateCaffeine > userRDI.value.userCaffeine, 'low-caffeine': drink.drinkCaffeine + userRDI.value.accumulateCaffeine <= userRDI.value.userCaffeine }">{{ drink.drinkCaffeine }} mg</td>
+            <td>
+              <button v-if="activeButtons[drink.drinkId]" @click="viewDetails(drink)" class="detail-view-button">상세보기</button>
+              <button v-if="activeButtons[drink.drinkId]" @click="comparisonStore.addToBasket(drink)" class="compare-button">비교함 담기</button>
+            </td>
           </tr>
         </tbody>
       </table>
-
-      <button v-if="activeButtons[drink.drinkId]" class="detail-view-button">상세보기</button>
-      <button v-if="activeButtons[drink.drinkId]" class="compare-button">비교함 담기</button>
     </div>
   </div>
   </div>
@@ -76,13 +90,16 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed,onMounted,watch } from 'vue';
 import { useSearchStore } from '../../stores/search';
 import { useUserStore } from '../../stores/user';
+import { useComparisonStore } from '../../stores/comparison';
 import router from '@/router';
+import '../../components/color/color.css'
 
 const searchStore = useSearchStore();
 const userStore = useUserStore();
+const comparisonStore = useComparisonStore();
 const searchQuery = ref('');
 const searchResults = computed(() => searchStore.getSearchDrinkList);
 const keywordRanking = computed(() => searchStore.getKeywordRanking);
@@ -128,9 +145,47 @@ const sortResults = (key, order) => {
   });
 };
 
+// 비교하기 버튼 클릭 시 호출될 함수
+const compareDrinks = () => {
+  if (comparisonStore.basket.length > 1) {
+    router.push({ name: 'searchDetail', params: { drinks: comparisonStore.basket } });
+  }
+};
+
+// 상세보기 버튼 클릭 시 호출될 함수
+const viewDetails = (drink) => {
+  router.push({ name: 'compareDrink', params: { drink } });
+};
+
+watch(comparisonStore.basket, (newVal) => {
+  // 세션 스토리지에 비교함 데이터 저장
+  comparisonStore.saveBasketToSession();
+}, { deep: true });
+
+// 컴포넌트가 마운트될 때 세션 스토리지에서 비교함 데이터를 불러옴
+onMounted(() => {
+  comparisonStore.loadBasketFromSession();
+});
+
+watch(() => comparisonStore.basket, (newVal) => {
+  comparisonStore.saveBasketToSession();
+}, { deep: true });
+
 </script>
 
 <style>
+.search-frame{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 600px;
+  margin: auto;
+  margin-top: 40px;
+  background: #FFF;
+  padding: 20px;
+  
+  
+}
 .ranking-row {
   display: flex;
   justify-content: space-between;

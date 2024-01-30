@@ -93,6 +93,7 @@ export const useUserStore = defineStore("user", () => {
       });
   };
 
+
   const createUser = function (user) {
     axios({
       url: import.meta.env.REST_USER_API,
@@ -103,6 +104,20 @@ export const useUserStore = defineStore("user", () => {
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  const logout = async () => {
+    try {
+      await axios({
+        url: `${import.meta.env.REST_USER_API}/logout`,
+        method: "POST",
+      });
+  
+      // 로그아웃 후 처리, 예: 로그인 페이지로 리다이렉트
+      router.push('/login');
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const researchUser = function () {
@@ -244,6 +259,7 @@ export const useUserStore = defineStore("user", () => {
     getRecommendedCaffeine,
     getRecommendedSugar,
     sendKakaoToken,
+    logout,
     createUser,
     researchUser,
     researchAmount,
