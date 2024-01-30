@@ -35,7 +35,7 @@ export const useAccumulateStore = defineStore("accumulate", () => {
   // data는 요청 바디로 전송될 데이터 (JSON)
   const today = function () {
     axios({
-      url: `${import.meta.env.REST_ACCUMULATE_API}/today`,
+      url: `${import.meta.env.VITE_REST_ACCUMULATE_API}/today`,
       method: "GET",
     })
       .then((res) => {
@@ -48,7 +48,7 @@ export const useAccumulateStore = defineStore("accumulate", () => {
 
   const duration = function () {
     axios({
-      url: `${import.meta.env.REST_ACCUMULATE_API}/duration`,
+      url: `${import.meta.env.VITE_REST_ACCUMULATE_API}/duration`,
       method: "GET",
     })
       .then((res) => {
@@ -62,7 +62,7 @@ export const useAccumulateStore = defineStore("accumulate", () => {
   // date example) 202401 (연도+월)
   const month = function (date) {
     axios({
-      url: `${import.meta.env.REST_ACCUMULATE_API}/month`,
+      url: `${import.meta.env.VITE_REST_ACCUMULATE_API}/month`,
       method: "GET",
       params: { ym: date },
     })
@@ -77,7 +77,7 @@ export const useAccumulateStore = defineStore("accumulate", () => {
   // date example) 20240123 (연도+월일)
   const day = function (date) {
     axios({
-      url: `${import.meta.env.REST_ACCUMULATE_API}/day`,
+      url: `${import.meta.env.VITE_REST_ACCUMULATE_API}/day`,
       method: "GET",
       params: { date: date },
     })
