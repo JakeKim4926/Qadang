@@ -6,33 +6,20 @@ import axios from "axios";
 export const useAccumulateStore = defineStore("accumulate", () => {
   // =========== STATE ===============
 
-  const acuumulateList = ref([]);
-  const acuumulateMonth = ref([]);
-
-  const acuumulateToday = ref({});
-  const acuumulateDay = ref({});
+  const chatRoomList = ref([]);
+  const chat = ref([]);
 
   // =========== GETTER ===============
 
-  const getAcuumulateList = computed(() => {
-    return acuumulateList.value;
+  const getChatRoomList = computed(() => {
+    return chatRoomList.value;
   });
 
-  const getAcuumulateMonth = computed(() => {
-    return acuumulateMonth.value;
-  });
-
-  const getAcuumulateToday = computed(() => {
-    return acuumulateToday.value;
-  });
-
-  const getAcuumulateDay = computed(() => {
-    return acuumulateDay.value;
+  const getChat = computed(() => {
+    return chat.value;
   });
 
   // =========== ACTION ===============
-  // params는 요청과 함께 전송되는 파라미터 (쿼리스트링)
-  // data는 요청 바디로 전송될 데이터 (JSON)
   const today = function () {
     axios({
       url: `${import.meta.env.VITE_REST_ACCUMULATE_API}/today`,

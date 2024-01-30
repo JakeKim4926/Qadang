@@ -1,6 +1,9 @@
 <template>
   <div>
-    <h2>Hello Chat</h2>
+    <h2>이야기 나누고 싶은 카페명을 선택하세요</h2>
+    <br>
+    <v-select label="Select" :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"
+      variant="outlined"></v-select>
     <div class="chat-container">
       <div class="chat-messages" ref="chatContainer">
         <div v-for="(msg, index) in socketStore.getChatMessages" :key="index"
@@ -20,12 +23,10 @@ import { nextTick, ref, watchEffect, onMounted } from "vue";
 import { useSocketStore, messageType } from '@/stores/socket';
 
 const socketStore = useSocketStore();
-
 const message = ref('')
 const chatContainer = ref(null);
 
 onMounted(() => {
-  
   const randomInteger = Math.ceil(Math.random() * 10);
   socketStore.id = randomInteger;
 
@@ -49,8 +50,6 @@ function sendMessage() {
     owner: socketStore.id,
     message: message.value
   }
-  console.log('??22 : ', socketStore.id)
-  console.log('?? : ', message.value)
   socketStore.chatMessages.push(chat)
   socketStore.socket.timeout(5000).emit('chat', chat)
 

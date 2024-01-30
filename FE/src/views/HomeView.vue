@@ -7,7 +7,12 @@
   
 <script setup>
 import '../components/font/font.css';
+import { onMounted } from "vue";
+
+onMounted(() => {
+
+})
+
 </script>
   
-<style scoped>
-</style>
+<style scoped></style>

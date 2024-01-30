@@ -21,6 +21,7 @@
     "@fullcalendar/vue3": "^6.1.10",
     "axios": "^1.6.5",
     "chart.js": "^4.4.1",
+    "dotenv": "^16.4.1",
     "pinia": "^2.1.7",
     "socket.io-client": "^4.7.4",
     "vue": "^3.3.11",
