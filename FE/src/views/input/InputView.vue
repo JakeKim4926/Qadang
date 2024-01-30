@@ -25,8 +25,20 @@
     
     <!-- 음료를 선택하기 전 샷, 시럽 선택할 수 없게 설정 -->
     <!-- +, - 미만일 경우 블락 처리, 바로바로 계산되어야 함 -->
-    샷: 1샷 - 카페인 75mg, +, -
-    시럽: 1시럽 - 당 6g, +, -
+    <div>
+      <p>샷: 1샷 - 카페인 75mg</p>
+      <button @click="minusCaffeine">-</button>
+      {{ cntCaffeine }}
+      <button @click="plusCaffeine">+</button>
+    </div>
+
+    <div>
+      <p>시럽: 1시럽 - 당 6g</p>
+      <button @click="minusSugar">-</button>
+      {{ cntSugar }}
+      <button @click="plusSugar">+</button>
+    </div>
+
   </div>
 
   <div>
@@ -53,6 +65,19 @@ const drinkSugar = ref(0)
 // 샷, 시럽 추가 계산을 위한 변수
 const cntCaffeine = ref(0)
 const cntSugar = ref(0)
+
+const minusCaffeine = () => {
+  cntCaffeine.value -= 1
+}
+const plusCaffeine = () => {
+  cntCaffeine.value += 1
+}
+const minusSugar = () => {
+  cntSugar.value -= 1
+}
+const plusSugar = () => {
+  cntSugar.value += 1
+}
 
 // 음료 생성을 위해 보내줄 데이터
 const cafeName = ref(null)
