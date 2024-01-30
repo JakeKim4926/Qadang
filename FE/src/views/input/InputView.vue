@@ -28,14 +28,14 @@
     <div>
       <p>샷: 1샷 - 카페인 75mg</p>
       <button @click="minusCaffeine">-</button>
-      {{ cntCaffeine }}
+      {{ drinkCaffeine }}
       <button @click="plusCaffeine">+</button>
     </div>
 
     <div>
       <p>시럽: 1시럽 - 당 6g</p>
       <button @click="minusSugar">-</button>
-      {{ cntSugar }}
+      {{ drinkSugar }}
       <button @click="plusSugar">+</button>
     </div>
 
@@ -67,16 +67,16 @@ const cntCaffeine = ref(0)
 const cntSugar = ref(0)
 
 const minusCaffeine = () => {
-  cntCaffeine.value -= 1
+  drinkCaffeine.value -= 1
 }
 const plusCaffeine = () => {
-  cntCaffeine.value += 1
+  drinkCaffeine.value += 1
 }
 const minusSugar = () => {
-  cntSugar.value -= 1
+  drinkSugar.value -= 1
 }
 const plusSugar = () => {
-  cntSugar.value += 1
+  drinkSugar.value += 1
 }
 
 // 음료 생성을 위해 보내줄 데이터
