@@ -24,7 +24,7 @@
           @keydown.enter="sendMessage" />
       </div>
     </template>
-    <h2>{{ cafe.id }}</h2>
+    <button @click="sendClose">통신 종료</button>
   </div>
 </template>
   
@@ -45,23 +45,21 @@ const userId = ref(0);
 
 
 onMounted(() => {
-  const randomInteger = Math.ceil(Math.random() * 10);
-  socketStore.id = randomInteger;
 
 })
 
-socketStore.socket.on("connect", () => {
-  socketStore.connected = ref(true);
-});
+// socketStore.socket.on("connect", () => {
+//   socketStore.connected = ref(true);
+// });
 
-socketStore.socket.on("disconnect", () => {
-  socketStore.connected = ref(false);
-});
+// socketStore.socket.on("disconnect", () => {
+//   socketStore.connected = ref(false);
+// });
 
-socketStore.socket.on('chat', (data) => {
-  console.log(data.message)
-  socketStore.chatMessages.push(data)
-})
+// socketStore.socket.on('chat', (data) => {
+//   console.log(data.message)
+//   socketStore.chatMessages.push(data)
+// })
 
 
 function extractTimeFromDate(dateTimeString) {
@@ -77,27 +75,27 @@ async function sendOpen() {
     senderId: userId.value,
     message: "ENTER",
   }
-  socketStore.socket.timeout(5000).emit('chat', chat)
 
+  console.log(chat);
   message.value = "";
+  await socketStore.socket.timeout(5000).emit('', chat);
   await chatStore.researchChatList(cafe.value.id);
-
   // 스크롤을 새 메시지 아래로 이동시킵니다.
   nextTick(() => {
     scrollChatToBottom();
   });
 }
 
-function sendMessage() {
+async function sendMessage() {
   const chat = {
     messageType: messageType.TALK,
     chatRoomId: cafe.value.id,
     senderId: userId.value,
     message: message.value,
   }
-  socketStore.chatMessages.push(chat)
-  socketStore.socket.timeout(5000).emit('chat', chat)
-
+  
+  await socketStore.socket.timeout(5000).emit('', chat)
+  console.log(chat);
   message.value = "";
   // 스크롤을 새 메시지 아래로 이동시킵니다.
   nextTick(() => {
@@ -112,7 +110,10 @@ async function sendClose() {
     senderId: userId.value,
     message: "QUIT",
   }
-  socketStore.socket.timeout(5000).emit('chat', chat)
+
+  console.log(chat);
+
+  socketStore.socket.timeout(5000).emit('', chat)
 }
 
 function adjustTextarea() {
@@ -126,7 +127,7 @@ function scrollChatToBottom() {
 
 watchEffect(() => {
   scrollChatToBottom();
-  console.log(socketStore.chatMessages.value)
+  // console.log(socketStore.chatMessages.value)
 })
 
 </script>

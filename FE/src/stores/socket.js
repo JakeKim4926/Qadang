@@ -38,7 +38,8 @@ export const useSocketStore = defineStore("socket", () => {
   const id = ref(0);
   const chatMessages = ref([]);
   const connected = ref(false);
-  const socket = io(`${import.meta.env.VITE_SOCKET_API}`);
+  const socket = io('wss://localhost:8080/ws/chat');
+//   const socket = io(`${import.meta.env.VITE_SOCKET_API}`);
   // const socket = io('http://localhost:3000');
 
   // =========== GETTER ===============
