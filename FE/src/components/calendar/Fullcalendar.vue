@@ -26,9 +26,9 @@ export default {
             navLinkDayClick: function (date, jsEvent) {
                 // 캘린더에서 날짜를 클릭했을 때
                  
-                const days = recordStore.days[date.getDay()] + '요일';
-                const day = date.getMonth()+1 + '월 ' + date.getDate() + '일'; 
-                recordStore.recordDate = day + ' ' + days;
+                const days =  date.getDate() + ' ' + recordStore.days[date.getDay()] + '요일';
+                // const day = date.getMonth()+1 + '월 ' + date.getDate() + '일'; 
+                recordStore.recordDate = days;
                 router.push({
                     name: 'calendarDetail',
                     // params: { id : diaryStore.getList.value[i].diary_id }
