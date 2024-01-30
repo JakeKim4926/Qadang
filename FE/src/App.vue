@@ -1,13 +1,12 @@
 <template>
   <div>
-    <!-- <div id="v-app"> -->
-    <!-- <v-app id="inspire"> -->
-    <TheHeader />
-    <div>
-      <RouterView />
-    </div>
-    <!-- <TheFooter />
-    </v-app> -->
+    
+      <TheHeader />
+      <div>
+        <RouterView />
+      </div>
+      <!-- <TheFooter /> -->
+    
   </div>
 </template>
 

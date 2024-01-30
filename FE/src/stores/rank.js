@@ -22,7 +22,7 @@ export const useRankStore = defineStore("rank", () => {
   // =========== ACTION ===============
   const researchKeywordRank = function () {
     axios({
-      url: `${import.meta.env.REST_RANK_API}/keywordranking`,
+      url: `${import.meta.env.VITE_REST_RANK_API}/keywordranking`,
       method: "GET",
     })
       .then((res) => {
@@ -35,7 +35,7 @@ export const useRankStore = defineStore("rank", () => {
 
   const researchRecordRank = function () {
     axios({
-      url: `${import.meta.env.REST_RANK_API}/recordranking`,
+      url: `${import.meta.env.VITE_REST_RANK_API}/recordranking`,
       method: "GET",
     })
       .then((res) => {
