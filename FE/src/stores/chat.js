@@ -4,7 +4,7 @@ import { responseState } from "./util";
 import router from "@/router";
 import axios from "axios";
 
-export const useAccumulateStore = defineStore("accumulate", () => {
+export const useChatStore = defineStore("chat", () => {
   // =========== STATE ===============
 
   const chatRoomList = ref([]);
@@ -23,7 +23,7 @@ export const useAccumulateStore = defineStore("accumulate", () => {
   // =========== ACTION ===============
   const researchChatRoomList = function () {
     axios({
-      url: `${import.meta.env.VITE_REST_CHAT_API}/chatrooml`,
+      url: `${import.meta.env.VITE_REST_CHAT_API}/chatroom`,
       method: "GET",
     })
       .then((res) => {
@@ -38,7 +38,7 @@ export const useAccumulateStore = defineStore("accumulate", () => {
 
   const researchChatList = function (id) {
     axios({
-      url: `${import.meta.env.VITE_REST_CHAT_API}`,
+      url: `${import.meta.env.VITE_REST_CHAT_API}/chatcontent`,
       method: "GET",
       params: { chatId: id },
     })
