@@ -45,6 +45,9 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useRecordsStore } from "@/stores/records";
+
+const store = useRecordsStore()
 
 const cafeName = ref(null)
 const drinkName = ref(null)
@@ -54,6 +57,17 @@ const drinkSugar = ref(0)
 const makeSubmit = () => {
   if (isValid()) {
     console.log('입력값이 올바릅니다. 데이터를 전송합니다.')
+
+    const drink = {
+      cafeName: cafeName,
+      drinkName: drinkName,
+      drinkCaffeine: drinkCaffeine,
+      drinkSugar: drinkSugar
+    }
+
+    // 유효한 데이터를 백엔드로 전송
+    store.createMyDrink(drink)
+
     } else {
       console.log('입력값이 올바르지 않습니다')
     }
