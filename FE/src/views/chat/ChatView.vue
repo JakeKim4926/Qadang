@@ -2,29 +2,47 @@
   <div>
     <h2>이야기 나누고 싶은 카페명을 선택하세요</h2>
     <br>
-    <v-select label="Select" :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"
-      variant="outlined"></v-select>
-    <div class="chat-container">
-      <div class="chat-messages" ref="chatContainer">
-        <div v-for="(msg, index) in socketStore.getChatMessages" :key="index"
-          :class="msg.owner == id ? 'my-chat' : 'their-chat'">
-          <div class="message">{{ msg.message }}</div>
-        </div>
-      </div>
-      <textarea style="resize: none" v-model="message" class="chat-input" placeholder="메시지 입력"
-        @keydown.enter="sendMessage" />
-    </div>
+    <select v-model="cafe" @change="sendOpen">
+      <option v-for="cafe in testCafeList" :key="cafe.id" :value="cafe">{{ cafe.cafe }}</option>
+    </select>
 
+    <template v-if="cafe.id > 0">
+      <div class="chat-container">
+        <div class="chat-messages" ref="chatContainer">
+
+          <div v-for="chat in chatStore.getChatList" :key="chat.index"
+            :class="chat.userId == userId ? 'my-chat' : 'their-chat'">
+            <h2> {{ chat.userName }}</h2>
+            <div>
+              <p class="message">{{ msg.message }}</p>
+              <p>{{ extractTimeFromDate(chat.time) }}</p>
+            </div>
+          </div>
+
+        </div>
+        <textarea style="resize: none" v-model="message" class="chat-input" placeholder="메시지 입력"
+          @keydown.enter="sendMessage" />
+      </div>
+    </template>
+    <h2>{{ cafe.id }}</h2>
   </div>
 </template>
   
 <script setup>
-import { nextTick, ref, watchEffect, onMounted } from "vue";
-import { useSocketStore, messageType } from '@/stores/socket';
+import { nextTick, ref, watchEffect, onMounted, computed } from "vue";
+import { useSocketStore, messageType, testCafeList } from '@/stores/socket';
+import { useChatStore } from '@/stores/chat'
 
 const socketStore = useSocketStore();
+const chatStore = useChatStore();
+
 const message = ref('')
 const chatContainer = ref(null);
+const cafe = ref({})
+
+// for test
+const userId = ref(0);
+
 
 onMounted(() => {
   const randomInteger = Math.ceil(Math.random() * 10);
@@ -45,10 +63,37 @@ socketStore.socket.on('chat', (data) => {
   socketStore.chatMessages.push(data)
 })
 
+
+function extractTimeFromDate(dateTimeString) {
+    // dateTimeString에서 공백을 기준으로 분할하여 시간 부분만 추출
+    const time = dateTimeString.split(' ')[1];
+    return time;
+}
+
+async function sendOpen() {
+  const chat = {
+    messageType: messageType.ENTER,
+    chatRoomId: cafe.value.id,
+    senderId: userId.value,
+    message: "ENTER",
+  }
+  socketStore.socket.timeout(5000).emit('chat', chat)
+
+  message.value = "";
+  await chatStore.researchChatList(cafe.value.id);
+
+  // 스크롤을 새 메시지 아래로 이동시킵니다.
+  nextTick(() => {
+    scrollChatToBottom();
+  });
+}
+
 function sendMessage() {
   const chat = {
-    owner: socketStore.id,
-    message: message.value
+    messageType: messageType.TALK,
+    chatRoomId: cafe.value.id,
+    senderId: userId.value,
+    message: message.value,
   }
   socketStore.chatMessages.push(chat)
   socketStore.socket.timeout(5000).emit('chat', chat)
@@ -58,6 +103,16 @@ function sendMessage() {
   nextTick(() => {
     scrollChatToBottom();
   });
+}
+
+async function sendClose() {
+  const chat = {
+    messageType: messageType.QUIT,
+    chatRoomId: cafe.value.id,
+    senderId: userId.value,
+    message: "QUIT",
+  }
+  socketStore.socket.timeout(5000).emit('chat', chat)
 }
 
 function adjustTextarea() {
