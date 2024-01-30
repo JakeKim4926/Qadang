@@ -28,14 +28,14 @@
     <div>
       <p>샷: 1샷 - 카페인 75mg</p>
       <button @click="minusCaffeine">-</button>
-      {{ drinkCaffeine }}
+      {{ plusShot }}
       <button @click="plusCaffeine">+</button>
     </div>
 
     <div>
       <p>시럽: 1시럽 - 당 6g</p>
       <button @click="minusSugar">-</button>
-      {{ drinkSugar }}
+      {{ plusSyrup }}
       <button @click="plusSugar">+</button>
     </div>
 
@@ -56,6 +56,12 @@ import { useRecordsStore } from "@/stores/records"
 const drinkStore = useDrinksStore()
 const recordsStore = useRecordsStore()
 
+// 음료 생성을 위해 보내줄 데이터
+const cafeName = ref(null)
+const drinkName = ref(null)
+const plusShot = ref(0)
+const plusSyrup = ref(0)
+
 // 카페 id, 음료 id, 각 음료의 카페인 함량, 당 함량
 const cafeId = ref(0)
 const drinkId = ref(0)
@@ -67,23 +73,18 @@ const cntCaffeine = ref(0)
 const cntSugar = ref(0)
 
 const minusCaffeine = () => {
-  drinkCaffeine.value -= 1
+  plusShot.value -= 1
 }
 const plusCaffeine = () => {
-  drinkCaffeine.value += 1
+  plusShot.value += 1
 }
 const minusSugar = () => {
-  drinkSugar.value -= 1
+  plusSyrup.value -= 1
 }
 const plusSugar = () => {
-  drinkSugar.value += 1
+  plusSyrup.value += 1
 }
 
-// 음료 생성을 위해 보내줄 데이터
-const cafeName = ref(null)
-const drinkName = ref(null)
-const plusShot = ref(0)
-const plusSyrup = ref(0)
 
 const drinkSubmit = () => {
   if (cafeName && drinkName) {
