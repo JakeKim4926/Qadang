@@ -9,6 +9,7 @@ import com.ssafy.cadang.response.DayAccumulateResponseDTO;
 import com.ssafy.cadang.response.DurationAccumulateResponseDTO;
 import com.ssafy.cadang.response.TodayAccumulateResponseDTO;
 import com.ssafy.cadang.service.AccumulateService;
+import com.ssafy.cadang.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,12 +27,12 @@ import java.util.List;
 public class AccumulateController {
 
     private final AccumulateService accumulateService;
-    private final UserRepository userRepository;
+    private final UserService userService;
     @GetMapping("/today")
     public ResponseEntity<TodayAccumulateResponseDTO> readTodayAccumulate(){
         //user check
         Long userId = 1L;
-        User user = userRepository.findByUserId(userId);
+        User user = userService.findUser(userId);
         if(user == null)
             return new ResponseEntity<>(null,HttpStatus.UNAUTHORIZED);
 

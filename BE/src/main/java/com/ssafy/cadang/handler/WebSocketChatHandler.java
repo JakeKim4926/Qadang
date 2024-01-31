@@ -1,7 +1,9 @@
 package com.ssafy.cadang.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.cadang.dto.ChatForwardDTO;
 import com.ssafy.cadang.dto.ChatMessageDTO;
+import com.ssafy.cadang.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -20,11 +22,12 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class WebSocketChatHandler extends TextWebSocketHandler {
     private final ObjectMapper mapper;
+    // 현재 연결되어 있는 세션
     private final Set<WebSocketSession> sessions = new HashSet<>();
 
     // chatRoomId
     private final Map<Long,Set<WebSocketSession>> chatRoomSessionMap = new HashMap<>();
-
+    private final MessageService messageService;
     // 소켓 연결 확인
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -48,22 +51,24 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
         if(!chatRoomSessionMap.containsKey(chatRoomId)){
             chatRoomSessionMap.put(chatRoomId,new HashSet<>());
         }
+        //chat room 안에 있는 세션들
         Set<WebSocketSession> chatRoomSession = chatRoomSessionMap.get(chatRoomId);
 
-        // message 에 담긴 타입을 확인한다.
-        // 이때 message 에서 getType 으로 가져온 내용이
-        // ChatDTO 의 열거형인 MessageType 안에 있는 ENTER 과 동일한 값이라면
         if (chatMessageDTO.getMessageType().equals(ChatMessageDTO.MessageType.ENTER)) {
-            // sessions 에 넘어온 session 을 담고,
+            //user check
+
+            //채팅 방 안에 넣기.
             chatRoomSession.add(session);
         }
-        else if (chatMessageDTO.getMessageType().equals(ChatMessageDTO.MessageType.QUIT)) {
-            //afterConnectionClosed(session);
+        else if (chatMessageDTO.getMessageType().equals(ChatMessageDTO.MessageType.QUIT)){
+            //채팅 방에서 빼기
             chatRoomSession.remove(session);
         }
-        else if (chatMessageDTO.getMessageType().equals(ChatMessageDTO.MessageType.TALK))
-            sendMessageToChatRoom(chatMessageDTO, chatRoomSession);
-
+        else if (chatMessageDTO.getMessageType().equals(ChatMessageDTO.MessageType.TALK)){
+            //채팅방 안에 있는 사람이 보낸것이라면
+            if(chatRoomSession.contains(session))
+                sendMessageToChatRoom(chatMessageDTO, chatRoomSession);
+        }
     }
 
     // 소켓 종료 확인
@@ -83,11 +88,8 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
         //user Name add
         //ChatMessageDTO userName
         //chatMessageDTO.setSenderId();
-
-        chatRoomSession.parallelStream().forEach(sess -> sendMessage(sess, chatMessageDTO));
-
-        //service chat room record
-
+        ChatForwardDTO forward = messageService.sendMessage(chatMessageDTO);
+        chatRoomSession.parallelStream().forEach(sess -> sendMessage(sess, forward));
     }
 
 

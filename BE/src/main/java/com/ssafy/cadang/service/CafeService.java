@@ -27,4 +27,8 @@ public class CafeService {
         }
         return result;
     }
+
+    public List<Cafes> cafeList() {
+        return cafeRepository.findAll();
+    }
 }

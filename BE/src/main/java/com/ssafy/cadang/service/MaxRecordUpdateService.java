@@ -18,7 +18,7 @@ import java.util.List;
 public class MaxRecordUpdateService {
 
     private final AccumulateRepository accumulateRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     // 매일 오후 0시에 실행
     @Scheduled(cron = "0 0 0 * * *")
@@ -33,7 +33,7 @@ public class MaxRecordUpdateService {
             log.info("accum update check - user : " + accum.getAccumulatePK().getUserId());
             double caffeine = accum.getAccumulateCaffeine();
             double sugar = accum.getAccumulateSugar();
-            User user = userRepository.findByUserId(accum.getAccumulatePK().getUserId());
+            User user = userService.findUser(accum.getAccumulatePK().getUserId());
 
             if(Double.compare(caffeine, user.getMaxCaffeineValue()) > 0){
                 user.setMaxCaffeineValue(caffeine);
@@ -43,7 +43,7 @@ public class MaxRecordUpdateService {
                 user.setMaxSugarValue(sugar);
                 user.setMaxSugarDate(localDate);
             }
-            userRepository.save(user);
+            userService.update(user);
         }
     }
 }

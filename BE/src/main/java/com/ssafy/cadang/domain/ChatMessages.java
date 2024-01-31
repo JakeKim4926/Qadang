@@ -2,9 +2,11 @@ package com.ssafy.cadang.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
+@Entity
 @Builder
 @Getter
 @Setter
@@ -20,8 +22,13 @@ public class ChatMessages {
     private String content;
 
     @Column(nullable = false)
-    private LocalDateTime sendTime;
+    @CreationTimestamp
+    private LocalDateTime time;
 
+    @Column(nullable = false)
     private Long senderId;
+    @Column(nullable = false)
+    private String userName;
+    @Column(nullable = false)
     private Long chatRoomId;
 }
