@@ -1,9 +1,13 @@
 <template>
   <div>
     <h2>hello home</h2>
-    <!-- <RouterLink to="/chat"><font-awesome-icon :icon="['fas', 'comments']" class="footer-icon" /></RouterLink> -->
-    <RouterLink :to="{ name:'mainCaffeine' }">mainCaffeine</RouterLink>
-    <RouterLink :to="{ name:'mainSugar' }">mainsugar</RouterLink>
+    <div>
+      <RouterLink to="/calendar">캘린더 보기</RouterLink>
+      <!-- <RouterLink to="/calendarDetail">캘린더 보기</RouterLink> -->
+      <div>
+        <RouterView />
+      </div>
+    </div>
   </div>
 </template>
   
