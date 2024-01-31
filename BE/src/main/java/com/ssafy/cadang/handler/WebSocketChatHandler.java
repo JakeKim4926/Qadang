@@ -61,7 +61,7 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
             //afterConnectionClosed(session);
             chatRoomSession.remove(session);
         }
-        else
+        else if (chatMessageDTO.getMessageType().equals(ChatMessageDTO.MessageType.TALK))
             sendMessageToChatRoom(chatMessageDTO, chatRoomSession);
 
     }

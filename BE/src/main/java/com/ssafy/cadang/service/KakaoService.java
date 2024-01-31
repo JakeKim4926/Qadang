@@ -15,6 +15,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.LocalDate;
+
 @Service
 @RequiredArgsConstructor
 //@Transactional
@@ -146,7 +148,7 @@ public class KakaoService {
 //                    .userGender(gender)
                     .userCaffeine(400) // 성인 기준
                     .userSugar(50) // 20대 성인 여성 기준
-                    .registerDatetime(info.connected_at)
+                    .registerDatetime(LocalDate.now())
                     .kakaoRefreshToken(token.getRefresh_token()) // 카카오 리프레시 토큰 저장
                     .build();
 
