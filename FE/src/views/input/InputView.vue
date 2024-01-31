@@ -10,7 +10,8 @@
   <div>
     <h2>오늘 마신 카페 음료를 선택해주세요</h2>
     <label for="cafeSelect">카페명: </label>
-    <select name="cafeSelect" id="cafeSelect" v-model="cafeId" @change="changeCafeDrinkList">
+    <select name="cafeSelect" id="cafeSelect"
+    v-model="cafeId" @change="changeCafeDrinkList" class="button_select">
       <option v-for="cafe in drinkStore.getCafeList"
       :key="cafe.cafeId"
       :value="cafe.cafeId">
@@ -20,7 +21,8 @@
 
     <div v-if="cafeId">
       <label for="drinkSelect">음료명: </label>
-      <select name="drinkSelect" id="drinkSelect" v-model="drinkInfo" @change="changeDrinkInfo">
+      <select name="drinkSelect" id="drinkSelect"
+      v-model="drinkInfo" @change="changeDrinkInfo" class="button_select">
       <option v-for="drink in drinkStore.getCafeDrinkList"
       :key="drink.drinkId"
       :value="drink">
@@ -31,7 +33,7 @@
 
     <div v-else>
       <label for="drinkSelect">음료명: </label>
-      <select name="drinkSelect" id="drinkSelect">
+      <select name="drinkSelect" id="drinkSelect" class="button_select">
         <option value="" disabled selected>카페를 먼저 선택해주세요</option>
       </select>
     </div>
@@ -259,7 +261,7 @@ const drinkSubmit = () => {
     }
   }
 
-// 
+// 여기없어용 버튼
 const goInputNothing = () => {
   router.push({name: 'inputNothing'})
 }
