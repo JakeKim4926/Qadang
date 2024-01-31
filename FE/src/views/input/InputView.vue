@@ -66,7 +66,7 @@
   </div>
 
   <div>
-    <RouterLink :to="{name: 'inputNothing'}">여기없어용</RouterLink>
+    <button @click="goInputNothing" class="button_input_color">여기없어용</button>
     <span @mouseover="showToolTip = true" @mouseleave="showToolTip = false"><font-awesome-icon :icon="['fas', 'circle-question']" /></span>
     <div v-if="showToolTip" class="tip">
       <p>여기에 여기없어용에 대한 자세한 설명을 작성합니다</p>
@@ -81,6 +81,7 @@ import { onMounted } from 'vue';
 
 import { useDrinksStore } from "@/stores/drinks";
 import { useRecordsStore } from "@/stores/records"
+import router from '@/router';
 
 const drinkStore = useDrinksStore()
 const recordsStore = useRecordsStore()
@@ -234,6 +235,7 @@ const plusSugar = () => {
   activeplusSugarButton()
 }
 
+// 생성된 음료 데이터 전송
 const drinkSubmit = () => {
   if (cafeName.value && drinkName.value) {
     console.log('입력값이 올바릅니다. 데이터를 전송합니다.')
@@ -257,9 +259,16 @@ const drinkSubmit = () => {
     }
   }
 
+// 
+const goInputNothing = () => {
+  router.push({name: 'inputNothing'})
+}
 </script>
 
 <style scoped>
+@import "../../components/font/font.css";
+@import "../../components/color/color.css";
+
 h2 {
   color: #562B1A;
   font-weight: bold;
