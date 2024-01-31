@@ -36,7 +36,8 @@
 
   <div>
     <RouterLink :to="{ name: 'input' }">음료선택</RouterLink>
-    물음표버튼
+    <span class="tip" @mouseover="showToolTip = true" @mouseleave="showToolTip = false">물음표버튼</span>
+    <div v-if="showToolTip">여기에 음료선택에 대한 자세한 설명을 작성합니다</div>
     <button @click="makeSubmit">입력완료</button>
   </div>
 </template>
@@ -51,6 +52,8 @@ const cafeName = ref(null)
 const drinkName = ref(null)
 const drinkCaffeine = ref(0)
 const drinkSugar = ref(0)
+
+const showToolTip = ref(false)
 
 const makeSubmit = () => {
   if (isValid()) {
@@ -88,4 +91,9 @@ const isValid = () => {
 
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.tip {
+  cursor: help
+}
+
+</style>
