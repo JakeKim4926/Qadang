@@ -82,8 +82,10 @@
       <span @mouseover="showToolTip = true" @mouseleave="showToolTip = false">
         <font-awesome-icon :icon="['fas', 'circle-question']" size="xl"/>
       </span>
-      <div v-if="showToolTip" class="tip">
-        <p>여기에 여기없어용에 대한 자세한 설명을 작성합니다</p>
+      <div v-if="showToolTip" class="tip-container">
+        <div class="tip">
+          <p>여기에 여기없어용에 대한 자세한 설명을 작성합니다</p>
+        </div>
       </div>
       <button @click="drinkSubmit" class="button_caffeine buttons">입력완료</button>
     </div>
@@ -351,6 +353,22 @@ div {
   width: 150px;
   height: 60px;
   border: none;
+}
+
+.tip-container {
+  position: relative;
+}
+
+.tip {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 100;
 }
 
 </style>
