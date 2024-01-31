@@ -98,10 +98,11 @@ const plusSugar = () => {
   plusSyrup.value += 1
 }
 
-
 const drinkSubmit = () => {
-  if (cafeName && drinkName) {
+  if (cafeName.value && drinkName.value) {
     console.log('입력값이 올바릅니다. 데이터를 전송합니다.')
+    console.log(cafeName)
+    console.log(drinkName)
 
     // 음료 생성을 위해 보내줄 데이터
     const drink = {
