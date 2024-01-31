@@ -67,8 +67,10 @@
 
   <div>
     <RouterLink :to="{name: 'inputNothing'}">여기없어용</RouterLink>
-    <span class="tip" @mouseover="showToolTip = true" @mouseleave="showToolTip = false">물음표버튼</span>
-    <div v-if="showToolTip">여기에 여기없어용에 대한 자세한 설명을 작성합니다</div>
+    <span @mouseover="showToolTip = true" @mouseleave="showToolTip = false"><font-awesome-icon :icon="['fas', 'circle-question']" /></span>
+    <div v-if="showToolTip" class="tip">
+      <p>여기에 여기없어용에 대한 자세한 설명을 작성합니다</p>
+    </div>
     <button @click="drinkSubmit">입력완료</button>
   </div>
 </template>
@@ -258,7 +260,4 @@ const drinkSubmit = () => {
 </script>
 
 <style scoped>
-.tip {
-  cursor: help
-}
 </style>
