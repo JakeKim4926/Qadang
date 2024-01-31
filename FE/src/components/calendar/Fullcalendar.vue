@@ -8,6 +8,7 @@ import axios from "axios";
 import router from "@/router";
 import { useRecordsStore } from "@/stores/records";
 import { useAccumulateStore } from "@/stores/accumulate";
+import { isCalendarModal } from "@/stores/util"
 
 export default {
     components: {
@@ -29,10 +30,12 @@ export default {
                 const days =  date.getDate() + ' ' + recordStore.days[date.getDay()] + '요일';
                 // const day = date.getMonth()+1 + '월 ' + date.getDate() + '일'; 
                 recordStore.recordDate = days;
-                router.push({
-                    name: 'calendarDetail',
-                    // params: { id : diaryStore.getList.value[i].diary_id }
-                });
+                // router.push({
+                //     name: 'calendarDetail',
+                //     // params: { id : diaryStore.getList.value[i].diary_id }
+                // });
+                isCalendarModal.value = true;
+
             },
             events: [
                 {

@@ -1,35 +1,49 @@
 <template>
-    <div class="calendar_background">
-        <div class="calendar_day_title">
-            {{ getRecordDate }}
-        </div>
-        <div class="calendar_all_material_font">
-            총 섭취한 카페인량
-        </div>
-        <div class="calendar_drink_value_font">
-            150.3 mg
-        </div>
-        <div class="calendar_all_material_font">
-            총 섭취한 당량
-        </div>
-        <div class="calendar_drink_value_font">
-            0.0 g
-        </div>
-        <hr class="calendar_drink_line_76">
-        <div class="calendar_drink_rectangle_4333">
-            <div>No.oo1</div>
-        </div>
+    <div class="board-create-container">
+        <div class="calendar_background">
+            <!-- <div class="calendar_day_title">
+                {{ getRecordDate }}
+            </div>
+            <div class="calendar_all_material_font">
+                총 섭취한 카페인량
+            </div>
+            <div class="calendar_drink_value_font">
+                150.3 mg
+            </div>
+            <div class="calendar_all_material_font">
+                총 섭취한 당량
+            </div>
+            <div class="calendar_drink_value_font">
+                0.0 g
+            </div>
+            <hr class="calendar_drink_line_76">
+            <div class="calendar_drink_rectangle_4333">
+                <div>No.oo1</div>
+            </div> -->
+            
 
+            <button @click="close">닫자 닫아</button>
+        </div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
     </div>
 </template>
 
 <script setup>
 import { useRecordsStore } from '@/stores/records';
 import { ref, onMounted, computed } from 'vue';
+import {isCalendarModal} from "@/stores/util"
 
 const recordStore = useRecordsStore();
 const recordDate = ref('');
 const getRecordDate = computed(() => recordDate);
+
+function close() {
+    isCalendarModal.value = false;
+}
 
 onMounted(() => {
     if (!sessionStorage.getItem('recordDate')) {
@@ -49,6 +63,19 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.board-create-container {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(128, 128, 128, 0.863);
+    top: 0;
+    left: 0;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 /* Rectangle 4329 */
 .calendar_background {
     box-sizing: border-box;
