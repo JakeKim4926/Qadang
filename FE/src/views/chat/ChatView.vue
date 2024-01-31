@@ -1,24 +1,24 @@
 <template>
   <div>
     <h2>이야기 나누고 싶은 카페명을 선택하세요</h2>
-    <br>
+    <br />
     <select v-model="cafe" @change="sendOpen">
-      <option v-for="cafe in testCafeList" :key="cafe.id" :value="cafe">{{ cafe.cafe }}</option>
+      <option v-for="cafe in testCafeList" :key="cafe.id" :value="cafe">
+        {{ cafe.cafe }}
+      </option>
     </select>
 
     <template v-if="cafe.id > 0">
       <div class="chat-container">
         <div class="chat-messages" ref="chatContainer">
-
           <div v-for="chat in chatStore.getChatList" :key="chat.index"
             :class="chat.userId == userId ? 'my-chat' : 'their-chat'">
-            <h2> {{ chat.userName }}</h2>
+            <h2>{{ chat.userName }}</h2>
             <div>
-              <p class="message">{{ msg.message }}</p>
+              <p class="message">{{ chat.message }}</p>
               <p>{{ extractTimeFromDate(chat.time) }}</p>
             </div>
           </div>
-
         </div>
         <textarea style="resize: none" v-model="message" class="chat-input" placeholder="메시지 입력"
           @keydown.enter="sendMessage" />
@@ -27,45 +27,96 @@
     <button @click="sendClose">통신 종료</button>
   </div>
 </template>
-  
+
 <script setup>
 import { nextTick, ref, watchEffect, onMounted, computed } from "vue";
-import { useSocketStore, messageType, testCafeList } from '@/stores/socket';
-import { useChatStore } from '@/stores/chat'
+import { useSocketStore, messageType, testCafeList } from "@/stores/socket";
+import { useChatStore } from "@/stores/chat";
+
+import Stomp from "webstomp-client";
+import SockJS from "sockjs-client";
 
 const socketStore = useSocketStore();
 const chatStore = useChatStore();
 
-const message = ref('')
+const message = ref("");
 const chatContainer = ref(null);
-const cafe = ref({})
-
+const cafe = ref({});
+const receivedMessages = ref([]);
+const Msgcnt = ref(0);
 // for test
 const userId = ref(0);
 
+onMounted(async () => {
+  // console.log(import.meta.env.VITE_SOCKET_API)
+  // socketStore.socket = new SockJS(import.meta.env.VITE_SOCKET_API); // 웹소켓 서버 URL
+  socketStore.socket = new SockJS("http://localhost:8080/ws/chat"); // 웹소켓 서버 URL
+  socketStore.stompClient = Stomp.over(socketStore.socket);
 
-onMounted(() => {
+  const chat = {
+    messageType: messageType.ENTER,
+    chatRoomId: 1,
+    senderId: 2,
+    message: "a",
+  };
 
-})
+  await socketStore.stompClient.connect(chat,
+    (frame) => {
+      // After successful connection, send the chat DTO
 
-// socketStore.socket.on("connect", () => {
-//   socketStore.connected = ref(true);
-// });
+      console.log("frame :" + frame);
+      console.log("hihihihi");
+      console.log("Connection :");
 
-// socketStore.socket.on("disconnect", () => {
-//   socketStore.connected = ref(false);
-// });
+      socketStore.stompClient.subscribe("http://localhost:8080/ws/chat", function (message) {
+        if (message.body) {
+          console.log(message.body);
 
-// socketStore.socket.on('chat', (data) => {
-//   console.log(data.message)
-//   socketStore.chatMessages.push(data)
-// })
 
+        } else {
+          console.log("nothing on message");
+        }
+      });
+      const chat = {
+        messageType: messageType.ENTER,
+        chatRoomId: cafe.value.id,
+        senderId: userId.value,
+        message: "a",
+      };
+      // let messageToSend = JSON.stringify(chat);
+      // messageToSend = JSON.parse(messageToSend)
+      socketStore.stompClient.send("http://localhost:8080/ws/chat", chat);
+
+    },
+    (error) => {
+      console.log("Connection error: " + error);
+    }
+
+  );
+
+  // socketStore.stompClient.debug = function (message) {
+  //   if (message.includes("<<<")) {
+  //     const index = message.indexOf("<<<");
+  //     if (index !== -1) {
+  //       message = message.substring(index + 3).trim();
+  //     } else {
+  //       message = "";
+  //     }
+  //     receivedMessages.value.push(message);
+  //     Msgcnt.value += 1;
+  //     console.log(message);
+  //   }
+
+  // };
+
+
+});
 
 function extractTimeFromDate(dateTimeString) {
-    // dateTimeString에서 공백을 기준으로 분할하여 시간 부분만 추출
-    const time = dateTimeString.split(' ')[1];
-    return time;
+  // dateTimeString에서 공백을 기준으로 분할하여 시간 부분만 추출
+  if (dateTimeString == undefined || dateTimeString.length < 5) return "";
+  const time = dateTimeString.split(" ")[1];
+  return time;
 }
 
 async function sendOpen() {
@@ -73,13 +124,31 @@ async function sendOpen() {
     messageType: messageType.ENTER,
     chatRoomId: cafe.value.id,
     senderId: userId.value,
-    message: "ENTER",
+    message: "a",
+  };
+  // let messageToSend = JSON.stringify(chat);
+  // messageToSend = JSON.parse(messageToSend)
+  socketStore.stompClient.send("http://localhost:8080/ws/chat", chat);
+  socketStore.stompClient.subscribe("http://localhost:8080/ws/chat", function (message) {
+        if (message.body) {
+          console.log(message.body);
+
+        } else {
+          console.log("nothing on message");
+        }
+      });
+  // Check if the StompClient is connected before sending the message
+  if (socketStore.stompClient && socketStore.stompClient.connected) {
+    // socketStore.stompClient.send(`${import.meta.env.VITE_SOCKET_API}`, {}, JSON.stringify(chat));
+    // const messageToSend = JSON.stringify(chat);
+    //   socketStore.stompClient.send("http://localhost:8080/ws/chat", messageToSend);
+  } else {
+    console.error("StompClient is not connected.");
   }
 
   console.log(chat);
   message.value = "";
-  await socketStore.socket.timeout(5000).emit('', chat);
-  await chatStore.researchChatList(cafe.value.id);
+  // await chatStore.researchChatList(cafe.value.id);
   // 스크롤을 새 메시지 아래로 이동시킵니다.
   nextTick(() => {
     scrollChatToBottom();
@@ -93,8 +162,23 @@ async function sendMessage() {
     senderId: userId.value,
     message: message.value,
   }
-  
-  await socketStore.socket.timeout(5000).emit('', chat)
+
+  // Check if the StompClient is connected before sending the message
+  if (socketStore.stompClient && socketStore.stompClient.connected) {
+    // socketStore.stompClient.send(`${import.meta.env.VITE_SOCKET_API}`, {}, JSON.stringify(chat));
+    socketStore.stompClient.send(`${import.meta.env.VITE_SOCKET_API}`, {}, chat);
+  } else {
+    console.error("StompClient is not connected.");
+  }
+
+  socketStore.stompClient.subscribe(`${import.meta.env.VITE_SOCKET_API}`, (message) => {
+    // Handle the incoming message
+    console.log("Received message:", JSON.parse(message.body));
+    console.log("Received message:", message.body);
+
+    // Here, you can update your UI or perform any other actions based on the received message
+  });
+
   console.log(chat);
   message.value = "";
   // 스크롤을 새 메시지 아래로 이동시킵니다.
@@ -103,21 +187,20 @@ async function sendMessage() {
   });
 }
 
-async function sendClose() {
-  const chat = {
-    messageType: messageType.QUIT,
-    chatRoomId: cafe.value.id,
-    senderId: userId.value,
-    message: "QUIT",
-  }
+// async function sendClose() {
+//   const chat = {
+//     messageType: messageType.QUIT,
+//     chatRoomId: cafe.value.id,
+//     senderId: userId.value,
+//     message: "QUIT",
+//   }
 
-  console.log(chat);
+//   console.log(chat);
 
-  socketStore.socket.timeout(5000).emit('', chat)
-}
+//   socketStore.socket.timeout(5000).emit('', chat)
+// }
 
-function adjustTextarea() {
-}
+function adjustTextarea() { }
 
 function scrollChatToBottom() {
   if (chatContainer.value) {
@@ -128,10 +211,9 @@ function scrollChatToBottom() {
 watchEffect(() => {
   scrollChatToBottom();
   // console.log(socketStore.chatMessages.value)
-})
-
+});
 </script>
-  
+
 <style scoped>
 .chat-container {
   border: 1px solid cornflowerblue;

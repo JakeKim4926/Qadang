@@ -33,58 +33,10 @@
         </div>
       </div>
     </div>
-
-    <div>
-    <div class="sort-buttons">
-      <button
-        :class="{ 'active': comparisonStore.basket.length >= 2 }"
-        :disabled="comparisonStore.basket.length < 2"
-        @click="compareDrinks">
-        비교하기
-      </button>
-      <button @click="toggleSortMenu" class="button_select">정렬</button>
-      <div v-if="comparisonStore.basket.length" class="comparison-basket">
-        <div v-for="(item, index) in comparisonStore.basket" :key="item.drinkId" class="basket-item">
-          {{ item.drinkName }} - {{ item.drinkSugar }}g, {{ item.drinkCaffeine }}mg
-          <button @click="comparisonStore.removeFromBasket(index)">X</button>
-        </div>
-      </div>
-
-      <div v-if="showSortMenu" class="sort-menu">
-        <button @click="sortResults('drinkSugar', 'asc')">당↑ (오름차순)</button>
-        <button @click="sortResults('drinkSugar', 'desc')">당↓ (내림차순)</button>
-        <button @click="sortResults('drinkCaffeine', 'asc')">카페인↑ (오름차순)</button>
-        <button @click="sortResults('drinkCaffeine', 'desc')">카페인↓ (내림차순)</button>
-      </div>
-    </div>
-    <div class="search-results-container">
-      <table>
-        <thead>
-          <tr>
-            <th>카페</th>
-            <th>음료</th>
-            <th>당(g)</th>
-            <th>카페인(mg)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="drink in searchResults" :key="drink.drinkId" @mouseover="enableButtons(drink.drinkId)" @mouseleave="disableButtons(drink.drinkId)">
-            <td>
-              <img :src="drink.cafeUrl" alt="Cafe Image">
-            </td>
-            <td>{{ drink.drinkName }}</td>
-            <td :class="{ 'high-sugar': drink.drinkSugar + userRDI.value.accumulateSugar > userRDI.value.userSugar, 'low-sugar': drink.drinkSugar + userRDI.value.accumulateSugar <= userRDI.value.userSugar }">{{ drink.drinkSugar }} g</td>
-            <td :class="{ 'high-caffeine': drink.drinkCaffeine + userRDI.value.accumulateCaffeine > userRDI.value.userCaffeine, 'low-caffeine': drink.drinkCaffeine + userRDI.value.accumulateCaffeine <= userRDI.value.userCaffeine }">{{ drink.drinkCaffeine }} mg</td>
-            <td>
-              <button v-if="activeButtons[drink.drinkId]" @click="viewDetails(drink)" class="detail-view-button">상세보기</button>
-              <button v-if="activeButtons[drink.drinkId]" @click="comparisonStore.addToBasket(drink)" class="compare-button">비교함 담기</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
   </div>
-  </div>
+
+  
+
 
     
 </template>
@@ -106,7 +58,6 @@ const keywordRanking = computed(() => searchStore.getKeywordRanking);
 const recordRanking = computed(() => searchStore.getRecordRanking);
 const activeButtons = ref({});
 const showSortMenu = ref(false);
-const userRDI = computed(() => userStore.getUserRDI);
 
 const keywordSearch = () => {
   searchStore.researchKeywordRank(searchQuery.value);

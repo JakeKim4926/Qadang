@@ -14,3 +14,4 @@ export const responseState = {
   NOT_IMPLEMENT: 501,
 };
 
+export const isCalendarModal = ref(false);

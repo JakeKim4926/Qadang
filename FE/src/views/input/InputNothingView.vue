@@ -24,21 +24,20 @@
 
     <div>
       <label for="drinkCaffeine">카페인: </label>
-      <input type="number" name="drinkCaffeine" id="drinkCaffeine"
-      v-model="drinkCaffeine" placeholder="없다면 0을 입력해주세요"/>mg
+      <input type="number" name="drinkCaffeine" id="drinkCaffeine" v-model="drinkCaffeine">mg
     </div>
 
     <div>
       <label for="drinkSugar">당: </label>
-      <input type="number" name="drinkSugar" id="drinkSugar"
-      v-model="drinkSugar" placeholder="없다면 0을 입력해주세요"/>g
+      <input type="number" name="drinkSugar" id="drinkSugar" v-model="drinkSugar">g
     </div>
 
   </div>
 
   <div>
     <RouterLink :to="{ name: 'input' }">음료선택</RouterLink>
-    물음표버튼
+    <span class="tip" @mouseover="showToolTip = true" @mouseleave="showToolTip = false">물음표버튼</span>
+    <div v-if="showToolTip">여기에 음료선택에 대한 자세한 설명을 작성합니다</div>
     <button @click="makeSubmit">입력완료</button>
   </div>
 </template>
@@ -54,16 +53,20 @@ const drinkName = ref(null)
 const drinkCaffeine = ref(0)
 const drinkSugar = ref(0)
 
+const showToolTip = ref(false)
+
 const makeSubmit = () => {
   if (isValid()) {
     console.log('입력값이 올바릅니다. 데이터를 전송합니다.')
 
     const drink = {
-      cafeName: cafeName,
-      drinkName: drinkName,
-      drinkCaffeine: drinkCaffeine,
-      drinkSugar: drinkSugar
+      cafeName: cafeName.value,
+      drinkName: drinkName.value,
+      drinkCaffeine: drinkCaffeine.value,
+      drinkSugar: drinkSugar.value
     }
+
+    console.log(drink)
 
     // 유효한 데이터를 백엔드로 전송
     store.createMyDrink(drink)
@@ -90,4 +93,9 @@ const isValid = () => {
 
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.tip {
+  cursor: help
+}
+
+</style>
