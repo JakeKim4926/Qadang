@@ -19,7 +19,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
         // setAllowedOrigins("*")는 모든 ip에서 접속 가능하도록 해줌
         // ws://주소:포트/ws/chat
         registry.addHandler(webSocketChatHandler, "/ws/chat")
-                .setAllowedOriginPatterns("*")
-                .withSockJS();
+                .setAllowedOriginPatterns("*");
+                //.withSockJS();
     }
 }
