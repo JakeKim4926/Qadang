@@ -1,5 +1,6 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
+import { responseState } from "./util";
 import router from "@/router";
 import axios from "axios";
 
@@ -14,7 +15,8 @@ export const useRecordsStore = defineStore("records", () => {
   const maxSugar = ref({});
   const maxCaffeine = ref({});
 
-  const recordDate = ref("");
+  const recordDay = ref(null);
+  const recordDate = ref(null);
   // =========== GETTER ===============
 
   const getDayDrink = computed(() => {
@@ -35,6 +37,10 @@ export const useRecordsStore = defineStore("records", () => {
 
   const getMaxCaffeine = computed(() => {
     return maxCaffeine.value;
+  });
+
+  const getRecordDay = computed(() => {
+    return recordDay.value;
   });
 
   const getRecordDate = computed(() => {
@@ -109,9 +115,13 @@ export const useRecordsStore = defineStore("records", () => {
     axios({
       url: `${import.meta.env.VITE_REST_RECORDS_API}/day`,
       method: "GET",
-      params: { date: date },
+      params: { date: date.value },
     })
       .then((res) => {
+        if(res.status == responseState.SUCCESS) {
+          console.log("success ", res.data );
+        }
+
         dayDrink.value = res.data;
       })
       .catch((err) => {
@@ -153,6 +163,7 @@ export const useRecordsStore = defineStore("records", () => {
     maxSugar,
     maxCaffeine,
     dayDrink,
+    recordDay,
     recordDate,
     getDayDrink,
     getCafeDrink,
@@ -160,6 +171,7 @@ export const useRecordsStore = defineStore("records", () => {
     getMaxSugar,
     getMaxCaffeine,
     getRecordDate,
+    getRecordDay,
     createCafeDrink,
     createMyDrink,
     updateCafeDrink,

@@ -26,9 +26,17 @@ export default {
             navLinks: true,
             navLinkDayClick: function (date, jsEvent) {
                 // 캘린더에서 날짜를 클릭했을 때
-                 
-                const days =  date.getDate() + ' ' + recordStore.days[date.getDay()] + '요일';
-                // const day = date.getMonth()+1 + '월 ' + date.getDate() + '일'; 
+
+                const days = date.getDate() + ' ' + recordStore.days[date.getDay()] + '요일';
+                const year = (date.getYear() + 1900).toString();
+                let month = date.getMonth() + 1;
+                let day = date.getDate();
+                month = month < 10 ? "0" + month.toString() : month.toString();
+                day = day < 10 ? "0" + day.toString() : day.toString();
+                const result = year + month + day;
+                console.log(result);
+                recordStore.recordDay = result;
+
                 recordStore.recordDate = days;
                 // router.push({
                 //     name: 'calendarDetail',
@@ -48,7 +56,8 @@ export default {
         });
 
         const updateCalendarOptions = async () => {
-           console.log()
+            console.log("hello");
+            
             // if (diaryStore.getList.value) {
             //     calendarOptions.value.events = await diaryStore.getList.value.map(() => ({
             //         title: "blahblah",
