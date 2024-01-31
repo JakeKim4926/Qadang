@@ -9,6 +9,12 @@
       <form @submit.prevent="updateUserInfo" class="update-form">
         <div class="form-row">
           <div class="form-group half-width">
+            <label for="username" class="label-margin align tag-bold">닉네임</label>
+            <input type="text" v-model="userInfo.username" class="input-field2">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group half-width">
             <label for="gender" class="label-margin align tag-bold">성별</label>
             <div class="button-group align">
               <button type="button" :class="{ active: userInfo.gender === 1 }" @click="userInfo.gender = 1" class="shading">남성</button>
@@ -74,6 +80,7 @@ library.add(faCircleQuestion);
 const store = useUserStore();
 const isLoading = ref(false);
 const userInfo = reactive({
+  username: null,
   gender: null,
   birthYear: null,
   height: null,
@@ -88,6 +95,7 @@ const bringUserInfo = async () => {
   isLoading.value = true;
   try {
     await store.researchUser();
+    userInfo.username = store.user.value?.userName || null;
     userInfo.gender = store.user.value?.userGender || null;
     userInfo.birthYear = store.user.value?.userBirthYear || null;
     userInfo.height = store.user.value?.userHeight || null;
@@ -104,6 +112,7 @@ const bringUserInfo = async () => {
 const updateUserInfo = async () => {
   
   const updateData = {};
+  if (userInfo.username !== null) updateData.username = userInfo.username;
   if (userInfo.gender !== null) updateData.gender = userInfo.gender;
   if (userInfo.birthYear) updateData.birthYear = userInfo.birthYear;
   if (userInfo.height !== null) updateData.height = userInfo.height;

@@ -113,7 +113,7 @@ export const useUserStore = defineStore("user", () => {
         method: "POST",
       });
   
-      // 로그아웃 후 처리, 예: 로그인 페이지로 리다이렉트
+      // 로그아웃 미완성
       router.push('/login');
     } catch (err) {
       console.error(err);

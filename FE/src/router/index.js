@@ -8,7 +8,8 @@ import MainSugarView from '@/views/main/MainSugarView.vue'
 import MypageView from '@/views/mypage/MypageView.vue'
 import SearchDetatilView from '@/views/search/SearchDetatilView.vue'
 import SearchRankView from '@/views/search/SearchRankView.vue'
-import DrinkDetailView from '@/views/search/drinkDetailView.vue'
+import SearchTopView from '@/views/search/SearchTopView.vue'
+import DrinkDetailView from '@/views/search/DrinkDetailView.vue'
 import CompareDrinkView from '@/views/search/CompareDrinkView.vue'
 import InputView from '@/views/input/InputView.vue'
 import InputNothingView from '@/views/input/InputNothingView.vue'
@@ -74,7 +75,12 @@ const router = createRouter({
       component: SearchRankView,
     },
     {
-      path: '/drinkDetail',
+      path: '/searchTop',
+      name: 'searchTop',
+      component: SearchTopView,
+    },
+    {
+      path: '/drinkDetail/:drinkId',
       name: 'drinkDetail',
       component: DrinkDetailView
     },
