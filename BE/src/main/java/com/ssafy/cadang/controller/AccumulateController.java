@@ -3,12 +3,15 @@ package com.ssafy.cadang.controller;
 import com.ssafy.cadang.domain.AccumulatePK;
 import com.ssafy.cadang.domain.Accumulates;
 import com.ssafy.cadang.domain.Records;
+import com.ssafy.cadang.domain.User;
+import com.ssafy.cadang.repository.UserRepository;
 import com.ssafy.cadang.response.DayAccumulateResponseDTO;
 import com.ssafy.cadang.response.DurationAccumulateResponseDTO;
 import com.ssafy.cadang.response.TodayAccumulateResponseDTO;
 import com.ssafy.cadang.service.AccumulateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -23,25 +26,33 @@ import java.util.List;
 public class AccumulateController {
 
     private final AccumulateService accumulateService;
+    private final UserRepository userRepository;
     @GetMapping("/today")
-    public TodayAccumulateResponseDTO readTodayAccumulate(){
+    public ResponseEntity<TodayAccumulateResponseDTO> readTodayAccumulate(){
         //user check
         Long userId = 1L;
-        if(userId == 0)
-            return null;
+        User user = userRepository.findByUserId(userId);
+        if(user == null)
+            return new ResponseEntity<>(null,HttpStatus.UNAUTHORIZED);
 
         Accumulates accumulate = accumulateService.readDate(userId);
         if(accumulate == null)
-            return  TodayAccumulateResponseDTO.builder()
+            return  new ResponseEntity<>(
+                    TodayAccumulateResponseDTO.builder()
                     .accumulateSugar(0)
-                    .accumulateCaffeine(0).build();
+                    .accumulateCaffeine(0).build()
+                    ,HttpStatus.OK
+            );
 
-        return  TodayAccumulateResponseDTO.builder()
+        return  new ResponseEntity<>(
+                TodayAccumulateResponseDTO.builder()
                 .accumulateSugar(accumulate.getAccumulateSugar())
                 .accumulateCaffeine(accumulate.getAccumulateCaffeine())
-                //user caffeine
-                //user sugar
-                .build();
+                .userCaffeine(user.getUserCaffeine())
+                .userSugar(user.getUserCaffeine())
+                .build()
+                ,HttpStatus.OK
+        );
     }
 
     @GetMapping("/duration")
