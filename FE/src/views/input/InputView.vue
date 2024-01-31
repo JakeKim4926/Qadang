@@ -41,7 +41,8 @@
 
   <div>
     <RouterLink :to="{name: 'inputNothing'}">여기없어용</RouterLink>
-    물음표 버튼
+    <span class="tip" @mouseover="showToolTip = true" @mouseleave="showToolTip = false">물음표버튼</span>
+    <div v-if="showToolTip">여기에 여기없어용에 대한 자세한 설명을 작성합니다</div>
     <button @click="drinkSubmit">입력완료</button>
   </div>
 </template>
@@ -65,6 +66,8 @@ const cafeId = ref(0)
 const drinkId = ref(0)
 const drinkCaffeine = ref(0)
 const drinkSugar = ref(0)
+
+const showToolTip = ref(false)
 
 // 샷, 시럽 - 버튼 활성화를 위한 함수
 const minusCaffeineButton = () => {
@@ -136,4 +139,8 @@ const drinkSubmit = () => {
 
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.tip {
+  cursor: help
+}
+</style>
