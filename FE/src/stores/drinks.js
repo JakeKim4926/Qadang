@@ -14,7 +14,7 @@ export const useDrinksStore = defineStore("drinks", () => {
   // =========== GETTER ===============
 
   const getCafeList = computed(() => {
-    return cafeList.value;
+    return cafeList.value; 
   });
 
   const getCafeDrinkList = computed(() => {
@@ -49,10 +49,9 @@ export const useDrinksStore = defineStore("drinks", () => {
       params: { cafeId: id },
     })
       .then((res) => {
-        // if (res.status == responseState.SUCCESS) {
-        //   cafeDrinkList.value = res.data;
-        // }
-        cafeDrinkList.value = res.data;
+        if (res.status == responseState.SUCCESS) {
+          cafeDrinkList.value = res.data;
+        }
       })
       .catch((err) => {
         console.log(err);
