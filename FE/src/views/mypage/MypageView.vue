@@ -1,30 +1,35 @@
 <template>
   <div class="mypage-container">    
     <div class="profile-section">
-      <div class="profile-image">{{ userInfo.userName }}</div>
-      <div class="profile-message">{{ message }}</div>
-      <RouterLink :to="{name: 'editinfo'}" class="edit-info-link">추가정보입력</RouterLink>
-      <div v-if="isInfoFilled">
-        <div>하루 권장 카페인 섭취량: {{ rdiCaffeine }}</div>
-        <div>하루 권장 설탕 섭취량: {{ rdiSugar }}</div>
+      <div class="profile-image">
+        <h2>{{ userInfo.userName }}</h2>
+      </div>
+      <div class="message">{{ message }}</div>
+      <div class="user-actions">
+        <RouterLink :to="{name: 'editinfo'}" class="button-edit-info">추가정보입력</RouterLink>        
+      </div>
+      <div v-if="isInfoFilled" class="shading">
+        <h3>하루 권장 카페인 섭취량: {{ rdiCaffeine }}</h3>
+        <h3>하루 권장 설탕 섭취량: {{ rdiSugar }}</h3>
       </div>
     </div>
     
     <div class="intake-section">
-      <div class="intake-card">
-        <div class="intake-amount">{{maxCaffeine}}</div>
-        <div class="intake-type">하루 최고 카페인 섭취량</div>
-        <div class="intake-date">{{maxCaffeineDate}}</div>
+      <div class="intake-card shading">
+        <h1>{{ maxCaffeine }}</h1>
+        <h4>하루 최고 카페인 섭취량</h4>
+        <h4>{{ maxCaffeineDate }}</h4>
       </div>
-      <div class="intake-card">
-        <div class="intake-amount">{{maxSugar}}</div>
-        <div class="intake-type">하루 최고 당 섭취량</div>
-        <div class="intake-date">{{maxSugarDate}}</div>
+      <div class="intake-card shading">
+        <h1>{{ maxSugar }}</h1>
+        <h4>하루 최고 당 섭취량</h4>
+        <h4>{{ maxSugarDate }}</h4>
       </div>
     </div>
     
     <div class="user-actions">
-      <button @click="userWithdraw" class="delete-account-button">회원 탈퇴</button>
+      <button @click="userWithdraw" class="button-withdraw">회원 탈퇴</button>
+      <button @click="handleLogout" class="button-logout">로그아웃</button>
     </div>
   </div>
   <RouterView/>
@@ -82,7 +87,7 @@ const bringUserInfo = async () => {
 
 const message = computed(() => {
   return store.infoFilled.value
-    ? "오늘 하루는 어떠셨나요? 카페인 없는 하루 화이팅"
+    ? "오늘 하루는 어떠셨나요? \n 카페인 없는 하루 화이팅"
     : "추가정보를 입력하지 않았어요\n 추가정보를 입력하시면\n개인별 맞춤 정보를 제공받을 수 있어요";
 });
 
@@ -98,6 +103,10 @@ const userWithdraw = async () => {
   }
 };
 
+const handleLogout = () => {
+  store.logout();
+};
+
 onMounted(() => {
   bringMaxintake();
   bringUserInfo();
@@ -111,53 +120,156 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
+  max-width: 600px;
+  margin: auto;
+  margin-top: 40px;
 }
 
 .profile-section {
+  position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start; 
+  text-align: left;
+  width: 100%;
 }
 
 .profile-image {
-  width: 80px;
-  height: 80px;
   background-color: #ccc;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 10px;
+  margin-bottom: 10px;  
+  width: 100px;
+  height: 100px;
 }
 
-.profile-message {
-  text-align: center;
-  margin-bottom: 10px;
+.profile-image h2 {
+  color: #562B1A;
+}
+.profile-image h2 {
+  margin-top: 0; 
 }
 
-.edit-info-link {
-  margin-bottom: 20px;
-}
-
-.intake-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.intake-card {
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 15px;
-  margin-bottom: 10px;
-  width: 80%;
+.message {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: #FFF;
+  padding: 10px 80px; 
+  border-radius: 22px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  white-space: pre-wrap;
+  font-weight: bold;
+  max-width: calc(100% - 40px);
+  z-index: 1;
 }
 
 .user-actions {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  padding-right: 20px;
+}
+
+.button-edit-info {
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 22px;
+  background: #846046;
+  color: #EFEFEF;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  margin-right: 25px; 
+  margin-top: 10px;
+}
+
+
+.intake-section {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
   margin-top: 20px;
 }
 
-.delete-account-button {
+.intake-card {
+  flex-basis: 48%;
+  margin: 10px;
+  padding: 20px;
+  text-align: center;
+  border-radius: 22px;
+  background: #FFF;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+.intake-card h1 {
+  color: #562B1A; 
+}
+.shading {
+  border-radius: 22px;
+  background: #FFF;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+.shading h3 {
+  color: #562B1A; 
+}
 
+.button-withdraw {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 22px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-left: 10px;
+  margin-top: 20px;
+  background: #B29F91;
+  color: #EFEFEF;
+}
+.button-logout {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 22px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-left: 10px;
+  margin-top: 20px;
+  background: #846046;
+  color: #EFEFEF;
+}
+
+h1 {
+  font-size: 2.5em;
+}
+
+h2 {
+  font-size: 1.7em;
+}
+
+h3 {
+  font-size: 1.15em;
+}
+
+h4 {
+  font-size: 1em;
+}
+
+@media (max-width: 768px) {
+  .profile-section {
+    align-items: center; 
+    text-align: center;
+  }
+
+  .message {
+    position: static;
+    margin: 10px 0;
+    text-align: center;
+  }
+
+  .user-actions {
+    justify-content: center;
+    padding-right: 0;
+    margin-top: 20px;
+  }
 }
 </style>

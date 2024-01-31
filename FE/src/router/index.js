@@ -8,6 +8,7 @@ import MypageView from '@/views/mypage/MypageView.vue'
 import SearchDetatilView from '@/views/search/SearchDetatilView.vue'
 import SearchRankView from '@/views/search/SearchRankView.vue'
 import DrinkDetailView from '@/views/search/drinkDetailView.vue'
+import CompareDrinkView from '@/views/search/CompareDrinkView.vue'
 import InputView from '@/views/input/InputView.vue'
 import InputNothingView from '@/views/input/InputNothingView.vue'
 import UserUpdateView from '@/views/mypage/UserUpdateView.vue'
@@ -70,6 +71,11 @@ const router = createRouter({
       path: '/drinkDetail',
       name: 'drinkDetail',
       component: DrinkDetailView
+    },
+    {
+      path: '/compareDrink',
+      name: 'compareDrink',
+      component: CompareDrinkView
     },
     {
       path: '/input',
