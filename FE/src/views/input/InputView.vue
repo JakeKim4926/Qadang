@@ -260,4 +260,9 @@ const drinkSubmit = () => {
 </script>
 
 <style scoped>
+h2 {
+  color: #562B1A;
+  font-weight: bold;
+  text-align: center;  
+}
 </style>
