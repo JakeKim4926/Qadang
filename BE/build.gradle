@@ -31,6 +31,9 @@ dependencies {
 	implementation 'io.springfox:springfox-swagger-ui:2.9.2'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	implementation 'com.google.code.gson:gson:2.8.7'
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5' // jwt
+	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5' // jwt
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5' // jwt
 	compileOnly 'org.projectlombok:lombok'
 	compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '3.0.1'
 	runtimeOnly 'com.mysql:mysql-connector-j'

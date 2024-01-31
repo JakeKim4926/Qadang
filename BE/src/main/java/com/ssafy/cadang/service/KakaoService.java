@@ -5,7 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.cadang.domain.User;
 import com.ssafy.cadang.dto.KakaoInfo;
 import com.ssafy.cadang.dto.KakaoToken;
+import com.ssafy.cadang.jwt.JwtToken;
 import com.ssafy.cadang.repository.UserRepository;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +19,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +42,9 @@ public class KakaoService {
 
     @Value("${spring.provider.kakao.user-info-uri}")
     private String user_info_uri;
+
+    @Value("${spring.jwt.secretKey}")
+    private String secretKey;
 
 
     // 인가코드를 사용해서 카카오에게 엑세스 토큰 요청하기
@@ -114,7 +121,7 @@ public class KakaoService {
             e.printStackTrace();
         }
 
-        System.out.println(" requestInfo / 성공 ");
+        System.out.println(" requestInfo / 성공 "+userinfo);
 
         return userinfo;
     }
@@ -132,13 +139,14 @@ public class KakaoService {
         System.out.println("사용자 회원 번호 : " + info.getId());
         User user = userRepository.findByUserId(info.getId()); // 가입된 회원인지 확인하기
 
+
         // 최초 연동시 회원가입
         if (user == null) {
 
             System.out.println(" addUser / 없는 회원이므로 회원가입 ");
 
             // 닉네임 ( 임시 )
-            String nickname = String.valueOf((int)(Math.random() * 900000) + 100000);
+            String nickname = String.valueOf((int) (Math.random() * 900000) + 100000);
 
             // 유저 정보 입력
             user = User.builder()
@@ -150,6 +158,7 @@ public class KakaoService {
                     .userSugar(50) // 20대 성인 여성 기준
                     .registerDatetime(LocalDate.now())
                     .kakaoRefreshToken(token.getRefresh_token()) // 카카오 리프레시 토큰 저장
+//                    .jwtRefreshToken()
                     .build();
 
             System.out.println(" addUser / 회원 정보담기");
@@ -158,6 +167,16 @@ public class KakaoService {
             userRepository.save(user);
             System.out.println(" addUser / 회원 추가하기 ");
 
+        } else {
+
+            // jwt 토큰 발급하고 jwt refresh 토큰 저장
+            System.out.println("jwt 발급해보자");
+            JwtToken jwtToken = getJwtToken(user);
+
+            // 유저 기존 정보 수정하고 save
+            user.setJwtRefreshToken(jwtToken.getRefreshToken());
+
+            userRepository.save(user);
         }
 
         System.out.println(" addUser / 성공 ");
@@ -165,5 +184,36 @@ public class KakaoService {
         return user;
     }
 
+    // JWT 토큰 발급
+    public JwtToken getJwtToken(User addUser) { // jwttoken 최초 발급
 
+        System.out.println("getJwt / 들어옴 ");
+        // jwtAccessToken 발급
+        String jwtAccessToken = Jwts.builder()
+                .setHeaderParam("type", "jwt") //Header 설정부분
+                .setHeaderParam("alg", "HS256") //Header 설정부분
+                .claim("userId", addUser.getUserId()) // Payload 설정부분
+                .claim("userName", addUser.getUserName()) // Payload 설정부분
+                .setExpiration(new Date(System.currentTimeMillis() + 1 * (1000 * 60 * 60 * 4))) // 만료시간 : 4시간
+                .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
+                .compact();
+
+        System.out.println("jwt / 엑세스 ");
+
+        // jwtRefreshToken 발급
+        String jwtRefreshToken = Jwts.builder()
+                .setHeaderParam("type", "jwt") //Header 설정부분
+                .setHeaderParam("alg", "HS256") //Header 설정부분
+                .claim("userId", addUser.getUserId()) // Payload 설정부분
+                .setExpiration(new Date(System.currentTimeMillis() + 1 * (1000 * 60 * 60 * 24 * 30))) // 만료시간 : 30일
+                .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
+                .compact();
+
+        System.out.println("jwt / 리프레시");
+
+
+
+        return new JwtToken(jwtAccessToken, jwtRefreshToken);
+
+    }
 }
