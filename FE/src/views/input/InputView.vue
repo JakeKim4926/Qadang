@@ -191,6 +191,7 @@ const activeplusSugarButton = () => {
 const changeDrinkInfo = () => {
   if (drinkInfo.value) {
     cafeName.value = drinkInfo.value.cafeName
+    drinkId.value = drinkInfo.value.drinkId
     drinkName.value = drinkInfo.value.drinkName
     drinkCaffeine.value = drinkInfo.value.drinkCaffeine
     drinkSugar.value = drinkInfo.value.drinkSugar
@@ -243,6 +244,8 @@ const drinkSubmit = () => {
       plusShot: plusShot.value,
       plusSyrup: plusSyrup.value,
     }
+
+    console.log(drink)
 
     // 데이터 전송
     recordsStore.createCafeDrink(drink)
