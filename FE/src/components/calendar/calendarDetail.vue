@@ -1,61 +1,61 @@
 <template>
     <div class="board-create-container">
-        <div class="rectangle-4333">
-            <div class="rectangle-4330"></div>
-            <div class="div">샷</div>
-            <div class="div2">스타벅스</div>
-            <div class="no-001">No.001</div>
-            <svg class="line-74" width="338" height="1" viewBox="0 0 338 1" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M1 0.5H337" stroke="black" stroke-linecap="round" />
-            </svg>
-            <svg class="line-75" width="338" height="1" viewBox="0 0 338 1" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M1 0.5H337" stroke="black" stroke-linecap="round" />
-            </svg>
-            <div class="div3">당</div>
-            <div class="div4">시럽</div>
-            <div class="div5">카페인</div>
-            <div class="_150-3-mg">150.3 mg</div>
-            <div class="_0">0 회</div>
-            <div class="_0-0-g">0.0 g</div>
-            <div class="_02">0 회</div>
-            <div class="_150-3-mg2">
+        <div class="detail_background">
+            <!-- header -->
+            <div class="all_caffeine">
                 <span>
-                    <span class="_150-3-mg-2-span">
+                    <span class="all_caffeine_title">
                         총 섭취한 카페인량
                         <br />
                     </span>
-                    <span class="_150-3-mg-2-span2">150.3 mg</span>
+                    <span class="all_caffeine_value">150.3 mg</span>
                 </span>
             </div>
-            <div class="_17">17 금요일</div>
-            <div class="_0-0-g2">
+            <div class="date_day">17 금요일</div>
+            <div class="all_sugar">
                 <span>
-                    <span class="_0-0-g-2-span">
+                    <span class="all_sugar_title">
                         총 섭취한 당량
                         <br />
                     </span>
-                    <span class="_0-0-g-2-span2">0.0 g</span>
+                    <span class="all_sugar_value">0.0 g</span>
                 </span>
             </div>
-            <div class="line-76"></div>
-            <div class="tall">아메리카노 Tall</div>
-            <img class="image-removebg-preview-4-10" src="https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[94]_20210430103337157.jpg" />
-            <!-- <font-awesome-icon :icon="['fas', 'circle-xmark']" class="image-removebg-preview-4-10" /> -->
-            <div class="rectangle-4331"></div>
-            <div class="div6">수정</div>
-            <div class="rectangle-4332"></div>
-            <div class="div7">삭제</div>
-            <!-- <div class="rectangle-4333"></div> -->
-            <!-- <div class="group-8771">
-                <div class="ellipse-2"></div>
-                <svg class="group-1" width="32" height="29" viewBox="0 0 32 29" fill="none"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path d="M15.7847 0.665527L15.7847 28.8989" stroke="white" stroke-width="12" stroke-linecap="round" />
-                    <path d="M0.100098 14.7754H31.4705" stroke="white" stroke-width="12" stroke-linecap="round" />
-                </svg>
-            </div> -->
-            <!-- <img class="image-174" src="" /> -->
             <font-awesome-icon :icon="['fas', 'circle-xmark']" class="image-174" @click="close" />
+            
+            <div class="line-76"></div>
+            
+            <div class="record_box"></div>
+            <!-- record header -->
+            <img class="coffee_image" src="https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[94]_20210430103337157.jpg" />
+            <div class="no-001">No.001</div>
+            <div class="coffee_name">아메리카노 Tall</div>
+            <div class="cafe_name">스타벅스</div>
+            <div class="update_button"></div>
+            <div class="update_font">수정</div>
+            <div class="delete_button"></div>
+            <div class="delete_font">삭제</div>
+
+            <svg class="line-74" width="338" height="1" viewBox="0 0 338 1" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 0.5H337" stroke="black" stroke-linecap="round" />
+            </svg>
+            <!-- record content -->
+            
+            <svg class="line-75" width="338" height="1" viewBox="0 0 338 1" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 0.5H337" stroke="black" stroke-linecap="round" />
+            </svg>
+            
+            <div class="div5">카페인</div>
+            <div class="caffeine_value">150.3 mg</div>
+
+            <div class="div3">당</div>
+            <div class="sugar_value">0.0 g</div>
+
+            <div class="shot_title">샷</div>
+            <div class="shot_count">0 회</div>
+
+            <div class="div4">시럽</div>
+            <div class="syrup_count">0 회</div>
         </div>
     </div>
 </template>
@@ -103,16 +103,6 @@ onMounted(() => {
 </script>
 <style scoped>
 
-.component-1,
-.component-1 * {
-    box-sizing: border-box;
-}
-
-.component-1 {
-    height: 613px;
-    position: relative;
-}
-
 .board-create-container {
     position: fixed;
     width: 100vw;
@@ -128,24 +118,7 @@ onMounted(() => {
     align-items: center;
 }
 
-
-.rectangle-4329 {
-    background: #ffffff;
-    border-radius: 20px;
-    border-style: solid;
-    border-color: #d9d9d9;
-    border-width: 1px;
-    position: absolute;
-    right: 0%;
-    left: 0%;
-    width: 100%;
-    bottom: 0%;
-    top: 0%;
-    height: 100%;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-}
-
-.rectangle-4330 {
+.record_box {
     background: #ffffff;
     border-radius: 30px;
     border-style: solid;
@@ -161,7 +134,7 @@ onMounted(() => {
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 
-.div {
+.shot_title {
     color: #000000;
     text-align: left;
     font-family: "DmSans-Bold", sans-serif;
@@ -180,7 +153,7 @@ onMounted(() => {
     justify-content: flex-start;
 }
 
-.div2 {
+.cafe_name {
     color: #000000;
     text-align: left;
     font-family: "DmSans-Bold", sans-serif;
@@ -299,7 +272,7 @@ onMounted(() => {
     justify-content: flex-start;
 }
 
-._150-3-mg {
+.caffeine_value {
     color: #000000;
     text-align: left;
     font-family: "DmSans-Regular", sans-serif;
@@ -318,7 +291,7 @@ onMounted(() => {
     justify-content: flex-start;
 }
 
-._0 {
+.shot_count {
     color: #000000;
     text-align: left;
     font-family: "DmSans-Regular", sans-serif;
@@ -337,7 +310,7 @@ onMounted(() => {
     justify-content: flex-start;
 }
 
-._0-0-g {
+.sugar_value {
     color: #000000;
     text-align: left;
     font-family: "DmSans-Regular", sans-serif;
@@ -356,7 +329,7 @@ onMounted(() => {
     justify-content: flex-start;
 }
 
-._02 {
+.syrup_count {
     color: #000000;
     text-align: left;
     font-family: "DmSans-Regular", sans-serif;
@@ -375,7 +348,7 @@ onMounted(() => {
     justify-content: flex-start;
 }
 
-._150-3-mg2 {
+.all_caffeine {
     text-align: center;
     font-family: "DmSans-Bold", sans-serif;
     font-size: 15px;
@@ -393,7 +366,7 @@ onMounted(() => {
     justify-content: center;
 }
 
-._150-3-mg-2-span {
+.all_caffeine_title {
     color: #000000;
     font-family: "DmSans-Bold", sans-serif;
     font-size: 15px;
@@ -401,15 +374,15 @@ onMounted(() => {
     font-weight: 700;
 }
 
-._150-3-mg-2-span2 {
-    color: #ff0000;
+.all_caffeine_value {
+    color: #000000;
     font-family: "DmSans-Bold", sans-serif;
     font-size: 15px;
     line-height: 18px;
     font-weight: 700;
 }
 
-._17 {
+.date_day {
     color: #000000;
     text-align: center;
     font-family: "DmSans-Bold", sans-serif;
@@ -428,7 +401,7 @@ onMounted(() => {
     justify-content: center;
 }
 
-._0-0-g2 {
+.all_sugar {
     text-align: center;
     font-family: "DmSans-Bold", sans-serif;
     font-size: 15px;
@@ -446,7 +419,7 @@ onMounted(() => {
     justify-content: center;
 }
 
-._0-0-g-2-span {
+.all_sugar_title {
     color: #000000;
     font-family: "DmSans-Bold", sans-serif;
     font-size: 15px;
@@ -454,8 +427,8 @@ onMounted(() => {
     font-weight: 700;
 }
 
-._0-0-g-2-span2 {
-    color: #008000;
+.all_sugar_value {
+    color: #000000;
     font-family: "DmSans-Bold", sans-serif;
     font-size: 15px;
     line-height: 18px;
@@ -477,7 +450,7 @@ onMounted(() => {
     transform: rotate(-0.114deg) scale(1, 1);
 }
 
-.tall {
+.coffee_name {
     color: #000000;
     text-align: left;
     font-family: "DmSans-Bold", sans-serif;
@@ -496,7 +469,7 @@ onMounted(() => {
     justify-content: flex-start;
 }
 
-.image-removebg-preview-4-10 {
+.coffee_image {
     position: absolute;
     right: 71.16%;
     left: 8.43%;
@@ -507,7 +480,7 @@ onMounted(() => {
     object-fit: cover;
 }
 
-.rectangle-4331 {
+.update_button {
     background: #8a6d58;
     border-radius: 90px;
     position: absolute;
@@ -517,13 +490,14 @@ onMounted(() => {
     bottom: 70.64%;
     top: 25.12%;
     height: 4.24%;
+    cursor: pointer;
 }
 
-.div6 {
+.update_font {
     color: #ffffff;
     text-align: center;
     font-family: "DmSans-Bold", sans-serif;
-    font-size: 11px;
+    font-size: 13px;
     line-height: 18px;
     font-weight: 700;
     position: absolute;
@@ -535,7 +509,7 @@ onMounted(() => {
     height: 2.77%;
 }
 
-.rectangle-4332 {
+.delete_button {
     background: #b29f91;
     border-radius: 90px;
     position: absolute;
@@ -547,11 +521,11 @@ onMounted(() => {
     height: 4.24%;
 }
 
-.div7 {
+.delete_font {
     color: #000000;
     text-align: center;
     font-family: "DmSans-Bold", sans-serif;
-    font-size: 11px;
+    font-size: 13px;
     line-height: 18px;
     font-weight: 700;
     position: absolute;
@@ -563,51 +537,21 @@ onMounted(() => {
     height: 2.77%;
 }
 
-.rectangle-4333 {
+.detail_background {
     background: #ffffff;
     border-radius: 30px;
     border-style: solid;
     border-color: #d9d9d9;
     border-width: 1px;
     position: absolute;
-    right: 25.39%;
-    left: 23.56%;
     width: 57.05%;
-    bottom: 3.92%;
-    top: 10.2%;
     height: 60.89%;
+    max-width: 870px;
+    max-height: 780px;
+    min-width: 575px;
+    min-height: 480px;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-}
-
-.group-8771 {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-}
-
-.ellipse-2 {
-    background: #efefef;
-    border-radius: 50%;
-    position: absolute;
-    right: 43.18%;
-    left: 43.52%;
-    width: 13.3%;
-    bottom: 16.48%;
-    top: 70.96%;
-    height: 12.56%;
-}
-
-.group-1 {
-    width: 31.37px;
-    height: 28.23px;
-    position: absolute;
-    right: 47.07%;
-    left: 47.51%;
-    width: 5.42%;
-    bottom: 20.24%;
-    top: 75.15%;
-    height: 4.61%;
-    overflow: visible;
+    overflow-y: auto; /* 세로 스크롤이 내용이 넘칠 때만 생성되도록 설정 */
 }
 
 .image-174 {
