@@ -74,12 +74,12 @@
   </div>
 
   <div>
-    <button @click="goInputNothing" class="button_input_color">여기없어용</button>
+    <button @click="goInputNothing" class="button_input_color buttons">여기없어용</button>
     <span @mouseover="showToolTip = true" @mouseleave="showToolTip = false"><font-awesome-icon :icon="['fas', 'circle-question']" /></span>
     <div v-if="showToolTip" class="tip">
       <p>여기에 여기없어용에 대한 자세한 설명을 작성합니다</p>
     </div>
-    <button @click="drinkSubmit">입력완료</button>
+    <button @click="drinkSubmit" class="button_caffeine white buttons">입력완료</button>
   </div>
 </template>
 
@@ -292,6 +292,16 @@ div {
   border: 2px solid #846046;
   padding: 10px 20px;
   width: 353px;
+}
+
+.white {
+  color: white;
+}
+
+.buttons {
+  width: 150px;
+  height: 60px;
+  border: none;
 }
 
 </style>
