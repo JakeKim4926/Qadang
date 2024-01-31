@@ -27,14 +27,14 @@
     <!-- +, - 미만일 경우 블락 처리, 바로바로 계산되어야 함 -->
     <div>
       <p>샷: 1샷 - 카페인 75mg</p>
-      <button @click="minusCaffeine">-</button>
+      <button :disabled="!minusCaffeineButton()" @click="minusCaffeine">-</button>
       {{ plusShot }}
       <button @click="plusCaffeine">+</button>
     </div>
 
     <div>
       <p>시럽: 1시럽 - 당 6g</p>
-      <button @click="minusSugar">-</button>
+      <button :disabled="!minusSugarButton()" @click="minusSugar">-</button>
       {{ plusSyrup }}
       <button @click="plusSugar">+</button>
     </div>
@@ -68,9 +68,22 @@ const drinkId = ref(0)
 const drinkCaffeine = ref(0)
 const drinkSugar = ref(0)
 
-// 샷, 시럽 추가 계산을 위한 변수
-const cntCaffeine = ref(0)
-const cntSugar = ref(0)
+// 샷, 시럽 - 버튼 활성화를 위한 함수
+const minusCaffeineButton = () => {
+  if (drinkCaffeine.value + 75 * (plusShot.value - 1) >= 0) {
+    return true
+  } else {
+    return false
+  }
+}
+
+const minusSugarButton = () => {
+  if (drinkSugar.value + 6 * (plusSyrup.value - 1) >= 0) {
+    return true
+  } else {
+    return false
+  }
+}
 
 const minusCaffeine = () => {
   plusShot.value -= 1
