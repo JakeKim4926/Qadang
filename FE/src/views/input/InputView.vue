@@ -44,18 +44,28 @@
       </select>
     </div>
     
-    <div>
-      <p>샷: 1샷 - 카페인 75mg</p>
-      <button :disabled="!getminusCaffeineButton" @click="minusCaffeine">-</button>
+    <div class="item-container">
+      <label for="plusShot">샷: </label>
+      <p>1샷 - 카페인 75mg</p>
+      <button :disabled="!getminusCaffeineButton" @click="minusCaffeine" class="pm-button">
+        <font-awesome-icon :icon="['fas', 'minus']" style="color: #000000;" />
+      </button>
       {{ plusShot }}
-      <button :disabled="!getplusCaffeineButton" @click="plusCaffeine">+</button>
+      <button :disabled="!getplusCaffeineButton" @click="plusCaffeine" class="pm-button">
+        <font-awesome-icon :icon="['fas', 'plus']" style="color: #000000;" />
+      </button>
     </div>
 
-    <div>
-      <p>시럽: 1시럽 - 당 6g</p>
-      <button :disabled="!getminusSugarButton" @click="minusSugar">-</button>
+    <div class="item-container">
+      <label for="plusSyrup">시럽: </label>
+      <p>1시럽 - 당 6g</p>
+      <button :disabled="!getminusSugarButton" @click="minusSugar" class="pm-button">
+        <font-awesome-icon :icon="['fas', 'minus']" style="color: #000000;" />
+      </button>
       {{ plusSyrup }}
-      <button :disabled="!getplusSugarButton" @click="plusSugar">+</button>
+      <button :disabled="!getplusSugarButton" @click="plusSugar" class="pm-button">
+        <font-awesome-icon :icon="['fas', 'plus']" style="color: #000000;" />
+      </button>
     </div>
 
     <!-- {{ drinkInfo }}
@@ -71,9 +81,11 @@
     {{ plusShot }}
     {{ plusSyrup }} -->
 
-    <div class="button-container">
+    <div class="item-container">
       <button @click="goInputNothing" class="button_input_color buttons">여기없어용</button>
-      <span @mouseover="showToolTip = true" @mouseleave="showToolTip = false"><font-awesome-icon :icon="['fas', 'circle-question']" /></span>
+      <span @mouseover="showToolTip = true" @mouseleave="showToolTip = false">
+        <font-awesome-icon :icon="['fas', 'circle-question']" />
+      </span>
       <div v-if="showToolTip" class="tip">
         <p>여기에 여기없어용에 대한 자세한 설명을 작성합니다</p>
       </div>
@@ -293,9 +305,12 @@ div {
   align-items: center;
 }
 
-.button-container {
+.item-container {
   display: flex;
   align-items: center;
+}
+.pm-button {
+  border: none;
 }
 
 .select {
