@@ -10,6 +10,7 @@ export const messageType = {
   ENTER: "ENTER",
   QUIT: "QUIT",
   TALK: "TALK",
+  CONNECT: "CONNECT",
 };
 
 export const testCafeList = ref([
