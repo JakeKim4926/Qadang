@@ -38,17 +38,30 @@
     
     <div>
       <p>샷: 1샷 - 카페인 75mg</p>
-      <button :disabled="!minusCaffeineButton()" @click="minusCaffeine">-</button>
+      <button :disabled="!getminusCaffeineButton" @click="minusCaffeine">-</button>
       {{ plusShot }}
-      <button :disabled="!plusCaffeineButton()" @click="plusCaffeine">+</button>
+      <button :disabled="!getplusCaffeineButton" @click="plusCaffeine">+</button>
     </div>
 
     <div>
       <p>시럽: 1시럽 - 당 6g</p>
-      <button :disabled="!minusSugarButton()" @click="minusSugar">-</button>
+      <button :disabled="!getminusSugarButton" @click="minusSugar">-</button>
       {{ plusSyrup }}
-      <button :disabled="!plusSugarButton()" @click="plusSugar">+</button>
+      <button :disabled="!getplusSugarButton" @click="plusSugar">+</button>
     </div>
+
+    <!-- {{ drinkInfo }}
+
+    {{ drinkCaffeine }}
+    {{ drinkSugar }}
+
+    {{ minusCaffeineButton }}
+    {{ plusCaffeineButton }}
+    {{ minusSugarButton }}
+    {{ plusSugarButton }}
+
+    {{ plusShot }}
+    {{ plusSyrup }} -->
 
   </div>
 
@@ -61,7 +74,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { onMounted } from 'vue';
 
 import { useDrinksStore } from "@/stores/drinks";
@@ -85,6 +98,12 @@ const drinkId = ref(0)
 const drinkCaffeine = ref(0)
 const drinkSugar = ref(0)
 
+const minusCaffeineButton = ref(false)
+const minusSugarButton = ref(false)
+const plusCaffeineButton = ref(false)
+const plusSugarButton = ref(false)
+
+// 도움말
 const showToolTip = ref(false)
 
 // 데이터를 가져오기 위한 함수
@@ -92,66 +111,124 @@ onMounted(() => {
   drinkStore.researchCafe()
 })
 
+// 이전 선택값 초기화해주는 함수
+const reset = () => {
+  drinkInfo.value = null
+  cafeName.value = null
+  drinkName.value = null
+  plusShot.value = 0
+  plusSyrup.value = 0
+
+  drinkId.value = 0
+  drinkCaffeine.value = 0
+  drinkSugar.value = 0
+
+  minusCaffeineButton.value = false
+  minusSugarButton.value = false
+  plusCaffeineButton.value = false
+  plusSugarButton.value = false
+}
+
 // 카페를 선택하면 해당 카페 음료를 가져오기 위한 함수
 const changeCafeDrinkList = () => {
   if (cafeId.value) {
+    reset()
     drinkStore.researchCafeDrinks(cafeId.value)
+  }
+}
+
+// 샷, 시럽 버튼 활성화를 위한 computed => getter
+const getminusCaffeineButton = computed(() => {
+  return minusCaffeineButton.value
+})
+
+const getminusSugarButton = computed(() => {
+  return minusSugarButton.value
+})
+
+const getplusCaffeineButton = computed(() => {
+  return plusCaffeineButton.value
+})
+
+const getplusSugarButton = computed(() => {
+  return plusSugarButton.value
+})
+
+// 샷, 시럽 버튼 활성화를 위한 함수 => Action
+const activeminusCaffeineButton = () => {
+  if (cafeName.value && drinkName.value && drinkCaffeine.value + 75 * (plusShot.value - 1) >= 0) {
+    return minusCaffeineButton.value = true
+  } else {
+    return minusCaffeineButton.value = false
+  }
+}
+
+const activminusSugarButton = () => {
+  if (cafeName.value && drinkName.value && drinkSugar.value + 6 * (plusSyrup.value - 1) >= 0) {
+    return minusSugarButton.value = true
+  } else {
+    return minusSugarButton.value = false
+  }
+}
+
+const activeplusCaffeineButton = () => {
+  if (cafeName.value && drinkName.value) {
+    return plusCaffeineButton.value = true
+  } else {
+    return plusCaffeineButton.value = false
+  }
+}
+
+const activeplusSugarButton = () => {
+  if (cafeName.value && drinkName.value) {
+    return plusSugarButton.value = true
+  } else {
+    return plusSugarButton.value = false
   }
 }
 
 // 카페 음료를 선택하면 해당 카페 음료 정보를 가져오기 위한 함수
 const changeDrinkInfo = () => {
   if (drinkInfo.value) {
+    cafeName.value = drinkInfo.value.cafeName
+    drinkName.value = drinkInfo.value.drinkName
     drinkCaffeine.value = drinkInfo.value.drinkCaffeine
     drinkSugar.value = drinkInfo.value.drinkSugar
-  }
-}
 
-// 샷, 시럽 - 버튼 활성화를 위한 함수
-const minusCaffeineButton = () => {
-  if (cafeName.value && drinkName.value && drinkCaffeine.value + 75 * (plusShot.value - 1) >= 0) {
-    return true
-  } else {
-    return false
-  }
-}
-
-const minusSugarButton = () => {
-  if (cafeName.value && drinkName.value && drinkSugar.value + 6 * (plusSyrup.value - 1) >= 0) {
-    return true
-  } else {
-    return false
-  }
-}
-
-// 샷, 시럽 + 버튼 활성화를 위한 함수
-const plusCaffeineButton = () => {
-  if (cafeName.value && drinkName.value) {
-    return true
-  } else {
-    return false
-  }
-}
-
-const plusSugarButton = () => {
-  if (cafeName.value && drinkName.value) {
-    return true
-  } else {
-    return false
+    activeminusCaffeineButton()
+    activminusSugarButton()
+    activeplusCaffeineButton()
+    activeplusSugarButton()
   }
 }
 
 const minusCaffeine = () => {
   plusShot.value -= 1
+  activeminusCaffeineButton()
+  activminusSugarButton()
+  activeplusCaffeineButton()
+  activeplusSugarButton()
 }
 const plusCaffeine = () => {
   plusShot.value += 1
+  activeminusCaffeineButton()
+  activminusSugarButton()
+  activeplusCaffeineButton()
+  activeplusSugarButton()
 }
 const minusSugar = () => {
   plusSyrup.value -= 1
+  activeminusCaffeineButton()
+  activminusSugarButton()
+  activeplusCaffeineButton()
+  activeplusSugarButton()
 }
 const plusSugar = () => {
   plusSyrup.value += 1
+  activeminusCaffeineButton()
+  activminusSugarButton()
+  activeplusCaffeineButton()
+  activeplusSugarButton()
 }
 
 const drinkSubmit = () => {
@@ -160,11 +237,11 @@ const drinkSubmit = () => {
 
     // 음료 생성을 위해 보내줄 데이터
     const drink = {
-      drinkId: drinkId,
-      cafeName: cafeName,
-      drinkName: drinkName,
-      plusShot: plusShot,
-      plusSyrup: plusSyrup,
+      drinkId: drinkId.value,
+      cafeName: cafeName.value,
+      drinkName: drinkName.value,
+      plusShot: plusShot.value,
+      plusSyrup: plusSyrup.value,
     }
 
     // 데이터 전송
