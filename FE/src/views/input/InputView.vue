@@ -84,12 +84,12 @@
     <div class="item-container">
       <button @click="goInputNothing" class="button_input_color buttons">여기없어용</button>
       <span @mouseover="showToolTip = true" @mouseleave="showToolTip = false">
-        <font-awesome-icon :icon="['fas', 'circle-question']" />
+        <font-awesome-icon :icon="['fas', 'circle-question']" size="xl"/>
       </span>
       <div v-if="showToolTip" class="tip">
         <p>여기에 여기없어용에 대한 자세한 설명을 작성합니다</p>
       </div>
-      <button @click="drinkSubmit" class="button_caffeine white buttons">입력완료</button>
+      <button @click="drinkSubmit" class="button_caffeine buttons">입력완료</button>
     </div>
 
   </div>
@@ -320,12 +320,20 @@ div {
   width: 353px;
 }
 
-.white {
-  color: white;
+.button_input_color {
+  margin-right: 5px;
+  color: black;
+  font-size: 20px;
+  font-weight: bold;
 }
 
+.button_caffeine {
+  margin-left: 80px;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+}
 .buttons {
-  margin-left: 20px;
   width: 150px;
   height: 60px;
   border: none;
