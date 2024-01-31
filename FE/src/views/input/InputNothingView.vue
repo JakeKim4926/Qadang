@@ -51,7 +51,6 @@
 </template>
 
 <script setup>
-import { handleError, ref } from 'vue';
 import { useRecordsStore } from "@/stores/records";
 import router from '@/router';
 
