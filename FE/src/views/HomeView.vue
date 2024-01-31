@@ -2,8 +2,9 @@
   <div>
     <h2>hello home</h2>
     <div>
-      <RouterLink to="/calendar">캘린더 보기</RouterLink>
+      <!-- <RouterLink to="/calendar">캘린더 보기</RouterLink> -->
       <!-- <RouterLink to="/calendarDetail">캘린더 보기</RouterLink> -->
+      <RouterLink :to="{ name : 'input'}">input</RouterLink>
       <div>
         <RouterView />
       </div>
