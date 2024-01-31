@@ -32,6 +32,7 @@
 import { nextTick, ref, watchEffect, onMounted, computed } from "vue";
 import { useSocketStore, messageType, testCafeList } from "@/stores/socket";
 import { useChatStore } from "@/stores/chat";
+
 import Stomp from "webstomp-client";
 import SockJS from "sockjs-client";
 
@@ -59,30 +60,38 @@ onMounted(async () => {
     message: "a",
   };
 
-  await socketStore.stompClient.connect(
-    chat,
-    async (frame) => {
+  await socketStore.stompClient.connect(chat,
+    (frame) => {
       // After successful connection, send the chat DTO
 
-
       console.log("frame :" + frame);
+      console.log("hihihihi");
+      console.log("Connection :");
+
+      socketStore.stompClient.subscribe("http://localhost:8080/ws/chat", function (message) {
+        if (message.body) {
+          console.log(message.body);
+
+
+        } else {
+          console.log("nothing on message");
+        }
+      });
       const chat = {
         messageType: messageType.ENTER,
         chatRoomId: cafe.value.id,
         senderId: userId.value,
         message: "a",
       };
-
+      // let messageToSend = JSON.stringify(chat);
       // messageToSend = JSON.parse(messageToSend)
-      await socketStore.stompClient.send("http://localhost:8080/ws/chat", {}, chat);
-
-      console.log("hihihihi");
-      console.log("Connection :");
+      socketStore.stompClient.send("http://localhost:8080/ws/chat", chat);
 
     },
     (error) => {
       console.log("Connection error: " + error);
     }
+
   );
 
   // socketStore.stompClient.debug = function (message) {
@@ -97,7 +106,10 @@ onMounted(async () => {
   //     Msgcnt.value += 1;
   //     console.log(message);
   //   }
+
   // };
+
+
 });
 
 function extractTimeFromDate(dateTimeString) {
@@ -114,9 +126,17 @@ async function sendOpen() {
     senderId: userId.value,
     message: "a",
   };
-  let messageToSend = JSON.stringify(chat);
+  // let messageToSend = JSON.stringify(chat);
   // messageToSend = JSON.parse(messageToSend)
   socketStore.stompClient.send("http://localhost:8080/ws/chat", chat);
+  socketStore.stompClient.subscribe("http://localhost:8080/ws/chat", function (message) {
+        if (message.body) {
+          console.log(message.body);
+
+        } else {
+          console.log("nothing on message");
+        }
+      });
   // Check if the StompClient is connected before sending the message
   if (socketStore.stompClient && socketStore.stompClient.connected) {
     // socketStore.stompClient.send(`${import.meta.env.VITE_SOCKET_API}`, {}, JSON.stringify(chat));
