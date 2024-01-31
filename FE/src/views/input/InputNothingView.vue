@@ -24,14 +24,12 @@
 
     <div>
       <label for="drinkCaffeine">카페인: </label>
-      <input type="number" name="drinkCaffeine" id="drinkCaffeine"
-      v-model="drinkCaffeine" placeholder="없다면 0을 입력해주세요"/>mg
+      <input type="number" name="drinkCaffeine" id="drinkCaffeine" v-model="drinkCaffeine">mg
     </div>
 
     <div>
       <label for="drinkSugar">당: </label>
-      <input type="number" name="drinkSugar" id="drinkSugar"
-      v-model="drinkSugar" placeholder="없다면 0을 입력해주세요"/>g
+      <input type="number" name="drinkSugar" id="drinkSugar" v-model="drinkSugar">g
     </div>
 
   </div>
