@@ -18,11 +18,6 @@ public class ChatRooms {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long chatroomId;
-
     private String chatroomName;
-
-    //private Long sender;
-
-    //private Long receiver;
 
 }
