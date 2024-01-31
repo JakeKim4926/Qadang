@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Drink {
+public class Drinks {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long drinkId;
@@ -21,7 +21,7 @@ public class Drink {
     private String cafeName;
     private String drinkName;
     private double drinkCaffeine;
-    private double drinksugar;
+    private double drinkSugar;
     private int drinkMl;
     private double drinkOz;
     private double drinkCalorie;
@@ -31,4 +31,5 @@ public class Drink {
     private String drinkUrl;
     private String drinkAllergy;
     private String drinkFullname;
+    private String tag;
 }
