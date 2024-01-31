@@ -32,11 +32,12 @@ export const useDrinksStore = defineStore("drinks", () => {
       method: "GET",
     })
       .then((res) => {
-        if (res.status == responseState.ACCEPT) {
+        if (res.status == responseState.SUCCESS) {
           cafeList.value = res.data;
         }
       })
       .catch((err) => {
+        
         console.log(err);
       });
   };
@@ -48,6 +49,9 @@ export const useDrinksStore = defineStore("drinks", () => {
       params: { cafeId: id },
     })
       .then((res) => {
+        // if (res.status == responseState.SUCCESS) {
+        //   cafeDrinkList.value = res.data;
+        // }
         cafeDrinkList.value = res.data;
       })
       .catch((err) => {

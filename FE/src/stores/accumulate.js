@@ -1,5 +1,6 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
+import { responseState } from "./util";
 import router from "@/router";
 import axios from "axios";
 
@@ -61,12 +62,16 @@ export const useAccumulateStore = defineStore("accumulate", () => {
 
   // date example) 202401 (연도+월)
   const month = function (date) {
+    console.log(date.value);
     axios({
       url: `${import.meta.env.VITE_REST_ACCUMULATE_API}/month`,
       method: "GET",
-      params: { ym: date },
+      params: { ym: date.value },
     })
       .then((res) => {
+        if(res.status == responseState.SUCCESS) {
+          console.log("success ", res.data );
+        }
         acuumulateMonth.value = res.data;
       })
       .catch((err) => {

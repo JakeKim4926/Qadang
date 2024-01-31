@@ -9,75 +9,69 @@
 
   <div>
     <h2>오늘 마신 카페 음료를 선택해주세요</h2>
-
-    <!-- 초기에 카페명을 먼저 선택-->
     <label for="cafeSelect">카페명: </label>
+    <select name="cafeSelect" id="cafeSelect" v-model="cafeId" @change="changeCafeDrinkList">
+      <option v-for="cafe in drinkStore.getCafeList"
+      :key="cafe.cafeId"
+      :value="cafe.cafeId">
+        {{ cafe.cafeName }}
+      </option>
+    </select>
 
-    <!-- 카페명을 선택하기 전 선택할 수 없음 -->
-    <!-- 카페 카테고리에 따라 음료를 가지고 와 select문 표시-->
     <div v-if="cafeId">
-      <label for="drinkSelect">음료명: 선택할 수 있음</label>
+      <label for="drinkSelect">음료명: </label>
+      <select name="drinkSelect" id="drinkSelect" v-model="drinkInfo" @change="changeDrinkInfo">
+      <option v-for="drink in drinkStore.getCafeDrinkList"
+      :key="drink.drinkId"
+      :value="drink">
+        {{ drink.drinkName }}
+      </option>
+    </select>
     </div>
 
     <div v-else>
-      <label for="drinkSelect">음료명: 선택할 수 없음</label>
+      <label for="drinkSelect">음료명: </label>
+      <select name="drinkSelect" id="drinkSelect">
+        <option value="" disabled selected>카페를 먼저 선택해주세요</option>
+      </select>
     </div>
     
-    <!-- 음료를 선택하기 전 샷, 시럽 선택할 수 없게 설정 -->
-    <!-- +, - 미만일 경우 블락 처리, 바로바로 계산되어야 함 -->
     <div>
       <p>샷: 1샷 - 카페인 75mg</p>
-      <button @click="minusCaffeine">-</button>
-      {{ cntCaffeine }}
-      <button @click="plusCaffeine">+</button>
+      <button :disabled="!minusCaffeineButton()" @click="minusCaffeine">-</button>
+      {{ plusShot }}
+      <button :disabled="!plusCaffeineButton()" @click="plusCaffeine">+</button>
     </div>
 
     <div>
       <p>시럽: 1시럽 - 당 6g</p>
-      <button @click="minusSugar">-</button>
-      {{ cntSugar }}
-      <button @click="plusSugar">+</button>
+      <button :disabled="!minusSugarButton()" @click="minusSugar">-</button>
+      {{ plusSyrup }}
+      <button :disabled="!plusSugarButton()" @click="plusSugar">+</button>
     </div>
 
   </div>
 
   <div>
     <RouterLink :to="{name: 'inputNothing'}">여기없어용</RouterLink>
-    물음표 버튼
+    <span class="tip" @mouseover="showToolTip = true" @mouseleave="showToolTip = false">물음표버튼</span>
+    <div v-if="showToolTip">여기에 여기없어용에 대한 자세한 설명을 작성합니다</div>
     <button @click="drinkSubmit">입력완료</button>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
+import { onMounted } from 'vue';
+
 import { useDrinksStore } from "@/stores/drinks";
 import { useRecordsStore } from "@/stores/records"
 
 const drinkStore = useDrinksStore()
 const recordsStore = useRecordsStore()
 
-// 카페 id, 음료 id, 각 음료의 카페인 함량, 당 함량
-const cafeId = ref(0)
-const drinkId = ref(0)
-const drinkCaffeine = ref(0)
-const drinkSugar = ref(0)
-
-// 샷, 시럽 추가 계산을 위한 변수
-const cntCaffeine = ref(0)
-const cntSugar = ref(0)
-
-const minusCaffeine = () => {
-  cntCaffeine.value -= 1
-}
-const plusCaffeine = () => {
-  cntCaffeine.value += 1
-}
-const minusSugar = () => {
-  cntSugar.value -= 1
-}
-const plusSugar = () => {
-  cntSugar.value += 1
-}
+// 음료 전체 정보
+const drinkInfo = ref({})
 
 // 음료 생성을 위해 보내줄 데이터
 const cafeName = ref(null)
@@ -85,8 +79,83 @@ const drinkName = ref(null)
 const plusShot = ref(0)
 const plusSyrup = ref(0)
 
+// 카페 id, 음료 id, 각 음료의 카페인 함량, 당 함량
+const cafeId = ref(0)
+const drinkId = ref(0)
+const drinkCaffeine = ref(0)
+const drinkSugar = ref(0)
+
+const showToolTip = ref(false)
+
+// 데이터를 가져오기 위한 함수
+onMounted(() => {
+  drinkStore.researchCafe()
+})
+
+// 카페를 선택하면 해당 카페 음료를 가져오기 위한 함수
+const changeCafeDrinkList = () => {
+  if (cafeId.value) {
+    drinkStore.researchCafeDrinks(cafeId.value)
+  }
+}
+
+// 카페 음료를 선택하면 해당 카페 음료 정보를 가져오기 위한 함수
+const changeDrinkInfo = () => {
+  if (drinkInfo.value) {
+    drinkCaffeine.value = drinkInfo.value.drinkCaffeine
+    drinkSugar.value = drinkInfo.value.drinkSugar
+  }
+}
+
+// 샷, 시럽 - 버튼 활성화를 위한 함수
+const minusCaffeineButton = () => {
+  if (cafeName.value && drinkName.value && drinkCaffeine.value + 75 * (plusShot.value - 1) >= 0) {
+    return true
+  } else {
+    return false
+  }
+}
+
+const minusSugarButton = () => {
+  if (cafeName.value && drinkName.value && drinkSugar.value + 6 * (plusSyrup.value - 1) >= 0) {
+    return true
+  } else {
+    return false
+  }
+}
+
+// 샷, 시럽 + 버튼 활성화를 위한 함수
+const plusCaffeineButton = () => {
+  if (cafeName.value && drinkName.value) {
+    return true
+  } else {
+    return false
+  }
+}
+
+const plusSugarButton = () => {
+  if (cafeName.value && drinkName.value) {
+    return true
+  } else {
+    return false
+  }
+}
+
+const minusCaffeine = () => {
+  plusShot.value -= 1
+}
+const plusCaffeine = () => {
+  plusShot.value += 1
+}
+const minusSugar = () => {
+  plusSyrup.value -= 1
+}
+const plusSugar = () => {
+  plusSyrup.value += 1
+}
+
 const drinkSubmit = () => {
-  if (cafeName && drinkName) {
+  if (cafeName.value && drinkName.value) {
     console.log('입력값이 올바릅니다. 데이터를 전송합니다.')
 
     // 음료 생성을 위해 보내줄 데이터
@@ -108,4 +177,8 @@ const drinkSubmit = () => {
 
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.tip {
+  cursor: help
+}
+</style>
