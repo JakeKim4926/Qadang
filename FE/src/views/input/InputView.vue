@@ -1,6 +1,6 @@
 <template>
-  <div>
-    x버튼
+  <div class="close">
+    <font-awesome-icon :icon="['fas', 'circle-xmark']" style="color: #000000;" size="xl"/>
   </div>
 
   <div class="input-container">
@@ -305,6 +305,12 @@ div {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.close {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; 
 }
 
 .pm-button {
