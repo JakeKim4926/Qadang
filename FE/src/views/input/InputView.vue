@@ -8,21 +8,27 @@
   </div>
 
   <div>
-    <h2>오늘 마신 카페 음료를 선택해주세요</h2>
-    <label for="cafeSelect">카페명: </label>
-    <select name="cafeSelect" id="cafeSelect"
-    v-model="cafeId" @change="changeCafeDrinkList" class="button_select">
-      <option v-for="cafe in drinkStore.getCafeList"
-      :key="cafe.cafeId"
-      :value="cafe.cafeId">
-        {{ cafe.cafeName }}
-      </option>
-    </select>
+    <div>
+      <h2>오늘 마신 카페 음료를 선택해주세요</h2>
+    </div>
+
+    <div>
+      <label for="cafeSelect">카페명: </label>
+      <select name="cafeSelect" id="cafeSelect"
+      v-model="cafeId" @change="changeCafeDrinkList" class="button_select select">
+        <option v-for="cafe in drinkStore.getCafeList"
+        :key="cafe.cafeId"
+        :value="cafe.cafeId">
+          {{ cafe.cafeName }}
+        </option>
+      </select>
+    </div>
+    
 
     <div v-if="cafeId">
       <label for="drinkSelect">음료명: </label>
       <select name="drinkSelect" id="drinkSelect"
-      v-model="drinkInfo" @change="changeDrinkInfo" class="button_select">
+      v-model="drinkInfo" @change="changeDrinkInfo" class="button_select select">
       <option v-for="drink in drinkStore.getCafeDrinkList"
       :key="drink.drinkId"
       :value="drink">
@@ -33,7 +39,7 @@
 
     <div v-else>
       <label for="drinkSelect">음료명: </label>
-      <select name="drinkSelect" id="drinkSelect" class="button_select">
+      <select name="drinkSelect" id="drinkSelect" class="button_select select">
         <option value="" disabled selected>카페를 먼저 선택해주세요</option>
       </select>
     </div>
@@ -276,4 +282,16 @@ h2 {
   font-weight: bold;
   text-align: center;  
 }
+
+div {
+  margin: 20px;
+}
+
+.select {
+  border-radius: 22px;
+  border: 2px solid #846046;
+  padding: 10px 20px;
+  width: 353px;
+}
+
 </style>
