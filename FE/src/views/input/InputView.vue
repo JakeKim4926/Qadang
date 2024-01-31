@@ -1,9 +1,5 @@
 <template>
   <div>
-    <h1>Hello Input</h1>
-  </div>
-
-  <div>
     x버튼
   </div>
 
