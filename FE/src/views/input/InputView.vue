@@ -13,7 +13,7 @@
     </div>
 
     <div>
-      <label for="cafeSelect">카페명: </label>
+      <label for="cafeSelect" class="big-font">카페명</label>
       <select name="cafeSelect" id="cafeSelect"
       v-model="cafeId" @change="changeCafeDrinkList" class="button_select select">
         <option v-for="cafe in drinkStore.getCafeList"
@@ -26,7 +26,7 @@
     
 
     <div v-if="cafeId">
-      <label for="drinkSelect">음료명: </label>
+      <label for="drinkSelect" class="big-font">음료명</label>
       <select name="drinkSelect" id="drinkSelect"
       v-model="drinkInfo" @change="changeDrinkInfo" class="button_select select">
       <option v-for="drink in drinkStore.getCafeDrinkList"
@@ -38,15 +38,15 @@
     </div>
 
     <div v-else>
-      <label for="drinkSelect">음료명: </label>
+      <label for="drinkSelect" class="big-font">음료명</label>
       <select name="drinkSelect" id="drinkSelect" class="button_select select">
         <option value="" disabled selected>카페를 먼저 선택해주세요</option>
       </select>
     </div>
     
     <div class="item-container">
-      <label for="plusShot">샷: </label>
-      <p>1샷 - 카페인 75mg</p>
+      <label for="plusShot" class="big-font">샷</label>
+      <p class="mid-font">1샷 - 카페인 75mg</p>
       <button :disabled="!getminusCaffeineButton" @click="minusCaffeine" class="pm-button">
         <font-awesome-icon :icon="['fas', 'minus']" style="color: #000000;" />
       </button>
@@ -57,8 +57,8 @@
     </div>
 
     <div class="item-container">
-      <label for="plusSyrup">시럽: </label>
-      <p>1시럽 - 당 6g</p>
+      <label for="plusSyrup" class="big-font">시럽</label>
+      <p class="mid-font">1시럽 - 당 6g</p>
       <button :disabled="!getminusSugarButton" @click="minusSugar" class="pm-button">
         <font-awesome-icon :icon="['fas', 'minus']" style="color: #000000;" />
       </button>
@@ -307,10 +307,22 @@ div {
 
 .item-container {
   display: flex;
+  justify-content: space-between;
   align-items: center;
 }
+
 .pm-button {
   border: none;
+}
+
+.big-font {
+  margin-right: 10px;
+  font-size: 20px;
+}
+
+.mid-font {
+  font-size: 15px;
+  width: 300px;
 }
 
 .select {
