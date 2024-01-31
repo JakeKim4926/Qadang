@@ -3,7 +3,8 @@ import HomeView from '@/views/HomeView.vue'
 import CalendarView from '@/views/calendar/CalendarView.vue'
 import ChatView from '@/views/chat/ChatView.vue'
 import DrinkView from '@/views/drink/DrinkView.vue'
-import MainView from '@/views/main/MainView.vue'
+import MainCaffeineView from '@/views/main/MainCaffeineView.vue'
+import MainSugarView from '@/views/main/MainSugarView.vue'
 import MypageView from '@/views/mypage/MypageView.vue'
 import SearchDetatilView from '@/views/search/SearchDetatilView.vue'
 import SearchRankView from '@/views/search/SearchRankView.vue'
@@ -43,9 +44,14 @@ const router = createRouter({
       component: DrinkView,
     },
     {
-      path: '/main',
-      name: 'main',
-      component: MainView,
+      path: '/mainCaffeine',
+      name: 'mainCaffeine',
+      component: MainCaffeineView,
+    },
+    {
+      path: '/mainSugar',
+      name: 'mainSugar',
+      component: MainSugarView,
     },
     {
       path: '/mypage',
