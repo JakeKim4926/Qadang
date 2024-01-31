@@ -20,10 +20,10 @@
 
     <div v-if="cafeId">
       <label for="drinkSelect">음료명: </label>
-      <select name="drinkSelect" id="drinkSelect" v-model="drinkId">
+      <select name="drinkSelect" id="drinkSelect" v-model="drinkInfo" @change="changeDrinkInfo">
       <option v-for="drink in drinkStore.getCafeDrinkList"
       :key="drink.drinkId"
-      :value="drink.drinkId">
+      :value="drink">
         {{ drink.drinkName }}
       </option>
     </select>
@@ -70,6 +70,9 @@ import { useRecordsStore } from "@/stores/records"
 const drinkStore = useDrinksStore()
 const recordsStore = useRecordsStore()
 
+// 음료 전체 정보
+const drinkInfo = ref({})
+
 // 음료 생성을 위해 보내줄 데이터
 const cafeName = ref(null)
 const drinkName = ref(null)
@@ -93,6 +96,14 @@ onMounted(() => {
 const changeCafeDrinkList = () => {
   if (cafeId.value) {
     drinkStore.researchCafeDrinks(cafeId.value)
+  }
+}
+
+// 카페 음료를 선택하면 해당 카페 음료 정보를 가져오기 위한 함수
+const changeDrinkInfo = () => {
+  if (drinkInfo.value) {
+    drinkCaffeine.value = drinkInfo.value.drinkCaffeine
+    drinkSugar.value = drinkInfo.value.drinkSugar
   }
 }
 
