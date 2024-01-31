@@ -60,11 +60,13 @@ const makeSubmit = () => {
     console.log('입력값이 올바릅니다. 데이터를 전송합니다.')
 
     const drink = {
-      cafeName: cafeName,
-      drinkName: drinkName,
-      drinkCaffeine: drinkCaffeine,
-      drinkSugar: drinkSugar
+      cafeName: cafeName.value,
+      drinkName: drinkName.value,
+      drinkCaffeine: drinkCaffeine.value,
+      drinkSugar: drinkSugar.value
     }
+
+    console.log(drink)
 
     // 유효한 데이터를 백엔드로 전송
     store.createMyDrink(drink)
