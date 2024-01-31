@@ -1,7 +1,8 @@
 <template>
     <div class="board-create-container">
         <div class="calendar_background">
-            <!-- <div class="calendar_day_title">
+            <!-- 
+            <div class="calendar_day_title">
                 {{ getRecordDate }}
             </div>
             <div class="calendar_all_material_font">
@@ -19,9 +20,17 @@
             <hr class="calendar_drink_line_76">
             <div class="calendar_drink_rectangle_4333">
                 <div>No.oo1</div>
-            </div> -->
-            
-
+            </div>
+             -->
+             <p>
+               <h2> {{ getRecordDate }} </h2>
+             </p>
+             <p>
+                <h2>총 성취한 카페량 : {{  }}</h2>
+             </p>
+             <p>
+                <h2>총 성취한 당량 : </h2>
+             </p>
             <button @click="close">닫자 닫아</button>
         </div>
         <br>
@@ -34,12 +43,18 @@
 
 <script setup>
 import { useRecordsStore } from '@/stores/records';
+import { useAccumulateStore } from '@/stores/accumulate';
 import { ref, onMounted, computed } from 'vue';
 import {isCalendarModal} from "@/stores/util"
 
 const recordStore = useRecordsStore();
+const accumulateStore = useAccumulateStore();
+
 const recordDate = ref('');
 const getRecordDate = computed(() => recordDate);
+
+const recordDay = ref('');
+const getRecordDay = computed(()=>recordDay);
 
 function close() {
     isCalendarModal.value = false;
@@ -58,6 +73,11 @@ onMounted(() => {
             recordDate.value = sessionStorage.getItem('recordDate');
         }
     }
+
+    recordDay.value = recordStore.getRecordDay;
+
+    recordStore.researchDayDrink(recordDay);
+    
 })
 
 </script>
