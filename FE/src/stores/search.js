@@ -44,7 +44,7 @@ export const useSearchStore = defineStore("search", () => {
 
   const bringKeywordRanking = function () {
     axios({
-      url: `${import.meta.env.VITE_REST_RANK_API}/keywordranking`,
+      url: `${import.meta.env.VITE_REST_RANKING_API}/keywordranking`,
       method: "GET"
     })
     .then((res) => {
@@ -70,7 +70,7 @@ export const useSearchStore = defineStore("search", () => {
 
   const bringAllDrinks = function () {
     axios({
-      url: import.meta.env.VITE_REST_DRINK_API,
+      url: import.meta.env.VITE_REST_DRINKS_API,
       method: "GET"
     })
     .then((res) => {
