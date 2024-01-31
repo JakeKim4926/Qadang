@@ -23,20 +23,18 @@
       <label for="drinkSelect">음료명: 선택할 수 없음</label>
     </div>
     
-    <!-- 음료를 선택하기 전 샷, 시럽 선택할 수 없게 설정 -->
-    <!-- +, - 미만일 경우 블락 처리, 바로바로 계산되어야 함 -->
     <div>
       <p>샷: 1샷 - 카페인 75mg</p>
       <button :disabled="!minusCaffeineButton()" @click="minusCaffeine">-</button>
       {{ plusShot }}
-      <button @click="plusCaffeine">+</button>
+      <button :disabled="!plusCaffeineButton()" @click="plusCaffeine">+</button>
     </div>
 
     <div>
       <p>시럽: 1시럽 - 당 6g</p>
       <button :disabled="!minusSugarButton()" @click="minusSugar">-</button>
       {{ plusSyrup }}
-      <button @click="plusSugar">+</button>
+      <button :disabled="!plusSugarButton()" @click="plusSugar">+</button>
     </div>
 
   </div>
@@ -70,7 +68,7 @@ const drinkSugar = ref(0)
 
 // 샷, 시럽 - 버튼 활성화를 위한 함수
 const minusCaffeineButton = () => {
-  if (drinkCaffeine.value + 75 * (plusShot.value - 1) >= 0) {
+  if (cafeName.value && drinkName.value && drinkCaffeine.value + 75 * (plusShot.value - 1) >= 0) {
     return true
   } else {
     return false
@@ -78,7 +76,24 @@ const minusCaffeineButton = () => {
 }
 
 const minusSugarButton = () => {
-  if (drinkSugar.value + 6 * (plusSyrup.value - 1) >= 0) {
+  if (cafeName.value && drinkName.value && drinkSugar.value + 6 * (plusSyrup.value - 1) >= 0) {
+    return true
+  } else {
+    return false
+  }
+}
+
+// 샷, 시럽 + 버튼 활성화를 위한 함수
+const plusCaffeineButton = () => {
+  if (cafeName.value && drinkName.value) {
+    return true
+  } else {
+    return false
+  }
+}
+
+const plusSugarButton = () => {
+  if (cafeName.value && drinkName.value) {
     return true
   } else {
     return false
@@ -101,8 +116,6 @@ const plusSugar = () => {
 const drinkSubmit = () => {
   if (cafeName.value && drinkName.value) {
     console.log('입력값이 올바릅니다. 데이터를 전송합니다.')
-    console.log(cafeName)
-    console.log(drinkName)
 
     // 음료 생성을 위해 보내줄 데이터
     const drink = {
