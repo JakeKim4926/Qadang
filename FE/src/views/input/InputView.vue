@@ -7,7 +7,7 @@
     x버튼
   </div>
 
-  <div>
+  <div class="input-container">
     <div>
       <h2>오늘 마신 카페 음료를 선택해주세요</h2>
     </div>
@@ -71,15 +71,15 @@
     {{ plusShot }}
     {{ plusSyrup }} -->
 
-  </div>
-
-  <div>
-    <button @click="goInputNothing" class="button_input_color buttons">여기없어용</button>
-    <span @mouseover="showToolTip = true" @mouseleave="showToolTip = false"><font-awesome-icon :icon="['fas', 'circle-question']" /></span>
-    <div v-if="showToolTip" class="tip">
-      <p>여기에 여기없어용에 대한 자세한 설명을 작성합니다</p>
+    <div class="button-container">
+      <button @click="goInputNothing" class="button_input_color buttons">여기없어용</button>
+      <span @mouseover="showToolTip = true" @mouseleave="showToolTip = false"><font-awesome-icon :icon="['fas', 'circle-question']" /></span>
+      <div v-if="showToolTip" class="tip">
+        <p>여기에 여기없어용에 대한 자세한 설명을 작성합니다</p>
+      </div>
+      <button @click="drinkSubmit" class="button_caffeine white buttons">입력완료</button>
     </div>
-    <button @click="drinkSubmit" class="button_caffeine white buttons">입력완료</button>
+
   </div>
 </template>
 
@@ -284,7 +284,18 @@ h2 {
 }
 
 div {
-  margin: 20px;
+  margin: 10px;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.button-container {
+  display: flex;
+  align-items: center;
 }
 
 .select {
@@ -299,6 +310,7 @@ div {
 }
 
 .buttons {
+  margin-left: 20px;
   width: 150px;
   height: 60px;
   border: none;
