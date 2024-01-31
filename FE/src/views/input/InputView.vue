@@ -9,9 +9,14 @@
 
   <div>
     <h2>오늘 마신 카페 음료를 선택해주세요</h2>
-
-    <!-- 초기에 카페명을 먼저 선택-->
     <label for="cafeSelect">카페명: </label>
+    <select id="cafeSelect" name="cafeSelect" v-model="cafeId">
+      <option v-for="cafe in drinkStore.getCafeList"
+      :key="cafe.cafeId"
+      :value="cafe.cafeId">
+        {{ cafe.cafeName }}
+      </option>
+    </select>
 
     <!-- 카페명을 선택하기 전 선택할 수 없음 -->
     <!-- 카페 카테고리에 따라 음료를 가지고 와 select문 표시-->
@@ -49,6 +54,8 @@
 
 <script setup>
 import { ref } from 'vue';
+import { onMounted } from 'vue';
+
 import { useDrinksStore } from "@/stores/drinks";
 import { useRecordsStore } from "@/stores/records"
 
@@ -68,6 +75,12 @@ const drinkCaffeine = ref(0)
 const drinkSugar = ref(0)
 
 const showToolTip = ref(false)
+
+// 데이터를 가져오기 위한 함수
+onMounted(() => {
+  drinkStore.researchCafe()
+  console.log(drinkStore.researchCafe())
+})
 
 // 샷, 시럽 - 버튼 활성화를 위한 함수
 const minusCaffeineButton = () => {

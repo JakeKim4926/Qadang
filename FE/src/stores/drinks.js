@@ -32,11 +32,12 @@ export const useDrinksStore = defineStore("drinks", () => {
       method: "GET",
     })
       .then((res) => {
-        if (res.status == responseState.ACCEPT) {
+        if (res.status == responseState.SUCCESS) {
           cafeList.value = res.data;
         }
       })
       .catch((err) => {
+        
         console.log(err);
       });
   };
