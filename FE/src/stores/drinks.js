@@ -49,6 +49,9 @@ export const useDrinksStore = defineStore("drinks", () => {
       params: { cafeId: id },
     })
       .then((res) => {
+        // if (res.status == responseState.SUCCESS) {
+        //   cafeDrinkList.value = res.data;
+        // }
         cafeDrinkList.value = res.data;
       })
       .catch((err) => {

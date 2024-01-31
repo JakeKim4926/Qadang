@@ -10,7 +10,7 @@
   <div>
     <h2>오늘 마신 카페 음료를 선택해주세요</h2>
     <label for="cafeSelect">카페명: </label>
-    <select id="cafeSelect" name="cafeSelect" v-model="cafeId">
+    <select name="cafeSelect" id="cafeSelect" v-model="cafeId" @change="changeCafeDrinkList">
       <option v-for="cafe in drinkStore.getCafeList"
       :key="cafe.cafeId"
       :value="cafe.cafeId">
@@ -18,14 +18,22 @@
       </option>
     </select>
 
-    <!-- 카페명을 선택하기 전 선택할 수 없음 -->
-    <!-- 카페 카테고리에 따라 음료를 가지고 와 select문 표시-->
     <div v-if="cafeId">
-      <label for="drinkSelect">음료명: 선택할 수 있음</label>
+      <label for="drinkSelect">음료명: </label>
+      <select name="drinkSelect" id="drinkSelect" v-model="drinkId">
+      <option v-for="drink in drinkStore.getCafeDrinkList"
+      :key="drink.drinkId"
+      :value="drink.drinkId">
+        {{ drink.drinkName }}
+      </option>
+    </select>
     </div>
 
     <div v-else>
-      <label for="drinkSelect">음료명: 선택할 수 없음</label>
+      <label for="drinkSelect">음료명: </label>
+      <select name="drinkSelect" id="drinkSelect">
+        <option value="" disabled selected>카페를 먼저 선택해주세요</option>
+      </select>
     </div>
     
     <div>
@@ -79,8 +87,14 @@ const showToolTip = ref(false)
 // 데이터를 가져오기 위한 함수
 onMounted(() => {
   drinkStore.researchCafe()
-  console.log(drinkStore.researchCafe())
 })
+
+// 카페를 선택하면 해당 카페 음료를 가져오기 위한 함수
+const changeCafeDrinkList = () => {
+  if (cafeId.value) {
+    drinkStore.researchCafeDrinks(cafeId.value)
+  }
+}
 
 // 샷, 시럽 - 버튼 활성화를 위한 함수
 const minusCaffeineButton = () => {
