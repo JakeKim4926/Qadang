@@ -8,18 +8,14 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
-
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SearchLog {
-
+public class Cafes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int searchId;
+    private Long cafeId;
 
-    private String searchKeyword;
-    private int searchUserId;
-    private Timestamp searchTime;
+    private String cafeName;
+    private String cafeUrl;
 }
