@@ -1,11 +1,10 @@
 <template>
   <div>
-    
       <TheHeader />
       <div>
         <RouterView />
       </div>
-      <!-- <TheFooter /> -->
+      <TheFooter />
     
   </div>
 </template>
