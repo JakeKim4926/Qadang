@@ -91,10 +91,8 @@
           </div>
           <button @click="drinkSubmit" class="button_caffeine buttons">입력완료</button>
         </div>
-
       </div>
     </div>
-    
   </div>
 </template>
 

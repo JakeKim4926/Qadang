@@ -12,10 +12,7 @@ export const useInputStore = defineStore("input", () => {
   }
 
   // inputNothing modal
-  const openInputNothingModal = () => {
-    isInputNothingModal.value = true
 
-  }
 
   const closeInputNothingModal = () => {
     isInputNothingModal.value = false

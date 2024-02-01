@@ -1,53 +1,58 @@
 <template>
-  <div class="close">
-    <font-awesome-icon :icon="['fas', 'circle-xmark']" style="color: #000000;" size="xl"/>
-  </div>
+  <div class="board-create-container">
+    <div class="input-box">
+      <div class="close">
+        <font-awesome-icon :icon="['fas', 'circle-xmark']" style="color: #000000;" size="xl"/>
+      </div>
 
-  <div class="input-container">
-    <div>
-      <h2>오늘 마신 카페 음료를 직접 입력해주세요</h2>
-    </div>
+      <div class="input-container">
+        <div>
+          <h2>오늘 마신 카페 음료를 직접 입력해주세요</h2>
+        </div>
 
-    <div>
-      <label for="cafeName" class="big-font">카페명</label>
-      <input type="text" name="cafeName" id="cafeName"
-      v-model="cafeName" placeholder="카페명을 입력해주세요"
-      class="button_select select"/>
-    </div>
+        <div>
+          <label for="cafeName" class="big-font">카페명</label>
+          <input type="text" name="cafeName" id="cafeName"
+          v-model="cafeName" placeholder="카페명을 입력해주세요"
+          class="button_select select"/>
+        </div>
 
-    <div>
-      <label for="drinkName" class="big-font">음료명</label>
-      <input type="text" name="drinkName" id="drinkName"
-      v-model="drinkName" placeholder="음료명을 입력해주세요"
-      class="button_select select"/>
-    </div>
+        <div>
+          <label for="drinkName" class="big-font">음료명</label>
+          <input type="text" name="drinkName" id="drinkName"
+          v-model="drinkName" placeholder="음료명을 입력해주세요"
+          class="button_select select"/>
+        </div>
 
-    <div>
-      <label for="drinkCaffeine" class="big-font">카페인</label>
-      <input type="number" name="drinkCaffeine" id="drinkCaffeine"
-      v-model="drinkCaffeine" class="button_select select">
-    </div>
+        <div>
+          <label for="drinkCaffeine" class="big-font">카페인</label>
+          <input type="number" name="drinkCaffeine" id="drinkCaffeine"
+          v-model="drinkCaffeine" class="button_select select">
+        </div>
 
-    <div>
-      <label for="drinkSugar" class="big-font">　　당</label>
-      <input type="number" name="drinkSugar" id="drinkSugar"
-      v-model="drinkSugar" class="button_select select">
-    </div>
+        <div>
+          <label for="drinkSugar" class="big-font">　　당</label>
+          <input type="number" name="drinkSugar" id="drinkSugar"
+          v-model="drinkSugar" class="button_select select">
+        </div>
 
-    <div class="item-container">
-      <button @click="goInput" class="button_input_color buttons">음료 선택</button>
-      <span @mouseover="showToolTip = true" @mouseleave="showToolTip = false">
-        <font-awesome-icon :icon="['fas', 'circle-question']" size="xl"/>
-      </span>
-      <div v-if="showToolTip" class="tip-container">
-        <div class="tip">
-          <p>여기에 음료 선택에 대한 자세한 설명을 작성합니다</p>
+        <div class="item-container">
+          <button @click="goInput" class="button_input_color buttons">음료 선택</button>
+          <span @mouseover="showToolTip = true" @mouseleave="showToolTip = false">
+            <font-awesome-icon :icon="['fas', 'circle-question']" size="xl"/>
+          </span>
+          <div v-if="showToolTip" class="tip-container">
+            <div class="tip">
+              <p>여기에 음료 선택에 대한 자세한 설명을 작성합니다</p>
+            </div>
+          </div>
+          <button @click="makeSubmit" class="button_caffeine buttons">입력완료</button>
         </div>
       </div>
-      <button @click="makeSubmit" class="button_caffeine buttons">입력완료</button>
     </div>
-
   </div>
+
+
 </template>
 
 <script setup>
@@ -116,11 +121,39 @@ const goInput = () => {
 h2 {
   color: #562B1A;
   font-weight: bold;
-  text-align: center;  
+  text-align: center;
 }
 
 div {
   margin: 10px;
+}
+
+.board-create-container {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  /* max-width:614px;
+  max-height: 584px; */
+  background-color: rgba(128, 128, 128, 0.863) !important;
+  top: 0;
+  left: 0;
+  margin: 0;
+  z-index: 99 !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.input-box {
+  background: #ffffff;
+  border-radius: 30px;
+  border-style: solid;
+  border-color: #d9d9d9;
+  border-width: 1px;
+  position: absolute;
+  width: 500px;
+  height: 450px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 
 .input-container {
@@ -137,22 +170,15 @@ div {
 
 .close {
   display: flex;
-  align-items: center;
-  justify-content: flex-end; 
-}
-
-.pm-button {
-  border: none;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
 }
 
 .big-font {
   margin-right: 10px;
   font-size: 20px;
-}
-
-.mid-font {
-  font-size: 15px;
-  width: 300px;
 }
 
 .select {
@@ -187,8 +213,8 @@ div {
 
 .tip {
   position: fixed;
-  top: 50%;
-  left: 50%;
+  top: 63%;
+  left: 63%;
   transform: translate(-50%, -50%);
   background: white;
   padding: 20px;
@@ -196,5 +222,4 @@ div {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   z-index: 100;
 }
-
 </style>
