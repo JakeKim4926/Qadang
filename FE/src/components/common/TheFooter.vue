@@ -1,6 +1,7 @@
 <template>
   <footer class="footer">
     <div class="footer-content">
+      <InputView v-if="isInputModal" />
       <div class="empty-space"></div> <!-- 왼쪽 끝의 빈 공간 -->
       <RouterLink to="/" class="footer-link">
         <div class="footer-item">
@@ -12,11 +13,11 @@
           <font-awesome-icon :icon="['fas', 'calendar-alt']" class="footer-icon" />
         </div>
       </RouterLink>
-      <RouterLink to="/input" class="footer-link">
+      <button class="footer-link" @click="open">
         <div class="footer-item">
           <font-awesome-icon :icon="['fas', 'plus']" class="footer-icon plus-icon" />
         </div>
-      </RouterLink>
+      </button>
       <RouterLink to="/searchRank" class="footer-link">
         <div class="footer-item">
           <font-awesome-icon :icon="['fas', 'search']" class="footer-icon" />
@@ -32,6 +33,15 @@
   </footer>
 </template>
 
+<script setup>
+  import InputView from '@/components/input/InputView.vue';
+  import { isInputModal } from '@/stores/util';
+
+  const open = () => {
+    isInputModal.value = true;
+  }
+</script>
+
 <style>
 .footer {
   position: fixed;
@@ -41,6 +51,7 @@
   background-color: #f0f0f0;
   box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
   border-top: 1px solid #ddd;
+  z-index: 95;
 }
 
 .footer-content {

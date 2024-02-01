@@ -104,7 +104,7 @@ const isValid = () => {
 
 // 음료선택 버튼
 const goInput = () => {
-  router.push({name: 'input'})
+  // router.push({name: 'input'})
 }
 
 </script>
