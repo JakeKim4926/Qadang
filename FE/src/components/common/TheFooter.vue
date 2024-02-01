@@ -2,6 +2,7 @@
   <footer class="footer">
     <div class="footer-content">
       <InputView v-if="isInputModal" />
+      <InputNothingView v-if="isInputNothingModal" />
       <div class="empty-space"></div> <!-- 왼쪽 끝의 빈 공간 -->
       <RouterLink to="/" class="footer-link">
         <div class="footer-item">
@@ -13,7 +14,7 @@
           <font-awesome-icon :icon="['fas', 'calendar-alt']" class="footer-icon" />
         </div>
       </RouterLink>
-      <button class="footer-link" @click="open">
+      <button class="footer-link" @click="openInputModal">
         <div class="footer-item">
           <font-awesome-icon :icon="['fas', 'plus']" class="footer-icon plus-icon" />
         </div>
@@ -35,11 +36,11 @@
 
 <script setup>
   import InputView from '@/components/input/InputView.vue';
-  import { isInputModal } from '@/stores/util';
+  import InputNothingView from '@/components/input/InputNothingView.vue';
 
-  const open = () => {
-    isInputModal.value = true;
-  }
+  import { isInputModal } from '@/stores/input';
+  import { isInputNothingModal } from '@/stores/input';
+
 </script>
 
 <style>
