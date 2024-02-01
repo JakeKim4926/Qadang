@@ -48,10 +48,12 @@ import router from '@/router';
 import { useUserStore } from '@/stores/user';
 import { useAccumulateStore } from '@/stores/accumulate';
 import { useRecordsStore } from '@/stores/records';
+import { useRecommendStore } from '@/stores/recommend';
 
 const userStore = useUserStore()
 const accumulateStore = useAccumulateStore()
 const recordsStore = useRecordsStore()
+const recommendStore = useRecommendStore()
 
 const recentCaffeine = ref(0)
 
