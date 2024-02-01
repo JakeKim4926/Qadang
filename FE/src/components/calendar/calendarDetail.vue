@@ -8,54 +8,84 @@
                         총 섭취한 카페인량
                         <br />
                     </span>
-                    <span class="all_caffeine_value">150.3 mg</span>
+                    <template v-if="userStore.userRDICaffeine / 2.0 <= accumulateStore.getAcuumulateDay.accumulateCaffeine">
+                        <span class="all_caffeine_value" style="color:red">{{
+                            accumulateStore.getAcuumulateDay.accumulateCaffeine }}</span>
+                    </template>
+                    <template v-else>
+                        <span class="all_caffeine_value" style="color:green">{{
+                            accumulateStore.getAcuumulateDay.accumulateCaffeine }}</span>
+                    </template>
+                    mg
                 </span>
             </div>
-            <div class="date_day">17 금요일</div>
+            <div class="date_day">{{ getRecordDate }}</div>
             <div class="all_sugar">
                 <span>
                     <span class="all_sugar_title">
                         총 섭취한 당량
                         <br />
                     </span>
-                    <span class="all_sugar_value">0.0 g</span>
+                    <template v-if="userStore.userRDISugar / 2.0 <= accumulateStore.getAcuumulateDay.accumulateSugar">
+                        <span class="all_sugar_value" style="color:red">{{ accumulateStore.getAcuumulateDay.accumulateSugar
+                        }} </span>
+                    </template>
+                    <template v-else>
+                        <span class="all_sugar_value" style="color:green">{{
+                            accumulateStore.getAcuumulateDay.accumulateSugar }} </span>
+                    </template>
+                    g
                 </span>
             </div>
             <font-awesome-icon :icon="['fas', 'circle-xmark']" class="image-174" @click="close" />
-            
+
             <div class="line-76"></div>
-            
-            <div class="record_box"></div>
-            <!-- record header -->
-            <img class="coffee_image" src="https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[94]_20210430103337157.jpg" />
-            <div class="no-001">No.001</div>
-            <div class="coffee_name">아메리카노 Tall</div>
-            <div class="cafe_name">스타벅스</div>
-            <div class="update_button"></div>
-            <div class="update_font">수정</div>
-            <div class="delete_button"></div>
-            <div class="delete_font">삭제</div>
+            <!-- When it has data -->
+            <template v-if="recordStore.getDayDrink.length">
+                <template v-for="(drink, index) in recordStore.getDayDrink" :key="index">
 
-            <svg class="line-74" width="338" height="1" viewBox="0 0 338 1" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M1 0.5H337" stroke="black" stroke-linecap="round" />
-            </svg>
-            <!-- record content -->
-            
-            <svg class="line-75" width="338" height="1" viewBox="0 0 338 1" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M1 0.5H337" stroke="black" stroke-linecap="round" />
-            </svg>
-            
-            <div class="div5">카페인</div>
-            <div class="caffeine_value">150.3 mg</div>
+                    <div class="record_box"></div>
+                    <!-- record header -->
+                    <img class="coffee_image" :src="drink.drinkUrl" />
+                    <div class="no-001">No.00{{ index + 1 }}</div>
+                    <div class="coffee_name">{{ drink.drinkName }}</div>
+                    <div class="cafe_name">{{ drink.cafeName }}</div>
+                    <a @click="editRecord(drink)" class="update_button">수정</a>
+                    <a @click="deleteRecord(drink.recordId)" class="delete_button">삭제</a>
 
-            <div class="div3">당</div>
-            <div class="sugar_value">0.0 g</div>
+                    <svg class="line-74" width="338" height="1" viewBox="0 0 338 1" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 0.5H337" stroke="black" stroke-linecap="round" />
+                    </svg>
+                    <!-- record content -->
 
-            <div class="shot_title">샷</div>
-            <div class="shot_count">0 회</div>
+                    <svg class="line-75" width="338" height="1" viewBox="0 0 338 1" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 0.5H337" stroke="black" stroke-linecap="round" />
+                    </svg>
 
-            <div class="div4">시럽</div>
-            <div class="syrup_count">0 회</div>
+                    <div class="div5">카페인</div>
+                    <div class="caffeine_value">{{ drink.drinkCaffeine }} mg</div>
+
+                    <div class="div3">당</div>
+                    <div class="sugar_value">{{ drink.drinkSugar }} g</div>
+
+                    <div class="shot_title">샷</div>
+                    <div class="shot_count">{{ drink.plusShot }} 회</div>
+
+                    <div class="div4">시럽</div>
+                    <div class="syrup_count">{{ drink.plusSyrup }} 회</div>
+                </template>
+            </template>
+            <tempalte v-else>
+                <div class="record_box" style="display: flex; justify-content: center; align-items: center;">
+                    <h3 style="text-align: center;">
+                        해당 날짜에 마신 음료가 없습니다. 
+                        <br>
+                        지난 일의 기록은 추가/삭제 등 수정이 불가능합니다.
+                    </h3>
+                </div>
+            </tempalte>
         </div>
     </div>
 </template>
@@ -64,10 +94,13 @@ import { useRecordsStore } from '@/stores/records';
 import { useAccumulateStore } from '@/stores/accumulate';
 import { ref, onMounted, computed } from 'vue';
 import { isCalendarModal } from "@/stores/util"
+import { useUserStore } from '@/stores/user';
 
 
 const recordStore = useRecordsStore();
 const accumulateStore = useAccumulateStore();
+const userStore = useUserStore();
+// const useUserStore = useUserStore();
 
 const recordDate = ref('');
 const getRecordDate = computed(() => recordDate);
@@ -77,6 +110,18 @@ const getRecordDay = computed(() => recordDay);
 
 function close() {
     isCalendarModal.value = false;
+}
+
+function editRecord(recordDrink) {
+    console.log(recordDrink);
+
+}
+
+function deleteRecord(recordId) {
+    const confirmed = window.confirm("정말 삭제를 원하십니까?");
+    if(confirmed) {
+        recordStore.deleteDrink(recordId);
+    }
 }
 
 onMounted(() => {
@@ -96,13 +141,12 @@ onMounted(() => {
     recordDay.value = recordStore.getRecordDay;
 
     recordStore.researchDayDrink(recordDay);
-
+    accumulateStore.day(recordDay);
 })
 
 
 </script>
 <style scoped>
-
 .board-create-container {
     position: fixed;
     width: 100vw;
@@ -482,6 +526,10 @@ onMounted(() => {
 
 .update_button {
     background: #8a6d58;
+    color: #ffffff;
+    font-size: 13px;
+    text-align: center;
+    font-family: "DmSans-Bold", sans-serif;
     border-radius: 90px;
     position: absolute;
     right: 21.24%;
@@ -493,24 +541,12 @@ onMounted(() => {
     cursor: pointer;
 }
 
-.update_font {
-    color: #ffffff;
-    text-align: center;
-    font-family: "DmSans-Bold", sans-serif;
-    font-size: 13px;
-    line-height: 18px;
-    font-weight: 700;
-    position: absolute;
-    right: 22.11%;
-    left: 72.88%;
-    width: 5.01%;
-    bottom: 71.45%;
-    top: 25.77%;
-    height: 2.77%;
-}
-
 .delete_button {
     background: #b29f91;
+    color: #ffffff;
+    font-size: 13px;
+    text-align: center;
+    font-family: "DmSans-Bold", sans-serif;
     border-radius: 90px;
     position: absolute;
     right: 12.78%;
@@ -519,22 +555,7 @@ onMounted(() => {
     bottom: 70.64%;
     top: 25.12%;
     height: 4.24%;
-}
-
-.delete_font {
-    color: #000000;
-    text-align: center;
-    font-family: "DmSans-Bold", sans-serif;
-    font-size: 13px;
-    line-height: 18px;
-    font-weight: 700;
-    position: absolute;
-    right: 8.98%;
-    left: 76.68%;
-    width: 14.34%;
-    bottom: 71.45%;
-    top: 25.77%;
-    height: 2.77%;
+    cursor: pointer;
 }
 
 .detail_background {
@@ -548,10 +569,11 @@ onMounted(() => {
     height: 60.89%;
     max-width: 870px;
     max-height: 780px;
-    min-width: 575px;
+    min-width: 685px;
     min-height: 480px;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-    overflow-y: auto; /* 세로 스크롤이 내용이 넘칠 때만 생성되도록 설정 */
+    overflow-y: auto;
+    /* 세로 스크롤이 내용이 넘칠 때만 생성되도록 설정 */
 }
 
 .image-174 {
@@ -564,6 +586,5 @@ onMounted(() => {
     height: 7.18%;
     object-fit: cover;
     cursor: pointer;
-}
-</style>
+}</style>
   
