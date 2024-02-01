@@ -15,4 +15,6 @@ export const responseState = {
 };
 
 export const isCalendarModal = ref(false);
-export const isInputModal = ref(false);
+
+export const isInputModal = ref(false)
+export const isInputNothingModal = ref(false)
