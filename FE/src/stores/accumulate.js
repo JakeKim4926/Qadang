@@ -7,28 +7,28 @@ import axios from "axios";
 export const useAccumulateStore = defineStore("accumulate", () => {
   // =========== STATE ===============
 
-  const acuumulateList = ref([]);
-  const acuumulateMonth = ref([]);
+  const accumulateList = ref([]);
+  const accumulateMonth = ref([]);
 
-  const acuumulateToday = ref({});
-  const acuumulateDay = ref({});
+  const accumulateToday = ref({});
+  const accumulateDay = ref({});
 
   // =========== GETTER ===============
 
-  const getAcuumulateList = computed(() => {
-    return acuumulateList.value;
+  const getAccumulateList = computed(() => {
+    return accumulateList.value;
   });
 
-  const getAcuumulateMonth = computed(() => {
-    return acuumulateMonth.value;
+  const getAccumulateMonth = computed(() => {
+    return accumulateMonth.value;
   });
 
-  const getAcuumulateToday = computed(() => {
-    return acuumulateToday.value;
+  const getAccumulateToday = computed(() => {
+    return accumulateToday.value;
   });
 
-  const getAcuumulateDay = computed(() => {
-    return acuumulateDay.value;
+  const getAccumulateDay = computed(() => {
+    return accumulateDay.value;
   });
 
   // =========== ACTION ===============
@@ -40,7 +40,7 @@ export const useAccumulateStore = defineStore("accumulate", () => {
       method: "GET",
     })
       .then((res) => {
-        acuumulateToday.value = res.data;
+        accumulateToday.value = res.data;
       })
       .catch((err) => {
         console.log(err);
@@ -53,7 +53,7 @@ export const useAccumulateStore = defineStore("accumulate", () => {
       method: "GET",
     })
       .then((res) => {
-        acuumulateList.value = res.data;
+        accumulateList.value = res.data;
       })
       .catch((err) => {
         console.log(err);
@@ -72,7 +72,7 @@ export const useAccumulateStore = defineStore("accumulate", () => {
         if(res.status == responseState.SUCCESS) {
           console.log("success ", res.data );
         }
-        acuumulateMonth.value = res.data;
+        accumulateMonth.value = res.data;
       })
       .catch((err) => {
         console.log(err);
@@ -89,7 +89,7 @@ export const useAccumulateStore = defineStore("accumulate", () => {
       .then((res) => {
         console.log('get it : ', parseFloat(res.data.accumulateCaffeine));
         console.log(date.value);
-        acuumulateDay.value = res.data;
+        accumulateDay.value = res.data;
       })
       .catch((err) => {
         console.log(err);
@@ -97,14 +97,14 @@ export const useAccumulateStore = defineStore("accumulate", () => {
   };
 
   return {
-    acuumulateList,
-    acuumulateMonth,
-    acuumulateToday,
-    acuumulateDay,
-    getAcuumulateList,
-    getAcuumulateMonth,
-    getAcuumulateToday,
-    getAcuumulateDay,
+    accumulateList: accumulateList,
+    accumulateMonth: accumulateMonth,
+    accumulateToday: accumulateToday,
+    accumulateDay: accumulateDay,
+    getAccumulateList: getAccumulateList,
+    getAccumulateMonth: getAccumulateMonth,
+    getAccumulateToday: getAccumulateToday,
+    getAccumulateDay: getAccumulateDay,
     today,
     duration,
     month,
