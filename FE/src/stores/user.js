@@ -194,7 +194,7 @@ export const useUserStore = defineStore("user", () => {
 
   const researchRecommendSugar = function () {
     axios({
-      url: `${import.meta.env.VITE_REST_USER_API}/recommendsugar`,
+      url: `${import.meta.env.VITE_REST_USER_API}/recommend/sugar`,
       method: "GET",
     })
       .then((res) => {
@@ -207,7 +207,7 @@ export const useUserStore = defineStore("user", () => {
 
   const researchRecommendCaffeine = function () {
     axios({
-      url: `${import.meta.env.VITE_REST_USER_API}/recommendcaffeine`,
+      url: `${import.meta.env.VITE_REST_USER_API}/recommend/caffeine`,
       method: "GET",
     })
       .then((res) => {
