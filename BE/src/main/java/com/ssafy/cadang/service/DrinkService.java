@@ -19,4 +19,12 @@ public class DrinkService {
     public List<Drinks> drinkList(Long cafeId) {
          return drinkRepository.findByCafeId(cafeId);
     }
+
+    public Drinks getCaffeineRecommend() {
+         return drinkRepository.findByDrinkId(1L);
+    }
+
+    public Drinks getSugarRecommend() {
+        return drinkRepository.findByDrinkId(1L);
+    }
 }
