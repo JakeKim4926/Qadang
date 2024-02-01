@@ -1,11 +1,13 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
+import { responseState } from "./util";
 import router from "@/router";
 import axios from "axios";
 
 export const useRecordsStore = defineStore("records", () => {
   // =========== STATE ===============
 
+  const days = ref(['일', '월', '화', '수', '목', '금', '토']);
   const dayDrink = ref([]);
 
   const cafeDrink = ref({});
@@ -13,6 +15,8 @@ export const useRecordsStore = defineStore("records", () => {
   const maxSugar = ref({});
   const maxCaffeine = ref({});
 
+  const recordDay = ref(null);
+  const recordDate = ref(null);
   // =========== GETTER ===============
 
   const getDayDrink = computed(() => {
@@ -35,12 +39,20 @@ export const useRecordsStore = defineStore("records", () => {
     return maxCaffeine.value;
   });
 
+  const getRecordDay = computed(() => {
+    return recordDay.value;
+  });
+
+  const getRecordDate = computed(() => {
+    return recordDate.value;
+  });
+
   // =========== ACTION ===============
   // params는 요청과 함께 전송되는 파라미터 (쿼리스트링)
   // data는 요청 바디로 전송될 데이터 (JSON)
   const createCafeDrink = function (drink) {
     axios({
-      url: `${import.meta.env.REST_RECORDS_API}/drink`,
+      url: `${import.meta.env.VITE_REST_RECORDS_API}/drink`,
       method: "POST",
       data: drink,
     })
@@ -52,7 +64,7 @@ export const useRecordsStore = defineStore("records", () => {
 
   const createMyDrink = function (drink) {
     axios({
-      url: `${import.meta.env.REST_RECORDS_API}/make`,
+      url: `${import.meta.env.VITE_REST_RECORDS_API}/make`,
       method: "POST",
       data: drink,
     })
@@ -64,7 +76,7 @@ export const useRecordsStore = defineStore("records", () => {
 
   const updateCafeDrink = function (drink) {
     axios({
-      url: `${import.meta.env.REST_RECORDS_API}/drink`,
+      url: `${import.meta.env.VITE_REST_RECORDS_API}/drink`,
       method: "",
       data: drink,
     })
@@ -76,7 +88,7 @@ export const useRecordsStore = defineStore("records", () => {
 
   const updateMyDrink = function (drink) {
     axios({
-      url: `${import.meta.env.REST_RECORDS_API}/make`,
+      url: `${import.meta.env.VITE_REST_RECORDS_API}/make`,
       method: "PUT",
       data: drink,
     })
@@ -88,7 +100,7 @@ export const useRecordsStore = defineStore("records", () => {
 
   const deleteDrink = function (recordId) {
     axios({
-      url: `${import.meta.env.REST_RECORDS_API}`,
+      url: `${import.meta.env.VITE_REST_RECORDS_API}`,
       method: "DELETE",
       params: { recordId: recordId },
     })
@@ -101,11 +113,15 @@ export const useRecordsStore = defineStore("records", () => {
   // date example) 20240124
   const researchDayDrink = function (date) {
     axios({
-      url: `${import.meta.env.REST_RECORDS_API}`,
+      url: `${import.meta.env.VITE_REST_RECORDS_API}/day`,
       method: "GET",
-      params: { date: date },
+      params: { date: date.value },
     })
       .then((res) => {
+        if(res.status == responseState.SUCCESS) {
+          console.log("success ", res.data );
+        }
+
         dayDrink.value = res.data;
       })
       .catch((err) => {
@@ -115,7 +131,7 @@ export const useRecordsStore = defineStore("records", () => {
 
   const researchMaxSugar = function () {
     axios({
-      url: `${import.meta.env.REST_RECORDS_API}/maxsugar`,
+      url: `${import.meta.env.VITE_REST_RECORDS_API}/maxsugar`,
       method: "GET",
     })
       .then((res) => {
@@ -128,7 +144,7 @@ export const useRecordsStore = defineStore("records", () => {
 
   const researchMaxCaffeine = function () {
     axios({
-      url: `${import.meta.env.REST_RECORDS_API}/maxcaffeine`,
+      url: `${import.meta.env.VITE_REST_RECORDS_API}/maxcaffeine`,
       method: "GET",
     })
       .then((res) => {
@@ -140,16 +156,22 @@ export const useRecordsStore = defineStore("records", () => {
   };
 
   return {
+    days,
     dayDrink,
     cafeDrink,
     myDrink,
     maxSugar,
     maxCaffeine,
+    dayDrink,
+    recordDay,
+    recordDate,
     getDayDrink,
     getCafeDrink,
     getMyDrink,
     getMaxSugar,
     getMaxCaffeine,
+    getRecordDate,
+    getRecordDay,
     createCafeDrink,
     createMyDrink,
     updateCafeDrink,
@@ -159,4 +181,4 @@ export const useRecordsStore = defineStore("records", () => {
     researchMaxSugar,
     researchMaxCaffeine,
   };
-});
+}, {persist:true});

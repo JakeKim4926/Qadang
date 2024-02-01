@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 import router from "@/router";
 import axios from "axios";
 
-export const useuserStore = defineStore("user", () => {
+export const useUserStore = defineStore("user", () => {
   // =========== STATE ===============
 
   const user = ref({});
@@ -11,8 +11,8 @@ export const useuserStore = defineStore("user", () => {
   const userName = ref("");
 
   const userRDI = ref({}); // RDI - Recommended Daily Intake (당일 권장량)
-  const userRDICaffeine = ref(0.0);
-  const userRDISugar = ref(0.0);
+  const userRDICaffeine = ref(400.0);
+  const userRDISugar = ref(50.0);
 
   const userMax = ref({});
   const userMaxCaffeine = ref(0.0);
@@ -81,7 +81,7 @@ export const useuserStore = defineStore("user", () => {
 
   const sendKakaoToken = function (token) {
     axios({
-      url: `${import.meta.env.REST_USER_API}/social-login`,
+      url: `${import.meta.env.VITE_REST_USER_API}/social-login`,
       method: "POST",
       data: user,
     })
@@ -93,9 +93,10 @@ export const useuserStore = defineStore("user", () => {
       });
   };
 
+
   const createUser = function (user) {
     axios({
-      url: import.meta.env.REST_USER_API,
+      url: import.meta.env.VITE_REST_USER_API,
       method: "POST",
       data: user,
     })
@@ -105,9 +106,23 @@ export const useuserStore = defineStore("user", () => {
       });
   };
 
+  const logout = async () => {
+    try {
+      await axios({
+        url: `${import.meta.env.REST_USER_API}/logout`,
+        method: "POST",
+      });
+  
+      // 로그아웃 미완성
+      router.push('/login');
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const researchUser = function () {
     axios({
-      url: import.meta.env.REST_USER_API,
+      url: import.meta.env.VITE_REST_USER_API,
       method: "GET",
     })
       .then((res) => {
@@ -120,7 +135,7 @@ export const useuserStore = defineStore("user", () => {
 
   const researchAmount = function () {
     axios({
-      url: `${import.meta.env.REST_USER_API}/amount`,
+      url: `${import.meta.env.VITE_REST_USER_API}/amount`,
       method: "GET",
     })
       .then((res) => {
@@ -135,7 +150,7 @@ export const useuserStore = defineStore("user", () => {
 
   const researchMax = function () {
     axios({
-      url: `${import.meta.env.REST_USER_API}/max`,
+      url: `${import.meta.env.VITE_REST_USER_API}/max`,
       method: "GET",
     })
       .then((res) => {
@@ -150,21 +165,25 @@ export const useuserStore = defineStore("user", () => {
       });
   };
 
-  const updateUser = function () {
+  const updateUser = function (updateData) {
     axios({
-      url: import.meta.env.REST_USER_API,
+      url: import.meta.env.VITE_REST_USER_API,
       method: "PUT",
-      data: user.value,
+      data: updateData, 
     })
-      .then(() => {})
-      .catch((err) => {
-        console.log(err);
-      });
+    .then(() => {
+      alert('사용자 정보가 성공적으로 업데이트되었습니다.');
+      router.push('/mypage'); 
+    })
+    .catch((err) => {
+      console.error("Error updating user:", err);
+    });
   };
+  
 
   const deleteUser = function () {
     axios({
-      url: import.meta.env.REST_USER_API,
+      url: import.meta.env.VITE_REST_USER_API,
       method: "DELETE",
     })
       .then(() => {})
@@ -175,7 +194,7 @@ export const useuserStore = defineStore("user", () => {
 
   const researchRecommendSugar = function () {
     axios({
-      url: `${import.meta.env.REST_USER_API}/recommendsugar`,
+      url: `${import.meta.env.VITE_REST_USER_API}/recommend/sugar`,
       method: "GET",
     })
       .then((res) => {
@@ -188,7 +207,7 @@ export const useuserStore = defineStore("user", () => {
 
   const researchRecommendCaffeine = function () {
     axios({
-      url: `${import.meta.env.REST_USER_API}/recommendcaffeine`,
+      url: `${import.meta.env.VITE_REST_USER_API}/recommend/caffeine`,
       method: "GET",
     })
       .then((res) => {
@@ -198,10 +217,19 @@ export const useuserStore = defineStore("user", () => {
         console.log(err);
       });
   };
-
-  const isAdditionalInfoFilled = computed(() => {
-    return user.value.additionalInfo && user.value.additionalInfo.trim() !== "";
-  }); // 추가정보가 입력되어있는지 아닌지 확인하기 위한 함수
+  
+  const infoFilled = computed(() => {     
+    const userInfo = user.value;   
+    if (!userInfo) {
+      return false;
+    }
+    // 모든 필요한 속성이 존재하는지 확인
+    return userInfo.hasOwnProperty('userHeight') && userInfo.userHeight !== 0 &&
+           userInfo.hasOwnProperty('userWeight') && userInfo.userWeight !== 0 &&
+           userInfo.hasOwnProperty('userHealth') && userInfo.userHealth !== 0;
+  });
+  
+  
 
   return {
     user,
@@ -231,6 +259,7 @@ export const useuserStore = defineStore("user", () => {
     getRecommendedCaffeine,
     getRecommendedSugar,
     sendKakaoToken,
+    logout,
     createUser,
     researchUser,
     researchAmount,
@@ -239,6 +268,6 @@ export const useuserStore = defineStore("user", () => {
     deleteUser,
     researchRecommendSugar,
     researchRecommendCaffeine,
-    isAdditionalInfoFilled,
+    infoFilled,
   };
 });
