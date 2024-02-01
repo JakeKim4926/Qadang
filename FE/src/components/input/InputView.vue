@@ -80,7 +80,7 @@
         {{ plusSyrup }} -->
 
         <div class="item-container">
-          <button @click="goInputNothing" class="button_input_color buttons">여기없어용</button>
+          <button @click="goInputNothingModal" class="button_input_color buttons">여기없어용</button>
           <span @mouseover="showToolTip = true" @mouseleave="showToolTip = false">
             <font-awesome-icon :icon="['fas', 'circle-question']" size="xl"/>
           </span>
@@ -104,6 +104,7 @@ import { onMounted } from 'vue';
 
 import { useDrinksStore } from "@/stores/drinks";
 import { useRecordsStore } from "@/stores/records"
+import { isInputModal, isInputNothingModal } from '@/stores/util';
 
 const drinkStore = useDrinksStore()
 const recordsStore = useRecordsStore()
@@ -136,8 +137,19 @@ onMounted(() => {
   drinkStore.researchCafe()
 })
 
-const closeInputModal = function() {
-  isInputModal.value = false;
+// 모달창을 열고 닫기 위한 함수
+const closeInputModal = () => {
+  isInputModal.value = false
+}
+
+const openInputNothingModal = () => {
+  isInputNothingModal.value = true
+}
+
+// 여기없어용으로 이동하기 위한 함수
+const goInputNothingModal = () => {
+  closeInputModal()
+  openInputNothingModal()
 }
 
 // 이전 선택값 초기화해주는 함수
@@ -277,20 +289,14 @@ const drinkSubmit = () => {
 
     console.log(drink)
 
-    // 데이터 전송
+    // 데이터 전송 및 창 닫기
     recordsStore.createCafeDrink(drink)
+    closeInputModal()
 
     } else {
       console.log('입력값이 올바르지 않습니다')
     }
   }
-
-// 여기없어용 버튼
-const goInputNothing = () => {
-  // 모달창을 끄고 새로운 모달창 활성화
-  closeInputModal()
-
-}
 </script>
 
 <style scoped>
