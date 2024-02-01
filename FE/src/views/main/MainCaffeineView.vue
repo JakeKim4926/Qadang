@@ -31,7 +31,11 @@
 
   <div>
     오늘은 이 음료 어때요?
-    {{ userStore.getRecommendedSugar }}
+    <img :src="recommendStore.getRecommendedCaffeine.drinkUrl" alt="Recommended Drink" />
+    {{ recommendStore.getRecommendedCaffeine.cafeName }}
+    {{ recommendStore.getRecommendedCaffeine.drinkName }}
+    {{ recommendStore.getRecommendedCaffeine.drinkCaffeine }}
+    {{ recommendStore.getRecommendedCaffeine.drinkSugar }}
     추천 음료 상세보기
   </div>
 
@@ -76,7 +80,7 @@ onMounted(async () => {
   const date = ref(null)
   date.value = year + month + day
 
-  // await userStore.researchUser()                   // 닉네임
+  // await userStore.researchUser()                   // 닉네임 <- 404 error
   // await accumulateStore.today()                   // 권장량, 섭취량
   // await accumulateStore.duration()                // chart.js를 위한 기간별 섭취량
   await recommendStore.researchRecommendCaffeine()     // 기록 기반 음료추천 카페
