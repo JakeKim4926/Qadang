@@ -1,7 +1,7 @@
 <template>
   <div class="board-create-container">
     <div class="input-box">
-      <div class="close">
+      <div class="close" @click="closeInputNothingModal">
         <font-awesome-icon :icon="['fas', 'circle-xmark']" style="color: #000000;" size="xl"/>
       </div>
 
@@ -37,7 +37,7 @@
         </div>
 
         <div class="item-container">
-          <button @click="goInput" class="button_input_color buttons">음료 선택</button>
+          <button @click="goInputModal" class="button_input_color buttons">음료 선택</button>
           <span @mouseover="showToolTip = true" @mouseleave="showToolTip = false">
             <font-awesome-icon :icon="['fas', 'circle-question']" size="xl"/>
           </span>
@@ -57,10 +57,8 @@
 
 <script setup>
 import { ref } from 'vue';
-import router from '@/router';
-
 import { useRecordsStore } from "@/stores/records";
-
+import { isInputModal, isInputNothingModal } from '@/stores/util';
 
 const store = useRecordsStore()
 
@@ -70,6 +68,21 @@ const drinkCaffeine = ref(0)
 const drinkSugar = ref(0)
 
 const showToolTip = ref(false)
+
+// 모달창을 열고 닫기 위한 함수
+const closeInputNothingModal = () => {
+  isInputNothingModal.value = false
+}
+
+const openInputModal = () => {
+  isInputModal.value = true
+}
+
+// 음료선택으로 이동하기 위한 함수
+const goInputModal = () => {
+  closeInputNothingModal()
+  openInputModal()
+}
 
 const makeSubmit = () => {
   if (isValid()) {
@@ -84,8 +97,9 @@ const makeSubmit = () => {
 
     console.log(drink)
 
-    // 유효한 데이터를 백엔드로 전송
+    // 유효한 데이터를 백엔드로 전송 및 창 닫기
     store.createMyDrink(drink)
+    closeInputNothingModal()
 
     } else {
       console.log('입력값이 올바르지 않습니다')
