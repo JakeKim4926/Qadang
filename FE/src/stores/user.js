@@ -20,9 +20,6 @@ export const useUserStore = defineStore("user", () => {
   const userMaxSugar = ref(0.0);
   const userMaxSugarDate = ref("");
 
-  const recommendedCaffeine = ref({});
-  const recommendedSugar = ref({});
-
   // =========== GETTER ===============
 
   const getUser = computed(() => {
@@ -67,14 +64,6 @@ export const useUserStore = defineStore("user", () => {
 
   const getUserMaxSugarDate = computed(() => {
     return userMaxSugarDate.value;
-  });
-
-  const getRecommendedCaffeine = computed(() => {
-    return recommendedCaffeine.value;
-  });
-
-  const getRecommendedSugar = computed(() => {
-    return recommendedSugar.value;
   });
 
   // =========== ACTION ===============
@@ -191,32 +180,6 @@ export const useUserStore = defineStore("user", () => {
         console.log(err);
       });
   };
-
-  const researchRecommendSugar = function () {
-    axios({
-      url: `${import.meta.env.VITE_REST_USER_API}/recommend/sugar`,
-      method: "GET",
-    })
-      .then((res) => {
-        recommendedSugar.value = res.data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const researchRecommendCaffeine = function () {
-    axios({
-      url: `${import.meta.env.VITE_REST_USER_API}/recommend/caffeine`,
-      method: "GET",
-    })
-      .then((res) => {
-        recommendedCaffeine.value = res.data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
   
   const infoFilled = computed(() => {     
     const userInfo = user.value;   
@@ -228,7 +191,6 @@ export const useUserStore = defineStore("user", () => {
            userInfo.hasOwnProperty('userWeight') && userInfo.userWeight !== 0 &&
            userInfo.hasOwnProperty('userHealth') && userInfo.userHealth !== 0;
   });
-  
   
 
   return {
@@ -243,8 +205,6 @@ export const useUserStore = defineStore("user", () => {
     userMaxCaffeineDate,
     userMaxSugar,
     userMaxSugarDate,
-    recommendedCaffeine,
-    recommendedSugar,
     getUser,
     getUserId,
     getUserName,
@@ -256,8 +216,6 @@ export const useUserStore = defineStore("user", () => {
     getUserMaxCaffeineDate,
     getUserMaxSugar,
     getUserMaxSugarDate,
-    getRecommendedCaffeine,
-    getRecommendedSugar,
     sendKakaoToken,
     logout,
     createUser,
@@ -266,8 +224,6 @@ export const useUserStore = defineStore("user", () => {
     researchMax,
     updateUser,
     deleteUser,
-    researchRecommendSugar,
-    researchRecommendCaffeine,
     infoFilled,
   };
 });

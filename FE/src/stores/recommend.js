@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 import router from "@/router";
 import axios from "axios";
 
-export const useRecommendStore = defineStore("user", () => {
+export const useRecommendStore = defineStore("recommend", () => {
   // =========== STATE ===============
 
   const recommendedCaffeine = ref({});
@@ -40,6 +40,7 @@ export const useRecommendStore = defineStore("user", () => {
       method: "GET",
     })
       .then((res) => {
+        console.log(res)
         recommendedCaffeine.value = res.data;
       })
       .catch((err) => {
@@ -52,7 +53,7 @@ export const useRecommendStore = defineStore("user", () => {
     recommendedSugar,
     getRecommendedCaffeine,
     getRecommendedSugar,
-    researchRecommendSugar,
     researchRecommendCaffeine,
+    researchRecommendSugar,
   };
 });
