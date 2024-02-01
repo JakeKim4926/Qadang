@@ -1,7 +1,7 @@
 <template>
   <div class="board-create-container">
     <div class="input-box">
-      <div class="close" @click="close">
+      <div class="close" @click="closeInputModal">
         <font-awesome-icon :icon="['fas', 'circle-xmark']" style="color: #000000;" size="xl"/>
       </div>
 
@@ -104,8 +104,6 @@ import { onMounted } from 'vue';
 
 import { useDrinksStore } from "@/stores/drinks";
 import { useRecordsStore } from "@/stores/records"
-import { isInputModal } from '@/stores/util';
-import router from '@/router';
 
 const drinkStore = useDrinksStore()
 const recordsStore = useRecordsStore()
@@ -138,7 +136,7 @@ onMounted(() => {
   drinkStore.researchCafe()
 })
 
-const close = function() {
+const closeInputModal = function() {
   isInputModal.value = false;
 }
 
@@ -289,7 +287,9 @@ const drinkSubmit = () => {
 
 // 여기없어용 버튼
 const goInputNothing = () => {
-  // router.push({name: 'inputNothing'})
+  // 모달창을 끄고 새로운 모달창 활성화
+  closeInputModal()
+
 }
 </script>
 
