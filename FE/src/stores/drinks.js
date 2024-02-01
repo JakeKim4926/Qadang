@@ -1,4 +1,5 @@
 import { ref, computed } from "vue";
+import { responseState } from "./util";
 import { defineStore } from "pinia";
 import router from "@/router";
 import axios from "axios";
@@ -13,7 +14,7 @@ export const useDrinksStore = defineStore("drinks", () => {
   // =========== GETTER ===============
 
   const getCafeList = computed(() => {
-    return cafeList.value;
+    return cafeList.value; 
   });
 
   const getCafeDrinkList = computed(() => {
@@ -27,25 +28,30 @@ export const useDrinksStore = defineStore("drinks", () => {
   // =========== ACTION ===============
   const researchCafe = function () {
     axios({
-      url: `${import.meta.env.REST_DRINKS_API}/cafe`,
+      url: `${import.meta.env.VITE_REST_DRINKS_API}/cafe`,
       method: "GET",
     })
       .then((res) => {
-        cafeList.value = res.data;
+        if (res.status == responseState.SUCCESS) {
+          cafeList.value = res.data;
+        }
       })
       .catch((err) => {
+        
         console.log(err);
       });
   };
 
   const researchCafeDrinks = function (id) {
     axios({
-      url: `${import.meta.env.REST_DRINKS_API}/cafe`,
+      url: `${import.meta.env.VITE_REST_DRINKS_API}/drink`,
       method: "GET",
       params: { cafeId: id },
     })
       .then((res) => {
-        cafeDrinkList.value = res.data;
+        if (res.status == responseState.SUCCESS) {
+          cafeDrinkList.value = res.data;
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -54,7 +60,7 @@ export const useDrinksStore = defineStore("drinks", () => {
 
   const researchAllDrink = function () {
     axios({
-      url: `${import.meta.env.REST_DRINKS_API}`,
+      url: `${import.meta.env.VITE_REST_DRINKS_API}`,
       method: "GET",
     })
       .then((res) => {

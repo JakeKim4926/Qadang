@@ -1,5 +1,6 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
+import { responseState } from "./util";
 import router from "@/router";
 import axios from "axios";
 
@@ -35,7 +36,7 @@ export const useAccumulateStore = defineStore("accumulate", () => {
   // data는 요청 바디로 전송될 데이터 (JSON)
   const today = function () {
     axios({
-      url: `${import.meta.env.REST_ACCUMULATE_API}/today`,
+      url: `${import.meta.env.VITE_REST_ACCUMULATE_API}/today`,
       method: "GET",
     })
       .then((res) => {
@@ -48,7 +49,7 @@ export const useAccumulateStore = defineStore("accumulate", () => {
 
   const duration = function () {
     axios({
-      url: `${import.meta.env.REST_ACCUMULATE_API}/duration`,
+      url: `${import.meta.env.VITE_REST_ACCUMULATE_API}/duration`,
       method: "GET",
     })
       .then((res) => {
@@ -61,12 +62,16 @@ export const useAccumulateStore = defineStore("accumulate", () => {
 
   // date example) 202401 (연도+월)
   const month = function (date) {
+    console.log(date.value);
     axios({
-      url: `${import.meta.env.REST_ACCUMULATE_API}/month`,
+      url: `${import.meta.env.VITE_REST_ACCUMULATE_API}/month`,
       method: "GET",
-      params: { ym: date },
+      params: { ym: date.value },
     })
       .then((res) => {
+        if(res.status == responseState.SUCCESS) {
+          console.log("success ", res.data );
+        }
         acuumulateMonth.value = res.data;
       })
       .catch((err) => {
@@ -77,11 +82,13 @@ export const useAccumulateStore = defineStore("accumulate", () => {
   // date example) 20240123 (연도+월일)
   const day = function (date) {
     axios({
-      url: `${import.meta.env.REST_ACCUMULATE_API}/day`,
+      url: `${import.meta.env.VITE_REST_ACCUMULATE_API}/day`,
       method: "GET",
-      params: { date: date },
+      params: { date: date.value },
     })
       .then((res) => {
+        console.log('get it : ', parseFloat(res.data.accumulateCaffeine));
+        console.log(date.value);
         acuumulateDay.value = res.data;
       })
       .catch((err) => {

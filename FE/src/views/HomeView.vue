@@ -1,12 +1,25 @@
 <template>
+  <div>
+    <h2>hello home</h2>
     <div>
-      <h2>Hello Home</h2>
+      <RouterLink to="/calendar">캘린더 보기</RouterLink>
+      <!-- <RouterLink to="/calendarDetail">캘린더 보기</RouterLink> -->
+      <!-- <RouterLink :to="{ name : 'input'}">input</RouterLink> -->
+      <div>
+        <RouterView />
+      </div>
     </div>
-  </template>
+  </div>
+</template>
   
-  <script setup>
+<script setup>
+import '../components/font/font.css';
+import { onMounted } from "vue";
+
+onMounted(() => {
+
+})
+
+</script>
   
-  </script>
-  
-  <style scoped>
-  </style>
+<style scoped></style>
