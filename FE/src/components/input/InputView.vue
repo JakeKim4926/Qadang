@@ -1,5 +1,6 @@
 <template>
-  <div class="close">
+  <div class="board-create-container input-background">
+    <div class="close" @click="close">
     <font-awesome-icon :icon="['fas', 'circle-xmark']" style="color: #000000;" size="xl"/>
   </div>
 
@@ -91,6 +92,8 @@
     </div>
 
   </div>
+  </div>
+
 </template>
 
 <script setup>
@@ -99,6 +102,7 @@ import { onMounted } from 'vue';
 
 import { useDrinksStore } from "@/stores/drinks";
 import { useRecordsStore } from "@/stores/records"
+import { isInputModal } from '@/stores/util';
 import router from '@/router';
 
 const drinkStore = useDrinksStore()
@@ -131,6 +135,10 @@ const showToolTip = ref(false)
 onMounted(() => {
   drinkStore.researchCafe()
 })
+
+const close = function() {
+  isInputModal.value = false;
+}
 
 // 이전 선택값 초기화해주는 함수
 const reset = () => {
@@ -279,7 +287,7 @@ const drinkSubmit = () => {
 
 // 여기없어용 버튼
 const goInputNothing = () => {
-  router.push({name: 'inputNothing'})
+  // router.push({name: 'inputNothing'})
 }
 </script>
 
@@ -295,6 +303,29 @@ h2 {
 
 div {
   margin: 10px;
+}
+
+.board-create-container {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(128, 128, 128, 0.863);
+    top: 0;
+    left: 0;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.input-background {
+    box-sizing: border-box;
+    width: 579px;
+    height: 613px;
+    background: #FFFFFF;
+    border: 1px solid #D9D9D9;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
 }
 
 .input-container {
