@@ -5,7 +5,7 @@
 
   <p>닉네임 님</p>
   <div>
-    당 섭취량으로 가는 버튼
+    <RouterLink :to="{name:'mainSugar'}">당 섭취량으로 가는 버튼</RouterLink>
   </div>
 
   <p>카페인 섭취량</p>
@@ -32,13 +32,18 @@
     추천 음료 상세보기
   </div>
 
-  <div>
-    채팅으로 가기
+  <div @click="goChat">
+    <font-awesome-icon :icon="['fas', 'comments']" style="color: #000000;" />
   </div>
 </template>
 
 <script setup>
+import router from '@/router';
 
+// 채팅으로 이동
+const goChat = () => {
+  router.push({name : 'chat'})
+}
 </script>
 
 <style scoped>
