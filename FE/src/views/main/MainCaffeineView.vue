@@ -79,7 +79,7 @@ onMounted(async () => {
   // await userStore.researchUser()                   // 닉네임
   // await accumulateStore.today()                   // 권장량, 섭취량
   // await accumulateStore.duration()                // chart.js를 위한 기간별 섭취량
-  // await userStore.researchRecommendCaffeine()     // 기록 기반 음료추천 카페
+  await recommendStore.researchRecommendCaffeine()     // 기록 기반 음료추천 카페
   // await recordsStore.researchDayDrink(date)       // 방금 마신 음료 계산을 위한 일자별 기록
 
   // 최근 마신 음료의 카페인 계산
