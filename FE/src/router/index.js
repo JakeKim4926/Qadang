@@ -11,8 +11,6 @@ import SearchRankView from '@/views/search/SearchRankView.vue'
 import SearchTopView from '@/views/search/SearchTopView.vue'
 import DrinkDetailView from '@/views/search/DrinkDetailView.vue'
 import CompareDrinkView from '@/views/search/CompareDrinkView.vue'
-import InputView from '@/views/input/InputView.vue'
-import InputNothingView from '@/views/input/InputNothingView.vue'
 import UserUpdateView from '@/views/mypage/UserUpdateView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -88,16 +86,6 @@ const router = createRouter({
       path: '/compareDrink',
       name: 'compareDrink',
       component: CompareDrinkView
-    },
-    {
-      path: '/input',
-      name: 'input',
-      component: InputView
-    },
-    {
-      path: '/inputNothing',
-      name: 'inputNothing',
-      component: InputNothingView
     },
   ],
 })
