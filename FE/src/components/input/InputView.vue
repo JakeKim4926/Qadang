@@ -1,99 +1,101 @@
 <template>
-  <div class="board-create-container input-background">
-    <div class="close" @click="close">
-    <font-awesome-icon :icon="['fas', 'circle-xmark']" style="color: #000000;" size="xl"/>
-  </div>
-
-  <div class="input-container">
-    <div>
-      <h2>오늘 마신 카페 음료를 선택해주세요</h2>
-    </div>
-
-    <div>
-      <label for="cafeSelect" class="big-font">카페명</label>
-      <select name="cafeSelect" id="cafeSelect"
-      v-model="cafeId" @change="changeCafeDrinkList" class="button_select select">
-        <option v-for="cafe in drinkStore.getCafeList"
-        :key="cafe.cafeId"
-        :value="cafe.cafeId">
-          {{ cafe.cafeName }}
-        </option>
-      </select>
-    </div>
-    
-
-    <div v-if="cafeId">
-      <label for="drinkSelect" class="big-font">음료명</label>
-      <select name="drinkSelect" id="drinkSelect"
-      v-model="drinkInfo" @change="changeDrinkInfo" class="button_select select">
-      <option v-for="drink in drinkStore.getCafeDrinkList"
-      :key="drink.drinkId"
-      :value="drink">
-        {{ drink.drinkName }}
-      </option>
-    </select>
-    </div>
-
-    <div v-else>
-      <label for="drinkSelect" class="big-font">음료명</label>
-      <select name="drinkSelect" id="drinkSelect" class="button_select select">
-        <option value="" disabled selected>카페를 먼저 선택해주세요</option>
-      </select>
-    </div>
-    
-    <div class="item-container">
-      <label for="plusShot" class="big-font">샷</label>
-      <p class="mid-font">1샷 - 카페인 75mg</p>
-      <button :disabled="!getminusCaffeineButton" @click="minusCaffeine" class="pm-button">
-        <font-awesome-icon :icon="['fas', 'minus']" style="color: #000000;" />
-      </button>
-      {{ plusShot }}
-      <button :disabled="!getplusCaffeineButton" @click="plusCaffeine" class="pm-button">
-        <font-awesome-icon :icon="['fas', 'plus']" style="color: #000000;" />
-      </button>
-    </div>
-
-    <div class="item-container">
-      <label for="plusSyrup" class="big-font">시럽</label>
-      <p class="mid-font">1시럽 - 당 6g</p>
-      <button :disabled="!getminusSugarButton" @click="minusSugar" class="pm-button">
-        <font-awesome-icon :icon="['fas', 'minus']" style="color: #000000;" />
-      </button>
-      {{ plusSyrup }}
-      <button :disabled="!getplusSugarButton" @click="plusSugar" class="pm-button">
-        <font-awesome-icon :icon="['fas', 'plus']" style="color: #000000;" />
-      </button>
-    </div>
-
-    <!-- {{ drinkInfo }}
-
-    {{ drinkCaffeine }}
-    {{ drinkSugar }}
-
-    {{ minusCaffeineButton }}
-    {{ plusCaffeineButton }}
-    {{ minusSugarButton }}
-    {{ plusSugarButton }}
-
-    {{ plusShot }}
-    {{ plusSyrup }} -->
-
-    <div class="item-container">
-      <button @click="goInputNothing" class="button_input_color buttons">여기없어용</button>
-      <span @mouseover="showToolTip = true" @mouseleave="showToolTip = false">
-        <font-awesome-icon :icon="['fas', 'circle-question']" size="xl"/>
-      </span>
-      <div v-if="showToolTip" class="tip-container">
-        <div class="tip">
-          <p>여기에 여기없어용에 대한 자세한 설명을 작성합니다</p>
-        </div>
+  <div class="board-create-container">
+    <div class="input-box">
+      <div class="close" @click="close">
+        <font-awesome-icon :icon="['fas', 'circle-xmark']" style="color: #000000;" size="xl"/>
       </div>
-      <button @click="drinkSubmit" class="button_caffeine buttons">입력완료</button>
+
+      <div class="input-container">
+        <div>
+          <h2>오늘 마신 카페 음료를 선택해주세요</h2>
+        </div>
+
+        <div>
+          <label for="cafeSelect" class="big-font">카페명</label>
+          <select name="cafeSelect" id="cafeSelect"
+          v-model="cafeId" @change="changeCafeDrinkList" class="button_select select">
+            <option v-for="cafe in drinkStore.getCafeList"
+            :key="cafe.cafeId"
+            :value="cafe.cafeId">
+              {{ cafe.cafeName }}
+            </option>
+          </select>
+        </div>
+        
+
+        <div v-if="cafeId">
+          <label for="drinkSelect" class="big-font">음료명</label>
+          <select name="drinkSelect" id="drinkSelect"
+          v-model="drinkInfo" @change="changeDrinkInfo" class="button_select select">
+          <option v-for="drink in drinkStore.getCafeDrinkList"
+          :key="drink.drinkId"
+          :value="drink">
+            {{ drink.drinkName }}
+          </option>
+        </select>
+        </div>
+
+        <div v-else>
+          <label for="drinkSelect" class="big-font">음료명</label>
+          <select name="drinkSelect" id="drinkSelect" class="button_select select">
+            <option value="" disabled selected>카페를 먼저 선택해주세요</option>
+          </select>
+        </div>
+        
+        <div class="item-container">
+          <label for="plusShot" class="big-font">샷</label>
+          <p class="mid-font">1샷 - 카페인 75mg</p>
+          <button :disabled="!getminusCaffeineButton" @click="minusCaffeine" class="pm-button">
+            <font-awesome-icon :icon="['fas', 'minus']" style="color: #000000;" />
+          </button>
+          {{ plusShot }}
+          <button :disabled="!getplusCaffeineButton" @click="plusCaffeine" class="pm-button">
+            <font-awesome-icon :icon="['fas', 'plus']" style="color: #000000;" />
+          </button>
+        </div>
+
+        <div class="item-container">
+          <label for="plusSyrup" class="big-font">시럽</label>
+          <p class="mid-font">1시럽 - 당 6g</p>
+          <button :disabled="!getminusSugarButton" @click="minusSugar" class="pm-button">
+            <font-awesome-icon :icon="['fas', 'minus']" style="color: #000000;" />
+          </button>
+          {{ plusSyrup }}
+          <button :disabled="!getplusSugarButton" @click="plusSugar" class="pm-button">
+            <font-awesome-icon :icon="['fas', 'plus']" style="color: #000000;" />
+          </button>
+        </div>
+
+        <!-- {{ drinkInfo }}
+
+        {{ drinkCaffeine }}
+        {{ drinkSugar }}
+
+        {{ minusCaffeineButton }}
+        {{ plusCaffeineButton }}
+        {{ minusSugarButton }}
+        {{ plusSugarButton }}
+
+        {{ plusShot }}
+        {{ plusSyrup }} -->
+
+        <div class="item-container">
+          <button @click="goInputNothing" class="button_input_color buttons">여기없어용</button>
+          <span @mouseover="showToolTip = true" @mouseleave="showToolTip = false">
+            <font-awesome-icon :icon="['fas', 'circle-question']" size="xl"/>
+          </span>
+          <div v-if="showToolTip" class="tip-container">
+            <div class="tip">
+              <p>여기에 여기없어용에 대한 자세한 설명을 작성합니다</p>
+            </div>
+          </div>
+          <button @click="drinkSubmit" class="button_caffeine buttons">입력완료</button>
+        </div>
+
+      </div>
     </div>
-
+    
   </div>
-  </div>
-
 </template>
 
 <script setup>
@@ -298,7 +300,7 @@ const goInputNothing = () => {
 h2 {
   color: #562B1A;
   font-weight: bold;
-  text-align: center;  
+  text-align: center;
 }
 
 div {
@@ -306,26 +308,31 @@ div {
 }
 
 .board-create-container {
-    position: fixed;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(128, 128, 128, 0.863);
-    top: 0;
-    left: 0;
-    z-index: 2;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  /* max-width:614px;
+  max-height: 584px; */
+  background-color: rgba(128, 128, 128, 0.863) !important;
+  top: 0;
+  left: 0;
+  margin: 0;
+  z-index: 99 !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.input-background {
-    box-sizing: border-box;
-    width: 579px;
-    height: 613px;
-    background: #FFFFFF;
-    border: 1px solid #D9D9D9;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 20px;
+.input-box {
+  background: #ffffff;
+  border-radius: 30px;
+  border-style: solid;
+  border-color: #d9d9d9;
+  border-width: 1px;
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 
 .input-container {
@@ -342,8 +349,10 @@ div {
 
 .close {
   display: flex;
-  align-items: center;
-  justify-content: flex-end; 
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
 }
 
 .pm-button {
@@ -392,8 +401,8 @@ div {
 
 .tip {
   position: fixed;
-  top: 50%;
-  left: 50%;
+  top: 63%;
+  left: 63%;
   transform: translate(-50%, -50%);
   background: white;
   padding: 20px;
