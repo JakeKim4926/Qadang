@@ -3,7 +3,7 @@
     <div class="footer-content">
       <InputView v-if="isInputModal" />
       <div class="empty-space"></div> <!-- 왼쪽 끝의 빈 공간 -->
-      <RouterLink to="/" class="footer-link">
+      <RouterLink :to="{name:'mainCaffeine'}" class="footer-link">
         <div class="footer-item">
           <font-awesome-icon :icon="['fas', 'home']" class="footer-icon" />
         </div>
