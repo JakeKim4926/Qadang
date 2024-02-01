@@ -1,8 +1,10 @@
 <template>
   <footer class="footer">
     <div class="footer-content">
+
       <InputView v-if="isInputModal" />
       <InputNothingView v-if="isInputNothingModal" />
+
       <div class="empty-space"></div> <!-- 왼쪽 끝의 빈 공간 -->
       <RouterLink to="/" class="footer-link">
         <div class="footer-item">
@@ -38,8 +40,12 @@
   import InputView from '@/components/input/InputView.vue';
   import InputNothingView from '@/components/input/InputNothingView.vue';
 
-  import { isInputModal } from '@/stores/input';
-  import { isInputNothingModal } from '@/stores/input';
+  import { isInputModal, isInputNothingModal } from '@/stores/util';
+
+  // open input modal
+  const openInputModal = () => {
+    isInputModal.value = true
+  }
 
 </script>
 

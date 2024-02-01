@@ -1,26 +1,24 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { isInputModal, isInputNothingModal } from '@/stores/util'
 
 export const useInputStore = defineStore("input", () => {
-  const isInputModal = ref(false)
-  const inInputNothingModal = ref(false)
-
   // input modal
   const openInputModal = () => {
     isInputModal.value = true
   }
 
-  const closeInputModal = function() {
+  const closeInputModal = () => {
     isInputModal.value = false
   }
 
   // inputNothing modal
   const openInputNothingModal = () => {
-    inInputNothingModal.value = true
+    isInputNothingModal.value = true
+
   }
 
   const closeInputNothingModal = () => {
-    inInputNothingModal.value = false
+    isInputNothingModal.value = false
   }
 
   // move modal
@@ -30,13 +28,11 @@ export const useInputStore = defineStore("input", () => {
   }
 
   const goInputNothingModal = () => {
-  closeInputModal()
-  openInputNothingModal()
+    closeInputModal()
+    openInputNothingModal()
   }
   
   return {
-    isInputModal,
-    inInputNothingModal,
     openInputModal,
     closeInputModal,
     openInputNothingModal,
