@@ -20,18 +20,16 @@
         {{ accumulateStore.getAcuumulateToday.userCaffeine }}mg</p>
     </div>
     <div>
-      <p>혈중 카페인농도 만땅</p>
+      <p>{{ statusText[getStatus] }}</p>
     </div>
   </div>
-
   <div>
     최근에 마신 카페인을 한눈에 보아요
-    chart.js 활용
   </div>
 
   <div>
     오늘은 이 음료 어때요?
-    <img :src="recommendStore.getRecommendedCaffeine.drinkUrl" alt="Recommended Drink" />
+    <img :src="recommendStore.getRecommendedCaffeine.drinkUrl" alt="Recommended Drink" class="photo"/>
     {{ recommendStore.getRecommendedCaffeine.cafeName }}
     {{ recommendStore.getRecommendedCaffeine.drinkName }}
     {{ recommendStore.getRecommendedCaffeine.drinkCaffeine }}
@@ -65,6 +63,19 @@ const getRecentCaffeine = computed(() => {
   return recentCaffeine.value
 })
 
+const status = ref(0)
+
+const getStatus = computed(() => {
+  return status.value
+})
+
+const statusText = ['양호메시지', '보통메시지', '나쁨메시지']
+const statusImg = [
+  'ca_good.png',
+  'ca_soso.png',
+  'ca_bad.png'
+]
+
 // 데이터를 가져오기 위한 함수
 onMounted(async () => {
 
@@ -80,16 +91,28 @@ onMounted(async () => {
   const date = ref(null)
   date.value = year + month + day
 
-  // await userStore.researchUser()                   // 닉네임 <- 404 error
-  // await accumulateStore.today()                   // 권장량, 섭취량
-  // await accumulateStore.duration()                // chart.js를 위한 기간별 섭취량
+  // await userStore.researchUser()                // 닉네임 <- 404 error
+  await accumulateStore.today()                   // 권장량, 섭취량
+  await accumulateStore.duration()                // chart.js를 위한 기간별 섭취량
   await recommendStore.researchRecommendCaffeine()     // 기록 기반 음료추천 카페
-  // await recordsStore.researchDayDrink(date)       // 방금 마신 음료 계산을 위한 일자별 기록
+  await recordsStore.researchDayDrink(date)       // 방금 마신 음료 계산을 위한 일자별 기록
 
   // 최근 마신 음료의 카페인 계산
   const idx = recordsStore.getDayDrink.length - 1
+
   const recentDrink = recordsStore.getDayDrink[idx]
   recentCaffeine.value = recentDrink ? recentDrink.drinkCaffeine.value : 0
+
+  // 섭취량에 따른 상태 표시 계산
+  // 섭취량이 0-200 -> 양호, 200-400 -> 보통, 400 이상 -> 위험
+  if (0 <= accumulateStore.getAcuumulateToday.accumulateCaffeine.value < 200) {
+    return status.value = 0
+  } else if (accumulateStore.getAcuumulateToday.accumulateCaffeine.value < 400) {
+    return status.value = 1
+  } else {
+    return status.value = 2
+  }
+
 })
 
 // 채팅으로 이동
@@ -99,4 +122,8 @@ const goChat = () => {
 </script>
 
 <style scoped>
+.photo {
+  width: 10%;
+  height: 10%;
+}
 </style>
