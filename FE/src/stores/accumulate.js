@@ -84,9 +84,11 @@ export const useAccumulateStore = defineStore("accumulate", () => {
     axios({
       url: `${import.meta.env.VITE_REST_ACCUMULATE_API}/day`,
       method: "GET",
-      params: { date: date },
+      params: { date: date.value },
     })
       .then((res) => {
+        console.log('get it : ', parseFloat(res.data.accumulateCaffeine));
+        console.log(date.value);
         acuumulateDay.value = res.data;
       })
       .catch((err) => {

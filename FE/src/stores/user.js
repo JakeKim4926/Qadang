@@ -11,8 +11,8 @@ export const useUserStore = defineStore("user", () => {
   const userName = ref("");
 
   const userRDI = ref({}); // RDI - Recommended Daily Intake (당일 권장량)
-  const userRDICaffeine = ref(0.0);
-  const userRDISugar = ref(0.0);
+  const userRDICaffeine = ref(400.0);
+  const userRDISugar = ref(50.0);
 
   const userMax = ref({});
   const userMaxCaffeine = ref(0.0);
