@@ -289,10 +289,12 @@ const drinkSubmit = () => {
 
     // 데이터 전송 및 창 닫기
     recordsStore.createCafeDrink(drink)
+    alert('입력값이 올바릅니다. 데이터를 전송합니다.')
     closeInputModal()
 
     } else {
       console.log('입력값이 올바르지 않습니다')
+      alert('입력값이 올바르지 않습니다. 다시 확인해주세요.')
     }
   }
 </script>
