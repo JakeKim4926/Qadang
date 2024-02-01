@@ -1,97 +1,82 @@
 <template>
-  <div>
-    <v-footer class="text-center d-flex flex-column" app>
-      <v-layout>
-        <nav class="footer-nav">
-          <RouterLink to="/"><font-awesome-icon :icon="['fas', 'house']" class="footer-icon" /></RouterLink>
-
-          <RouterLink to="/calendar"><font-awesome-icon :icon="['fas', 'calendar']" class="footer-icon" />
-          </RouterLink>
-
-          <RouterLink to="/input"><font-awesome-icon :icon="['fas', 'plus']" class="footer-icon" /></RouterLink>
-
-          <RouterLink to="/searchRank"><font-awesome-icon :icon="['fas', 'magnifying-glass']" class="footer-icon" />
-          </RouterLink>
-
-          <RouterLink to="/mypage"><font-awesome-icon :icon="['fas', 'user']" class="footer-icon" />
-          </RouterLink>
-        </nav>
-      </v-layout>
-    </v-footer>
-    <!-- </v-app> -->
-    <!-- home icon -->
-    <!-- <font-awesome-icon :icon="['fas', 'house']" style="color: #b3b3b3;" /> -->
-
-  </div>
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="empty-space"></div> <!-- 왼쪽 끝의 빈 공간 -->
+      <RouterLink to="/" class="footer-link">
+        <div class="footer-item">
+          <font-awesome-icon :icon="['fas', 'home']" class="footer-icon" />
+        </div>
+      </RouterLink>
+      <RouterLink to="/calendar" class="footer-link">
+        <div class="footer-item">
+          <font-awesome-icon :icon="['fas', 'calendar-alt']" class="footer-icon" />
+        </div>
+      </RouterLink>
+      <RouterLink to="/input" class="footer-link">
+        <div class="footer-item">
+          <font-awesome-icon :icon="['fas', 'plus']" class="footer-icon plus-icon" />
+        </div>
+      </RouterLink>
+      <RouterLink to="/searchRank" class="footer-link">
+        <div class="footer-item">
+          <font-awesome-icon :icon="['fas', 'search']" class="footer-icon" />
+        </div>
+      </RouterLink>
+      <RouterLink to="/mypage" class="footer-link">
+        <div class="footer-item">
+          <font-awesome-icon :icon="['fas', 'user']" class="footer-icon" />
+        </div>
+      </RouterLink>
+      <div class="empty-space"></div> <!-- 오른쪽 끝의 빈 공간 -->
+    </div>
+  </footer>
 </template>
-<script setup>
-
-</script>
 
 <style>
-.footer-bottom {
-  bottom: 0;
+.footer {
   position: fixed;
+  bottom: 0;
+  left: 0;
   width: 100%;
+  background-color: #f0f0f0;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+  border-top: 1px solid #ddd;
 }
 
-.footer-icon {
-  width: 75px;
-  height: 75px;
-  flex-shrink: 0;
-  color: #768189;
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+}
+
+.footer-link {
+  text-decoration: none;
+  color: #666;
+}
+
+.footer-item {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
+.footer-icon {
+  font-size: 24px;
+  color: #666; /* 기본 색상 */
+  transition: color 0.3s ease; /* 색상 전환 애니메이션 */
+}
+
+.plus-icon {
+  font-size: 32px;
+  color: #666; /* 플러스 아이콘의 색상 */
+}
+
+.empty-space {
+  width: calc(25% - 24px); /* 4/1 공간을 계산하여 설정 */
+}
+
 .footer-icon:hover {
-  color: #000000; /* Change to desired color */
-}
-
-.footer-nav {
-  display: flex;
-  justify-content: center;
-  /* Center the icons horizontally */
-  align-items: center;
-  background-color: #fff;
-  /* Footer 배경색 */
-  border-top: 1px solid #dcdcdc;
-  /* 윗면 테두리 */
-  padding: 10px;
-  /* Add padding as needed */
-}
-
-
-@media (max-width: 600px) {
-  .footer-icon {
-    /* Adjust the width and height for smaller screens */
-    width: 50px;
-    height: 50px;
-  }
-}
-
-@media (min-width: 601px) and (max-width: 900px) {
-  .footer-icon:nth-child(1) {
-    /* Adjust margin for the first icon on medium-sized screens */
-    margin-right: 30px;
-  }
-
-  .footer-icon:nth-child(2) {
-    /* Adjust margin for the second icon on medium-sized screens */
-    margin-left: 30px;
-  }
-}
-
-@media (min-width: 901px) {
-  .footer-icon:nth-child(1) {
-    /* Adjust margin for the first icon on large screens */
-    margin-right: 50px;
-  }
-
-  .footer-icon:nth-child(2) {
-    /* Adjust margin for the second icon on large screens */
-    margin-left: 50px;
-  }
+  color: #000; /* 마우스 호버 시 검정색으로 변경 */
 }
 </style>
