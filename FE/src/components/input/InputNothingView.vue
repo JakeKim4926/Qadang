@@ -99,10 +99,12 @@ const makeSubmit = () => {
 
     // 유효한 데이터를 백엔드로 전송 및 창 닫기
     store.createMyDrink(drink)
+    alert('입력값이 올바릅니다. 데이터를 전송합니다.')
     closeInputNothingModal()
 
     } else {
       console.log('입력값이 올바르지 않습니다')
+      alert('입력값이 올바르지 않습니다. 다시 확인해주세요.')
     }
   }
 
