@@ -51,8 +51,11 @@
 </template>
 
 <script setup>
-import { useRecordsStore } from "@/stores/records";
+import { ref } from 'vue';
 import router from '@/router';
+
+import { useRecordsStore } from "@/stores/records";
+
 
 const store = useRecordsStore()
 
