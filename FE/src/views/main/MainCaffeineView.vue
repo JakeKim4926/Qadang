@@ -3,12 +3,14 @@
     <h2>Hello Main Caffeine</h2>
   </div>
 
+  <canvas id="chartCanvas"></canvas>
+
   {{ accumulateStore.getAccumulateList }}
   <p>{{ userStore.getUserName }} 님</p>
   <div>
     <RouterLink :to="{name:'mainSugar'}">당 섭취량으로 가는 버튼</RouterLink>
   </div>
-<!--
+
   <p>카페인 섭취량</p>
   <div>
     <div v-if="accumulateStore.getAccumulateToday.accumulateCaffeine < 200.0">
@@ -46,7 +48,6 @@
       </div>
     </div>
   </div>
-  -->
   
   <div>
     최근에 마신 카페인을 한눈에 보아요
@@ -72,6 +73,9 @@
 import { computed, ref } from 'vue';
 import { onMounted } from 'vue';
 import router from '@/router';
+
+import { Chart } from "chart.js/auto";
+import 'chartjs-adapter-date-fns';
 
 import { useUserStore } from '@/stores/user';
 import { useAccumulateStore } from '@/stores/accumulate';
@@ -103,6 +107,44 @@ onMounted(async () => {
   await accumulateStore.duration()                // chart.js를 위한 기간별 섭취량
   await recommendStore.researchRecommendCaffeine()     // 기록 기반 음료추천 카페인
   await recordsStore.researchDayDrink(date)       // 방금 마신 음료 계산을 위한 일자별 기록
+
+  // chart.js
+  const chartElement = document.querySelector('#chartCanvas').getContext('2d');
+  const chartCanvas = new Chart(chartElement, {
+    type: 'bar',
+    data: {
+      labels: ['20240102', '20240103', '20240131', '20240201', '20240202'], // 날짜
+      datasets: [{
+        label: '일별 카페인 섭취량',
+        data: [500, 600.4, 203.4, 330.4, 13.2], // 날짜에 따른 데이터 기록 합산
+        backgroundColor: ['#846046'],
+      }]
+    },
+    options: {
+      scales: {
+        x: {
+          type: 'time',
+          time: {
+            unit: 'day'
+          }
+        },
+        y: {
+          beginAtZero:true
+        }
+      },
+      plugins: {
+        title: {
+          display: true,
+          text: '일별 카페인 섭취량',
+          font: {
+            size: 20
+          }
+        },
+      },
+      responsive: true,
+      // maintainAspectRatio: false
+    }
+  })
 
 })
 
