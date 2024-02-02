@@ -3,9 +3,6 @@
     <h2>Hello Main Caffeine</h2>
   </div>
 
-  <canvas id="chartCanvas"></canvas>
-
-  {{ accumulateStore.getAccumulateList }}
   <p>{{ userStore.getUserName }} 님</p>
   <div>
     <RouterLink :to="{name:'mainSugar'}">당 섭취량으로 가는 버튼</RouterLink>
@@ -51,7 +48,7 @@
   
   <div>
     최근에 마신 카페인을 한눈에 보아요
-    
+    <canvas id="chartCanvas"></canvas>
   </div>
 
   <div>
@@ -70,7 +67,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, reactive, ref, watchEffect } from 'vue';
 import { onMounted } from 'vue';
 import router from '@/router';
 
@@ -87,36 +84,13 @@ const accumulateStore = useAccumulateStore()
 const recordsStore = useRecordsStore()
 const recommendStore = useRecommendStore()
 
-// 데이터를 가져오기 위한 함수
-onMounted(async () => {
-
-  // 현재 날짜를 알기 위한 변수
-  const todayDate = new Date()
-  const year = todayDate.getFullYear()
-  let month = todayDate.getMonth() + 1
-  let day = todayDate.getDate()
-
-  month = month < 10 ? '0' + month.toString() : month.toString()
-  day = day < 10 ? '0' + day.toString() : day.toString()
-
-  const date = ref(null)
-  date.value = year + month + day
-
-  // await userStore.researchUser()                // 닉네임 <- 404 error
-  await accumulateStore.today();                   // 권장량, 섭취량
-  await accumulateStore.duration()                // chart.js를 위한 기간별 섭취량
-  await recommendStore.researchRecommendCaffeine()     // 기록 기반 음료추천 카페인
-  await recordsStore.researchDayDrink(date)       // 방금 마신 음료 계산을 위한 일자별 기록
-
-  // chart.js
-  const chartElement = document.querySelector('#chartCanvas').getContext('2d');
-  const chartCanvas = new Chart(chartElement, {
+const chartData = reactive({
     type: 'bar',
     data: {
-      labels: ['20240102', '20240103', '20240131', '20240201', '20240202'], // 날짜
+      labels: [], // 날짜
       datasets: [{
         label: '일별 카페인 섭취량',
-        data: [500, 600.4, 203.4, 330.4, 13.2], // 날짜에 따른 데이터 기록 합산
+        data: [], // 날짜에 따른 데이터 기록 합산
         backgroundColor: ['#846046'],
       }]
     },
@@ -146,6 +120,50 @@ onMounted(async () => {
     }
   })
 
+// 데이터를 가져오기 위한 함수
+onMounted(async () => {
+
+  // 현재 날짜를 알기 위한 변수
+  const todayDate = new Date()
+  const year = todayDate.getFullYear()
+  let month = todayDate.getMonth() + 1
+  let day = todayDate.getDate()
+
+  month = month < 10 ? '0' + month.toString() : month.toString()
+  day = day < 10 ? '0' + day.toString() : day.toString()
+
+  const date = ref(null)
+  date.value = year + month + day
+
+  // await userStore.researchUser()                // 닉네임 <- 404 error
+  await accumulateStore.today();                   // 권장량, 섭취량
+  await accumulateStore.duration()                // chart.js를 위한 기간별 섭취량
+  await recommendStore.researchRecommendCaffeine()     // 기록 기반 음료추천 카페인
+  await recordsStore.researchDayDrink(date)       // 방금 마신 음료 계산을 위한 일자별 기록
+
+  // chart.js
+  const chartElement = document.querySelector('#chartCanvas').getContext('2d');
+  
+  const tmp_data = ref([])
+  const chartCanvas = new Chart(chartElement, chartData)
+  
+  // 차트 데이터에 넣을 데이터가 생긴 뒤 데이터 삽입
+  watchEffect(() => {
+    if (accumulateStore.getAccumulateList.length > 1) {
+      // console.log(accumulateStore.getAccumulateList)
+      accumulateStore.getAccumulateList.forEach(data => {
+        // console.log(data)
+        chartData.data.labels.push(data.accumulateDate)
+        // console.log(data.accumulateCaffeine)
+        // console.log(chartData.data.datasets[0].data)
+        tmp_data.value.push(data.accumulateCaffeine)
+        // chartData.data.datasets[0].data.push(data.accumulateCaffeine)
+      });
+      chartData.data.datasets[0].data = tmp_data.value
+      console.log(chartData.data.datasets[0].data)
+    }
+    chartCanvas.update()
+  })
 })
 
 // 채팅으로 이동
