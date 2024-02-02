@@ -11,20 +11,45 @@
   <p>카페인 섭취량</p>
   <div>
     <!-- 상태에 따라 출력되는 이미지와 문구가 다름 -->
-    <p>이미지</p>
+    <div v-if="accumulateStore.getAccumulateToday.accumulateCaffeine < 200.0">
+      <img src="@/components/icons/ca_good.png" alt="양호 이미지" srcset="">
+    </div>
+    <div v-else if="accumulateStore.getAccumulateToday.accumulateCaffeine < 400.0">
+      <img src="@/components/icons/ca_soso.png" alt="보통 이미지" srcset="">
+    </div>
+    <div v-else>
+      <img src="@/components/icons/ca_bad.png" alt="나쁨 이미지" srcset="">
+    </div>
+
     <div>
       <p>방금 마신 음료</p>
-      <p>카페인 {{ getRecentCaffeine }}mg</p>
+      <div v-if="recordsStore.getDayDrink.length > 0">
+        {{ recordsStore.getDayDrink[recordsStore.getDayDrink.length-1].drinkCaffeine }}mg
+      </div>
+      <div v-else>
+        오늘 마신 음료가 없습니다!
+      </div>
+
       <p>하루 총합 섭취량 / 권장량</p>
-      <p>{{ accumulateStore.getAcuumulateToday.accumulateCaffeine }} / 
-        {{ accumulateStore.getAcuumulateToday.userCaffeine }}mg</p>
+      <p>{{ accumulateStore.getAccumulateToday.accumulateCaffeine }} / 
+        {{ accumulateStore.getAccumulateToday.userCaffeine }}mg</p>
     </div>
     <div>
-      <p>{{ statusText[getStatus] }}</p>
+      <!-- 상태에 따라 달라지는 문구 -->
+      <div v-if="accumulateStore.getAccumulateToday.accumulateCaffeine < 200.0">
+        <p>양호 메시지</p>
+      </div>
+      <div v-else-if="accumulateStore.getAccumulateToday.accumulateCaffeine < 400.0">
+        <p>보통 메시지</p>
+      </div>
+      <div v-else>
+        <p>나쁨 메시지</p>
+      </div>
     </div>
   </div>
   <div>
     최근에 마신 카페인을 한눈에 보아요
+    <!-- chart.js -->
   </div>
 
   <div>
@@ -57,32 +82,13 @@ const accumulateStore = useAccumulateStore()
 const recordsStore = useRecordsStore()
 const recommendStore = useRecommendStore()
 
-const recentCaffeine = ref(0)
-
-const getRecentCaffeine = computed(() => {
-  return recentCaffeine.value
-})
-
-const status = ref(0)
-
-const getStatus = computed(() => {
-  return status.value
-})
-
-const statusText = ['양호메시지', '보통메시지', '나쁨메시지']
-const statusImg = [
-  'ca_good.png',
-  'ca_soso.png',
-  'ca_bad.png'
-]
-
 // 데이터를 가져오기 위한 함수
 onMounted(async () => {
 
   // 현재 날짜를 알기 위한 변수
   const todayDate = new Date()
   const year = todayDate.getFullYear()
-  let month = todayDate.getMonth()
+  let month = todayDate.getMonth() + 1
   let day = todayDate.getDate()
 
   month = month < 10 ? '0' + month.toString() : month.toString()
@@ -92,26 +98,10 @@ onMounted(async () => {
   date.value = year + month + day
 
   // await userStore.researchUser()                // 닉네임 <- 404 error
-  await accumulateStore.today()                   // 권장량, 섭취량
+  await accumulateStore.today();                   // 권장량, 섭취량
   await accumulateStore.duration()                // chart.js를 위한 기간별 섭취량
-  await recommendStore.researchRecommendCaffeine()     // 기록 기반 음료추천 카페
+  await recommendStore.researchRecommendCaffeine()     // 기록 기반 음료추천 카페인
   await recordsStore.researchDayDrink(date)       // 방금 마신 음료 계산을 위한 일자별 기록
-
-  // 최근 마신 음료의 카페인 계산
-  const idx = recordsStore.getDayDrink.length - 1
-
-  const recentDrink = recordsStore.getDayDrink[idx]
-  recentCaffeine.value = recentDrink ? recentDrink.drinkCaffeine.value : 0
-
-  // 섭취량에 따른 상태 표시 계산
-  // 섭취량이 0-200 -> 양호, 200-400 -> 보통, 400 이상 -> 위험
-  if (0 <= accumulateStore.getAcuumulateToday.accumulateCaffeine.value < 200) {
-    return status.value = 0
-  } else if (accumulateStore.getAcuumulateToday.accumulateCaffeine.value < 400) {
-    return status.value = 1
-  } else {
-    return status.value = 2
-  }
 
 })
 
