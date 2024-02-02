@@ -116,23 +116,6 @@ const toggleSortMenu = () => {
   showSortMenu.value = !showSortMenu.value;
 };
 
-const sortResults = (key, order) => {
-  searchResults.value.sort((a, b) => {    
-    const keyMap = {
-      'sugar': 'drinkSugar',
-      'caffeine': 'drinkCaffeine'
-    };
-    
-    const actualKey = keyMap[key];
-    
-    if (order === 'asc') {
-      return a[actualKey] - b[actualKey];
-    } else {
-      return b[actualKey] - a[actualKey];
-    }
-  });
-};
-
 const compareDrinks = () => {
   if (comparisonStore.basket.length > 1) {
     router.push({ name: 'compareDrink', params: { drinks: comparisonStore.basket } });
@@ -142,18 +125,16 @@ const viewDetails = (drink) => {
   router.push({ name: 'drinkDetail', params: { drink } });
 };
 
-watch(comparisonStore.basket, (newVal) => {
-
-  comparisonStore.saveBasketToSession();
-}, { deep: true });
-
+// 컴포넌트가 마운트될 때 세션 스토리지에서 basket을 로드합니다.
 onMounted(() => {
   comparisonStore.loadBasketFromSession();
 });
 
-watch(() => comparisonStore.basket, (newVal) => {
+// basket 배열이 변경될 때마다 세션 스토리지에 저장합니다.
+watch(comparisonStore.basket, () => {
   comparisonStore.saveBasketToSession();
 }, { deep: true });
+
 const goToRanklist = () => {
   router.push({ name: 'searchRank' });
 };
