@@ -1,5 +1,61 @@
 <template>
   <div>
+    <canvas ref="MyChart" />
+  </div>
+</template>
+
+<script>
+import { Chart, registerables } from 'chart.js'
+Chart.register(...registerables)
+
+export default {
+  data:() => ({
+    type: 'bar',
+    data: {
+      labels: [ 'Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange' ],
+      datasets: [{
+        label: '# of Votes',
+        data: [ 12, 19, 3, 5, 2, 3 ],
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  }),
+  mounted(){
+    this.createChart()
+  },
+  methods:{
+    createChart(){
+      new Chart(this.$refs.MyChart, {
+        type:'bar',
+        data:this.data,
+        options:this.options
+      })
+
+    }
+  }
+
+}
+
+</script>
+
+<style>
+</style>
+
+<!-- <template>
+  <div>
     <h2>Hello Main Sugar</h2>
   </div>
 
@@ -47,4 +103,4 @@ const goChat = () => {
 </script>
 
 <style scoped>
-</style>
+</style> -->
