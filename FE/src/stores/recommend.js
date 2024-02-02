@@ -40,7 +40,7 @@ export const useRecommendStore = defineStore("recommend", () => {
       method: "GET",
     })
       .then((res) => {
-        console.log(res)
+        // console.log(res)
         recommendedCaffeine.value = res.data;
       })
       .catch((err) => {
