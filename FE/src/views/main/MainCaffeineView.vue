@@ -3,14 +3,14 @@
     <h2>Hello Main Caffeine</h2>
   </div>
 
+  {{ accumulateStore.getAccumulateList }}
   <p>{{ userStore.getUserName }} 님</p>
   <div>
     <RouterLink :to="{name:'mainSugar'}">당 섭취량으로 가는 버튼</RouterLink>
   </div>
-
+<!--
   <p>카페인 섭취량</p>
   <div>
-    <!-- 상태에 따라 출력되는 이미지와 문구가 다름 -->
     <div v-if="accumulateStore.getAccumulateToday.accumulateCaffeine < 200.0">
       <img src="@/components/icons/ca_good.png" alt="양호 이미지" srcset="">
     </div>
@@ -35,7 +35,6 @@
         {{ accumulateStore.getAccumulateToday.userCaffeine }}mg</p>
     </div>
     <div>
-      <!-- 상태에 따라 달라지는 문구 -->
       <div v-if="accumulateStore.getAccumulateToday.accumulateCaffeine < 200.0">
         <p>양호 메시지</p>
       </div>
@@ -47,9 +46,11 @@
       </div>
     </div>
   </div>
+  -->
+  
   <div>
     최근에 마신 카페인을 한눈에 보아요
-    <!-- chart.js -->
+    
   </div>
 
   <div>
