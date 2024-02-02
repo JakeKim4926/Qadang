@@ -69,10 +69,10 @@ export const useAccumulateStore = defineStore("accumulate", () => {
       params: { ym: date.value },
     })
       .then((res) => {
-        if(res.status == responseState.SUCCESS) {
-          console.log("success ", res.data );
+        if (res.status == responseState.SUCCESS) {
+          console.log("success ", res.data);
+          accumulateMonth.value = res.data;
         }
-        accumulateMonth.value = res.data;
       })
       .catch((err) => {
         console.log(err);
@@ -87,9 +87,9 @@ export const useAccumulateStore = defineStore("accumulate", () => {
       params: { date: date.value },
     })
       .then((res) => {
-        console.log('get it : ', parseFloat(res.data.accumulateCaffeine));
-        console.log(date.value);
-        accumulateDay.value = res.data;
+        if (res.status == responseState.SUCCESS) {
+          accumulateDay.value = res.data;
+        }
       })
       .catch((err) => {
         console.log(err);

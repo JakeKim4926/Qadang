@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>Hello Main Caffeine</h2>
+    <h2>Hello Main Caffeine</h2> {{ userStore.getUserCode }}
   </div>
 
   <canvas id="chartCanvas"></canvas>
@@ -8,7 +8,7 @@
   {{ accumulateStore.getAccumulateList }}
   <p>{{ userStore.getUserName }} 님</p>
   <div>
-    <RouterLink :to="{name:'mainSugar'}">당 섭취량으로 가는 버튼</RouterLink>
+    <RouterLink :to="{ name: 'mainSugar' }">당 섭취량으로 가는 버튼</RouterLink>
   </div>
 
   <p>카페인 섭취량</p>
@@ -26,14 +26,14 @@
     <div>
       <p>방금 마신 음료</p>
       <div v-if="recordsStore.getDayDrink.length > 0">
-        {{ recordsStore.getDayDrink[recordsStore.getDayDrink.length-1].drinkCaffeine }}mg
+        {{ recordsStore.getDayDrink[recordsStore.getDayDrink.length - 1].drinkCaffeine }}mg
       </div>
       <div v-else>
         오늘 마신 음료가 없습니다!
       </div>
 
       <p>하루 총합 섭취량 / 권장량</p>
-      <p>{{ accumulateStore.getAccumulateToday.accumulateCaffeine }} / 
+      <p>{{ accumulateStore.getAccumulateToday.accumulateCaffeine }} /
         {{ accumulateStore.getAccumulateToday.userCaffeine }}mg</p>
     </div>
     <div>
@@ -48,15 +48,15 @@
       </div>
     </div>
   </div>
-  
+
   <div>
     최근에 마신 카페인을 한눈에 보아요
-    
+
   </div>
 
   <div>
     오늘은 이 음료 어때요?
-    <img :src="recommendStore.getRecommendedCaffeine.drinkUrl" alt="Recommended Drink" class="photo"/>
+    <img :src="recommendStore.getRecommendedCaffeine.drinkUrl" alt="Recommended Drink" class="photo" />
     {{ recommendStore.getRecommendedCaffeine.cafeName }}
     {{ recommendStore.getRecommendedCaffeine.drinkName }}
     {{ recommendStore.getRecommendedCaffeine.drinkCaffeine }}
@@ -89,7 +89,6 @@ const recommendStore = useRecommendStore()
 
 // 데이터를 가져오기 위한 함수
 onMounted(async () => {
-
   // 현재 날짜를 알기 위한 변수
   const todayDate = new Date()
   const year = todayDate.getFullYear()
@@ -129,7 +128,7 @@ onMounted(async () => {
           }
         },
         y: {
-          beginAtZero:true
+          beginAtZero: true
         }
       },
       plugins: {
@@ -150,7 +149,7 @@ onMounted(async () => {
 
 // 채팅으로 이동
 const goChat = () => {
-  router.push({name : 'chat'})
+  router.push({ name: 'chat' })
 }
 </script>
 

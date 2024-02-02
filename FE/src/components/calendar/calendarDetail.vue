@@ -8,13 +8,13 @@
                         총 섭취한 카페인량
                         <br />
                     </span>
-                    <template v-if="userStore.userRDICaffeine / 2.0 <= accumulateStore.getAcuumulateDay.accumulateCaffeine">
+                    <template v-if="userStore.userRDICaffeine / 2.0 <= accumulateStore.getAccumulateDay.accumulateCaffeine">
                         <span class="all_caffeine_value" style="color:red">{{
-                            accumulateStore.getAcuumulateDay.accumulateCaffeine }}</span>
+                            accumulateStore.getAccumulateDay.accumulateCaffeine }}</span>
                     </template>
                     <template v-else>
                         <span class="all_caffeine_value" style="color:green">{{
-                            accumulateStore.getAcuumulateDay.accumulateCaffeine }}</span>
+                            accumulateStore.getAccumulateDay.accumulateCaffeine }}</span>
                     </template>
                     mg
                 </span>
@@ -26,13 +26,13 @@
                         총 섭취한 당량
                         <br />
                     </span>
-                    <template v-if="userStore.userRDISugar / 2.0 <= accumulateStore.getAcuumulateDay.accumulateSugar">
-                        <span class="all_sugar_value" style="color:red">{{ accumulateStore.getAcuumulateDay.accumulateSugar
+                    <template v-if="userStore.userRDISugar / 2.0 <= accumulateStore.getAccumulateDay.accumulateSugar">
+                        <span class="all_sugar_value" style="color:red">{{ accumulateStore.getAccumulateDay.accumulateSugar
                         }} </span>
                     </template>
                     <template v-else>
                         <span class="all_sugar_value" style="color:green">{{
-                            accumulateStore.getAcuumulateDay.accumulateSugar }} </span>
+                            accumulateStore.getAccumulateDay.accumulateSugar }} </span>
                     </template>
                     g
                 </span>
@@ -54,7 +54,7 @@
 
                         <div class="no-001">No.00{{ index + 1 }}</div>
                         <div class="coffee_name">{{ drink.drinkName }}</div>
-                        <div class="cafe_name">{{ drink.cafeName }} 
+                        <div class="cafe_name">{{ drink.cafeName }}
                             <template v-if="drink.drinkId == 0">(나만의 음료)</template>
                         </div>
 
@@ -612,7 +612,7 @@ onMounted(() => {
     justify-content: center;
 }
 
-.cant_access{
+.cant_access {
     color: gray;
     font-size: 13px;
     text-align: center;
