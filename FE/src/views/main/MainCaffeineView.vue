@@ -1,68 +1,66 @@
 <template>
-  <div>
-    <h2>Hello Main Caffeine</h2>
-  </div>
-
-  <p>{{ userStore.getUserName }} 님</p>
-  <div>
-    <RouterLink :to="{name:'mainSugar'}">당 섭취량으로 가는 버튼</RouterLink>
-  </div>
-
-  <p>카페인 섭취량</p>
-  <div>
-    <div v-if="accumulateStore.getAccumulateToday.accumulateCaffeine < 200.0">
-      <img src="@/components/icons/ca_good.png" alt="양호 이미지" srcset="">
-    </div>
-    <div v-else if="accumulateStore.getAccumulateToday.accumulateCaffeine < 400.0">
-      <img src="@/components/icons/ca_soso.png" alt="보통 이미지" srcset="">
-    </div>
-    <div v-else>
-      <img src="@/components/icons/ca_bad.png" alt="나쁨 이미지" srcset="">
+  <div class="main-container">
+    <div class="user-info">
+      <h2>{{ userStore.getUserName }} 님</h2>
+      <RouterLink :to="{name:'mainSugar'}">당 섭취량으로 가는 버튼</RouterLink>
     </div>
 
-    <div>
-      <p>방금 마신 음료</p>
-      <div v-if="recordsStore.getDayDrink.length > 0">
-        {{ recordsStore.getDayDrink[recordsStore.getDayDrink.length-1].drinkCaffeine }}mg
-      </div>
-      <div v-else>
-        오늘 마신 음료가 없습니다!
-      </div>
-
-      <p>하루 총합 섭취량 / 권장량</p>
-      <p>{{ accumulateStore.getAccumulateToday.accumulateCaffeine }} / 
-        {{ accumulateStore.getAccumulateToday.userCaffeine }}mg</p>
-    </div>
+    <p>카페인 섭취량</p>
     <div>
       <div v-if="accumulateStore.getAccumulateToday.accumulateCaffeine < 200.0">
-        <p>양호 메시지</p>
+        <img src="@/components/icons/ca_good.png" alt="양호 이미지" srcset="">
       </div>
-      <div v-else-if="accumulateStore.getAccumulateToday.accumulateCaffeine < 400.0">
-        <p>보통 메시지</p>
+      <div v-else if="accumulateStore.getAccumulateToday.accumulateCaffeine < 400.0">
+        <img src="@/components/icons/ca_soso.png" alt="보통 이미지" srcset="">
       </div>
       <div v-else>
-        <p>나쁨 메시지</p>
+        <img src="@/components/icons/ca_bad.png" alt="나쁨 이미지" srcset="">
+      </div>
+
+      <div>
+        <p>방금 마신 음료</p>
+        <div v-if="recordsStore.getDayDrink.length > 0">
+          {{ recordsStore.getDayDrink[recordsStore.getDayDrink.length-1].drinkCaffeine }}mg
+        </div>
+        <div v-else>
+          오늘 마신 음료가 없습니다!
+        </div>
+
+        <p>하루 총합 섭취량 / 권장량</p>
+        <p>{{ accumulateStore.getAccumulateToday.accumulateCaffeine }} / 
+          {{ accumulateStore.getAccumulateToday.userCaffeine }}mg</p>
+      </div>
+      <div>
+        <div v-if="accumulateStore.getAccumulateToday.accumulateCaffeine < 200.0">
+          <p>양호 메시지</p>
+        </div>
+        <div v-else-if="accumulateStore.getAccumulateToday.accumulateCaffeine < 400.0">
+          <p>보통 메시지</p>
+        </div>
+        <div v-else-if="accumulateStore.getAccumulateToday.accumulateCaffeine >= 400">
+          <p>나쁨 메시지</p>
+        </div>
       </div>
     </div>
-  </div>
-  
-  <div>
-    최근에 마신 카페인을 한눈에 보아요
-    <canvas id="chartCanvas"></canvas>
-  </div>
+    
+    <div>
+      최근에 마신 카페인을 한눈에 보아요
+      <canvas id="chartCanvas" width="500"></canvas>
+    </div>
 
-  <div>
-    오늘은 이 음료 어때요?
-    <img :src="recommendStore.getRecommendedCaffeine.drinkUrl" alt="Recommended Drink" class="photo"/>
-    {{ recommendStore.getRecommendedCaffeine.cafeName }}
-    {{ recommendStore.getRecommendedCaffeine.drinkName }}
-    {{ recommendStore.getRecommendedCaffeine.drinkCaffeine }}
-    {{ recommendStore.getRecommendedCaffeine.drinkSugar }}
-    추천 음료 상세보기
-  </div>
+    <div>
+      오늘은 이 음료 어때요?
+      <img :src="recommendStore.getRecommendedCaffeine.drinkUrl" alt="Recommended Drink" class="photo"/>
+      {{ recommendStore.getRecommendedCaffeine.cafeName }}
+      {{ recommendStore.getRecommendedCaffeine.drinkName }}
+      {{ recommendStore.getRecommendedCaffeine.drinkCaffeine }}
+      {{ recommendStore.getRecommendedCaffeine.drinkSugar }}
+      추천 음료 상세보기
+    </div>
 
-  <div @click="goChat">
-    <font-awesome-icon :icon="['fas', 'comments']" style="color: #000000;" />
+    <div @click="goChat">
+      <font-awesome-icon :icon="['fas', 'comments']" style="color: #000000;" />
+    </div>
   </div>
 </template>
 
@@ -106,17 +104,7 @@ const chartData = reactive({
           beginAtZero:true
         }
       },
-      plugins: {
-        title: {
-          display: true,
-          text: '일별 카페인 섭취량',
-          font: {
-            size: 20
-          }
-        },
-      },
-      responsive: true,
-      // maintainAspectRatio: false
+      responsive: false,
     }
   })
 
@@ -173,6 +161,27 @@ const goChat = () => {
 </script>
 
 <style scoped>
+@import "../../components/font/font.css";
+@import "../../components/color/color.css";
+
+h2 {
+  color: #562B1A;
+  font-weight: bold;
+  text-align: left;
+}
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.user-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .photo {
   width: 10%;
   height: 10%;
