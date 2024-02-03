@@ -11,7 +11,7 @@ import SearchRankView from '@/views/search/SearchRankView.vue'
 import SearchTopView from '@/views/search/SearchTopView.vue'
 import DrinkDetailView from '@/views/search/DrinkDetailView.vue'
 import CompareDrinkView from '@/views/search/CompareDrinkView.vue'
-import UserUpdateView from '@/views/mypage/UserUpdateView.vue'
+import UserUpdateView from '@/components/user/UserUpdateView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -58,8 +58,8 @@ const router = createRouter({
       component: MypageView,
     },
     {
-      path: '/mypage/editinfo',
-      name: 'editinfo',
+      path: '/userupdate',
+      name: 'userupdate',
       component: UserUpdateView
     },
     {
@@ -77,6 +77,7 @@ const router = createRouter({
       name: 'searchTop',
       component: SearchTopView,
     },
+
     {
       path: '/drinkDetail/:drinkId',
       name: 'drinkDetail',

@@ -31,7 +31,7 @@ const doSearch = () => {
   position: relative;
   width: 100%;
   max-width: 500px; /* 최대 너비 설정, 필요에 따라 조정 */
-  margin-bottom: 5%;
+  margin-bottom: 1%;
 }
 
 .search-input {
