@@ -9,7 +9,7 @@ export const useUserStore = defineStore("user", () => {
   const user = ref({});
   const userId = ref("");
   const userName = ref("");
-  const userCode = ref(null);
+  const userCode = ref('');
 
   const userRDI = ref({}); // RDI - Recommended Daily Intake (당일 권장량)
   const userRDICaffeine = ref(400.0);
@@ -76,15 +76,6 @@ export const useUserStore = defineStore("user", () => {
   const loginKakao = async function () {
     Kakao.Auth.authorize({
       redirectUri: `${import.meta.env.VITE_REST_KAKAO_LOGIN_API}`,
-      success: function(authObj) {
-        console.log('로그인 성공', authObj);
-        // 로그인 성공 후 처리할 코드 작성
-
-      },
-      fail: function(err) {
-        console.error('로그인 실패', err);
-        // 로그인 실패 후 처리할 코드 작성
-      }
     });
   }
 
@@ -92,7 +83,7 @@ export const useUserStore = defineStore("user", () => {
     axios({
       url: `${import.meta.env.VITE_REST_USER_API}/social-login`,
       method: "POST",
-      data: user,
+      data: token,
     })
       .then(() => {
         // should get token for checking login

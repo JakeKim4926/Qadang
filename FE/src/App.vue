@@ -1,11 +1,11 @@
 <template>
   <div>
-      <TheHeader />
-      <div>
-        <RouterView />
-      </div>
-      <TheFooter />
-    
+    <TheHeader />
+    <div class="main-content">
+      <RouterView />
+    </div>
+    <TheFooter />
+
   </div>
 </template>
 
@@ -17,4 +17,5 @@ import { RouterLink, RouterView } from 'vue-router'
 
 </script>
 
-<style></style>
+<style>
+</style>
