@@ -3,6 +3,7 @@ package com.ssafy.cadang.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.cadang.domain.User;
+import com.ssafy.cadang.dto.IdResponse;
 import com.ssafy.cadang.dto.KakaoInfo;
 import com.ssafy.cadang.dto.KakaoToken;
 import com.ssafy.cadang.repository.UserRepository;
@@ -140,12 +141,9 @@ public class KakaoService {
 
         KakaoInfo info = requestInfo(token.getAccess_token()); // 사용자 정보 가져오기
 
-        // 카카오 엑세스 토큰 만료
-        Long id = kakaoLogout(token.getAccess_token());
-
         System.out.println(" addUser / 회원 확인하기 ");
-        System.out.println("사용자 회원 번호 : " + id);
-        User user = userRepository.findByUserId(id); // 가입된 회원인지 확인하기
+        System.out.println("사용자 회원 번호 : " + info.getId());
+        User user = userRepository.findByUserId(info.getId()); // 가입된 회원인지 확인하기
 
 
 
@@ -178,6 +176,7 @@ public class KakaoService {
         System.out.println(" addUser / 성공 ");
 
         kakaoLogout(token.getAccess_token()); // 카카오 엑세스 토큰 만료
+        System.out.println("카카오 만료");
 
         return user;
     }
@@ -191,7 +190,7 @@ public class KakaoService {
                 .setHeaderParam("type", "jwt") //Header 설정부분
                 .setHeaderParam("alg", "HS256") //Header 설정부분
                 .claim("userId", user.getUserId()) // Payload 설정부분
-                .setExpiration(new Date(System.currentTimeMillis() + 1 * (1000 * 60 * 60 * 4))) // 만료시간 : 4시간
+                .setExpiration(new Date(System.currentTimeMillis() + 1 * (1000 * 60 * 60 * 72))) // 만료시간 : 72시간
 //                .setExpiration(new Date(System.currentTimeMillis() + 1 * (1000 * 60 * 2))) // 만료시간 : 2분
                 .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
                 .compact();
@@ -200,7 +199,7 @@ public class KakaoService {
         return jwtAccessToken;
     }
 
-    // jwtRefreshToken 발급
+        // jwtRefreshToken 발급
     public String getJwtRefresh(User addUser){
 
         String jwtRefreshToken = Jwts.builder()
@@ -305,7 +304,7 @@ public class KakaoService {
 
         return getAccess;
     }
-    // 리프레시 토큰 유효성 검사
+// 리프레시 토큰 유효성 검사
     public boolean refreshcheck(String accesstoken){
 
         Long id = getUser(accesstoken).getUserId();
@@ -319,7 +318,7 @@ public class KakaoService {
     }
 
     // 카카오 엑세스 토큰 만료
-    public Long kakaoLogout(String code) {
+    public IdResponse kakaoLogout(String code) {
 
         // 요청 param ( body )
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
@@ -340,10 +339,10 @@ public class KakaoService {
 
         //json형태로 변환
         ObjectMapper objectMapper = new ObjectMapper();
-        Long id = null;
+        IdResponse id = null;
 
         try {
-            id = objectMapper.readValue(response, Long.class);
+            id = objectMapper.readValue(response, IdResponse.class);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

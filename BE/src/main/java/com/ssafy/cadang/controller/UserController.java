@@ -5,6 +5,7 @@ import com.ssafy.cadang.dto.KakaoToken;
 import com.ssafy.cadang.dto.MaxRecord;
 import com.ssafy.cadang.dto.UserAmount;
 import com.ssafy.cadang.dto.UserInfo;
+import com.ssafy.cadang.service.KakaoService;
 import com.ssafy.cadang.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,10 +49,7 @@ public class UserController {
         // 헤더에 jwt access token 담기
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + jwtAccessToken);
-//        headers.setContentType("application/json;charset=UTF-8");
 
-
-//    return new ResponseEntity<>(HttpStatus.OK);
         return ResponseEntity.ok().headers(headers).body("success");
     }
 
