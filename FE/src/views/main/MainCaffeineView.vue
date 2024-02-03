@@ -5,57 +5,64 @@
       <RouterLink :to="{name:'mainSugar'}">당 섭취량으로 가는 버튼</RouterLink>
     </div>
 
-    <p>카페인 섭취량</p>
     <div>
-      <div v-if="accumulateStore.getAccumulateToday.accumulateCaffeine < 200.0">
-        <img src="@/components/icons/ca_good.png" alt="양호 이미지" srcset="">
-      </div>
-      <div v-else if="accumulateStore.getAccumulateToday.accumulateCaffeine < 400.0">
-        <img src="@/components/icons/ca_soso.png" alt="보통 이미지" srcset="">
-      </div>
-      <div v-else>
-        <img src="@/components/icons/ca_bad.png" alt="나쁨 이미지" srcset="">
-      </div>
+      <p>카페인 섭취량</p>
+      <div class="info-box">
 
-      <div>
-        <p>방금 마신 음료</p>
-        <div v-if="recordsStore.getDayDrink.length > 0">
-          {{ recordsStore.getDayDrink[recordsStore.getDayDrink.length-1].drinkCaffeine }}mg
+        <div v-if="accumulateStore.getAccumulateToday.accumulateCaffeine < 200.0">
+          <img src="@/components/icons/ca_good.png" alt="양호 이미지" class="status-img left-info">
+        </div>
+        <div v-else if="accumulateStore.getAccumulateToday.accumulateCaffeine < 400.0">
+          <img src="@/components/icons/ca_soso.png" alt="보통 이미지" class="status-img left-info">
         </div>
         <div v-else>
-          오늘 마신 음료가 없습니다!
+          <img src="@/components/icons/ca_bad.png" alt="나쁨 이미지" class="status-img left-info">
         </div>
 
-        <p>하루 총합 섭취량 / 권장량</p>
-        <p>{{ accumulateStore.getAccumulateToday.accumulateCaffeine }} / 
-          {{ accumulateStore.getAccumulateToday.userCaffeine }}mg</p>
-      </div>
-      <div>
-        <div v-if="accumulateStore.getAccumulateToday.accumulateCaffeine < 200.0">
-          <p>양호 메시지</p>
+        <div class="mid-info">
+          <p>방금 마신 음료</p>
+          <div v-if="recordsStore.getDayDrink.length > 0">
+            {{ recordsStore.getDayDrink[recordsStore.getDayDrink.length-1].drinkCaffeine }}mg
+          </div>
+          <div v-else>
+            오늘 마신 음료가 없습니다!
+          </div>
+
+          <p>하루 총합 섭취량 / 권장량</p>
+          <p>{{ accumulateStore.getAccumulateToday.accumulateCaffeine }} / 
+            {{ accumulateStore.getAccumulateToday.userCaffeine }}mg</p>
         </div>
-        <div v-else-if="accumulateStore.getAccumulateToday.accumulateCaffeine < 400.0">
-          <p>보통 메시지</p>
-        </div>
-        <div v-else-if="accumulateStore.getAccumulateToday.accumulateCaffeine >= 400">
-          <p>나쁨 메시지</p>
+
+        <div class="right-info">
+          <div v-if="accumulateStore.getAccumulateToday.accumulateCaffeine < 200.0">
+            <p>양호 메시지</p>
+          </div>
+          <div v-else-if="accumulateStore.getAccumulateToday.accumulateCaffeine < 400.0">
+            <p>보통 메시지</p>
+          </div>
+          <div v-else-if="accumulateStore.getAccumulateToday.accumulateCaffeine >= 400">
+            <p>나쁨 메시지</p>
+          </div>
         </div>
       </div>
     </div>
+
+
     
     <div>
-      최근에 마신 카페인을 한눈에 보아요
-      <canvas id="chartCanvas" width="500"></canvas>
+      <p>최근에 마신 카페인을 한눈에 보아요</p>
+      <div class="info-box">
+        <canvas id="chartCanvas" width="500"></canvas>
+      </div>
     </div>
 
     <div>
-      오늘은 이 음료 어때요?
-      <img :src="recommendStore.getRecommendedCaffeine.drinkUrl" alt="Recommended Drink" class="photo"/>
-      {{ recommendStore.getRecommendedCaffeine.cafeName }}
-      {{ recommendStore.getRecommendedCaffeine.drinkName }}
-      {{ recommendStore.getRecommendedCaffeine.drinkCaffeine }}
-      {{ recommendStore.getRecommendedCaffeine.drinkSugar }}
-      추천 음료 상세보기
+      <p>오늘은 이 음료 어때요?</p>
+      <div class="info-box">
+        <img :src="recommendStore.getRecommendedCaffeine.drinkUrl" alt="Recommended Drink" class="photo"/>
+        {{ recommendStore.getRecommendedCaffeine.cafeName }} {{ recommendStore.getRecommendedCaffeine.drinkName }}
+        추천 음료 상세보기
+      </div>
     </div>
 
     <div @click="goChat">
@@ -178,12 +185,48 @@ h2 {
 
 .user-info {
   display: flex;
+  flex-direction: flex;
   justify-content: space-between;
   align-items: center;
 }
 
+.info-box {
+  background: #ffffff;
+  border-radius: 30px;
+  border-style: solid;
+  border-color: #d9d9d9;
+  border-width: 1px;
+  display: flex;
+  align-items: center;
+  width: 700px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  margin-bottom: 10px;
+}
+
+.status-img {
+  width: 130px;
+  height: 130px;
+  margin-left: 10px;
+  margin-right: 20px;
+}
+
+.left-info {
+  flex: 1;
+}
+
+.mid-info {
+  flex: 3;
+}
+
+.right-info {
+  flex: 3;
+}
+
+#chartCanvas {
+  margin: auto;
+}
+
 .photo {
   width: 10%;
-  height: 10%;
 }
 </style>
