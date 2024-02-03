@@ -19,23 +19,11 @@ import { onMounted } from "vue";
 import { useUserStore } from '@/stores/user';
 
 onMounted(() => {
-
+  console.log("are you here");
 })
 
 const userStore = useUserStore();
 
-const loginKakao = function () {
-    axios({
-      url: 'https://kauth.kakao.com/oauth/authorize',
-      method: "GET",
-      params : {redirect_uri : 'http://localhost:5173/login'}
-    })
-      .then((res) => {
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
 
 </script>
   

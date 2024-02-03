@@ -11,6 +11,7 @@ import SearchRankView from '@/views/search/SearchRankView.vue'
 import SearchTopView from '@/views/search/SearchTopView.vue'
 import DrinkDetailView from '@/views/search/DrinkDetailView.vue'
 import CompareDrinkView from '@/views/search/CompareDrinkView.vue'
+import SurveyView from '@/views/survey/SurveyView.vue'
 import UserUpdateView from '@/views/mypage/UserUpdateView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -86,6 +87,11 @@ const router = createRouter({
       path: '/compareDrink',
       name: 'compareDrink',
       component: CompareDrinkView
+    },
+    {
+      path: '/survey',
+      name: 'survey',
+      component: SurveyView
     },
   ],
 })
