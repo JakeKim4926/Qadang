@@ -11,4 +11,5 @@ public interface RecordReporsitory extends JpaRepository<Records, Long> {
     Records findByRecordId(Long recordId);
 
     List<Records> findByUserIdAndRecordDate(Long userId, LocalDate localDate);
+
 }

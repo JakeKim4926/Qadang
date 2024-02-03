@@ -3,12 +3,14 @@ package com.ssafy.cadang.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.cadang.domain.User;
-import com.ssafy.cadang.dto.KakaoAccessToken;
 import com.ssafy.cadang.dto.KakaoInfo;
 import com.ssafy.cadang.dto.KakaoToken;
 import com.ssafy.cadang.repository.UserRepository;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -138,9 +140,13 @@ public class KakaoService {
 
         KakaoInfo info = requestInfo(token.getAccess_token()); // 사용자 정보 가져오기
 
+        // 카카오 엑세스 토큰 만료
+        Long id = kakaoLogout(token.getAccess_token());
+
         System.out.println(" addUser / 회원 확인하기 ");
-        System.out.println("사용자 회원 번호 : " + info.getId());
-        User user = userRepository.findByUserId(info.getId()); // 가입된 회원인지 확인하기
+        System.out.println("사용자 회원 번호 : " + id);
+        User user = userRepository.findByUserId(id); // 가입된 회원인지 확인하기
+
 
 
         // 최초 연동시 회원가입
@@ -171,92 +177,20 @@ public class KakaoService {
 
         System.out.println(" addUser / 성공 ");
 
+        kakaoLogout(token.getAccess_token()); // 카카오 엑세스 토큰 만료
+
         return user;
     }
 
-    // 카카오 access 토큰 정보 가져오기
-    public KakaoAccessToken kakaoVaild(String code){
-
-        // HTTP 요청
-        WebClient wc = WebClient.create("https://kapi.kakao.com/v1/user/access_token_info");
-
-        System.out.println(" kakaoVaild / webclient 시작 ");
-
-        String response = wc.get()
-                .uri("https://kapi.kakao.com/v1/user/access_token_info")
-                .header("Authorization", "Bearer " + code)
-                .header("Content-type", "application/x-www-form-urlencoded;charset=utf-8") // 요청 헤더
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        KakaoAccessToken kakaoAccessToken = null;
-        System.out.println(objectMapper);
-
-        try {
-            kakaoAccessToken = objectMapper.readValue(response, KakaoAccessToken.class);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println(kakaoAccessToken);
-
-        return kakaoAccessToken;
-    }
-
-    // refresh token을 이용해서 카카오 토큰 갱신요청
-    public KakaoToken updatetoken(User user) {
-
-        // 요청 param ( body )
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", "refresh_token");
-        params.add("client_id", client_id);
-        params.add("refresh_token",user.getKakaoRefreshToken());
-        params.add("client_secret", client_secret);
-
-        //request
-        WebClient wc = WebClient.create(token_uri);
-        String response = wc.post()
-                .uri(token_uri)
-                .body(BodyInserters.fromFormData(params))
-                .header("Content-type", "application/x-www-form-urlencoded;charset=utf-8") //요청 헤더
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
-
-        //json형태로 변환
-        ObjectMapper objectMapper = new ObjectMapper();
-        KakaoToken kakaoToken = null;
-
-
-        try {
-            kakaoToken = objectMapper.readValue(response, KakaoToken.class);
-
-            // refresh token 의 유효기간이 남아 넘어오지 않았을 경우, 기존 refresh token 이어서 사용
-            if(kakaoToken!=null&&kakaoToken.getRefresh_token()==null){
-                kakaoToken.setRefresh_token(user.getKakaoRefreshToken());
-            }
-
-
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return kakaoToken;
-    }
-
     // jwtAccessToken 발급
-    public String getJwtAccess(String kakaoaccess) { // jwttoken 최초 발급
-
-        Long id = kakaoVaild(kakaoaccess).getId();
+    public String getJwtAccess(User user) { // jwttoken 최초 발급
 
         System.out.println("getJwt / 들어옴 ");
         // jwtAccessToken 발급
         String jwtAccessToken = Jwts.builder()
                 .setHeaderParam("type", "jwt") //Header 설정부분
                 .setHeaderParam("alg", "HS256") //Header 설정부분
-                .claim("kakaoAccess", kakaoaccess) // Payload 설정부분
-                .claim("userId", id) // Payload 설정부분
+                .claim("userId", user.getUserId()) // Payload 설정부분
                 .setExpiration(new Date(System.currentTimeMillis() + 1 * (1000 * 60 * 60 * 4))) // 만료시간 : 4시간
 //                .setExpiration(new Date(System.currentTimeMillis() + 1 * (1000 * 60 * 2))) // 만료시간 : 2분
                 .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
@@ -266,7 +200,7 @@ public class KakaoService {
         return jwtAccessToken;
     }
 
-        // jwtRefreshToken 발급
+    // jwtRefreshToken 발급
     public String getJwtRefresh(User addUser){
 
         String jwtRefreshToken = Jwts.builder()
@@ -298,7 +232,7 @@ public class KakaoService {
         return null; // 헤더에 token이 없거나 올바른 형식이 아니면 null 반환
     }
 
-    // JWT 토큰 유효성 검증
+    // JWT 토큰  만료시간 검증
     public boolean validToken(String token){
         try{
             Jwts.parser()
@@ -313,6 +247,37 @@ public class KakaoService {
             return true; // 만료일자가 현재시간보다 이전이면 유효하지 않음
 
         }
+    }
+
+    // JWT 토큰 유효성 검사
+    public Boolean vaildation(String token){
+        try{
+            Jwts.parserBuilder().setSigningKey(secretKey)
+                    .build().parseClaimsJws(token).getBody();
+        }catch (SignatureException e ){
+            return false;
+        }catch (ExpiredJwtException e) {
+            return false;
+        } catch (MalformedJwtException e) {
+            return false;
+        }catch (IllegalArgumentException e) {
+            return false;
+        }catch (Exception e ){
+            return false;
+        }
+        return true;
+    }
+
+    // JWT 토큰 복호화 및 유저정보 가져오기
+    public Long getUserId(String token){
+        Long getId = Jwts.parser()
+                .setSigningKey(secretKey.getBytes()) // 비밀키를 이용해서 복호화
+                .parseClaimsJws(token)
+                .getBody()
+                .get("userId",Long.class);
+
+        return getId;
+
     }
 
     // JWT 토큰 복호화 및 유저정보 가져오기
@@ -340,45 +305,51 @@ public class KakaoService {
 
         return getAccess;
     }
+    // 리프레시 토큰 유효성 검사
+    public boolean refreshcheck(String accesstoken){
 
+        Long id = getUser(accesstoken).getUserId();
+        User user = userRepository.findByUserId(id);
+        if(user.getJwtRefreshToken().isEmpty()){ // refresh token 없음 => 새로운 유저 or logout
+            return false;
+        }else{
+            return true;
+        }
 
-//    // 로그아웃
-//    public KakaoToken logout(String code) {
-//
-//        // 요청 param ( body )
-//        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-//        params.add("grant_type", "authorization_code");
-//        params.add("client_id", client_id);
-//        params.add("logout_uri", logout_uri);
-//        params.add("client_secret", client_secret);
-//
-//        String access_token = Jwts.parser()
-//                .setSigningKey(secretKey)
-//                .parseClaimsJws(code)
-//                .getBody()
-//                .get("kakaoAccess",String.class);
-//
-//        //request
-//        WebClient wc = WebClient.create(logout_uri);
-//        String response = wc.post()
-//                .uri(logout_uri)
-//                .header("Authorization", "Bearer " + access_token)
-//                .header("Content-type", "application/x-www-form-urlencoded;charset=utf-8") // 요청 헤더
-//                .retrieve()
-//                .bodyToMono(String.class)
-//                .block();
-//
-//        //json형태로 변환
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        KakaoToken kakaoToken = null;
-//
-//        try {
-//            kakaoToken = objectMapper.readValue(response, KakaoToken.class);
-//        } catch (JsonProcessingException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return kakaoToken;
-//    }
+    }
+
+    // 카카오 엑세스 토큰 만료
+    public Long kakaoLogout(String code) {
+
+        // 요청 param ( body )
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("grant_type", "authorization_code");
+        params.add("client_id", client_id);
+        params.add("logout_uri", logout_uri);
+        params.add("client_secret", client_secret);
+
+        //request
+        WebClient wc = WebClient.create(logout_uri);
+        String response = wc.post()
+                .uri(logout_uri)
+                .header("Authorization", "Bearer " + code)
+                .header("Content-type", "application/x-www-form-urlencoded;charset=utf-8") // 요청 헤더
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+
+        //json형태로 변환
+        ObjectMapper objectMapper = new ObjectMapper();
+        Long id = null;
+
+        try {
+            id = objectMapper.readValue(response, Long.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return id;
+
+    }
 
 }

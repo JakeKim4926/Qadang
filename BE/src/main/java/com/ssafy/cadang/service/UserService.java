@@ -1,6 +1,8 @@
 package com.ssafy.cadang.service;
 
 import com.ssafy.cadang.domain.User;
+import com.ssafy.cadang.dto.MaxRecord;
+import com.ssafy.cadang.dto.UserAmount;
 import com.ssafy.cadang.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
+
     public User findUser(Long userId) {
         return userRepository.findByUserId(userId);
     }
@@ -23,16 +26,32 @@ public class UserService {
         return user.getUserName();
     }
 
+    public void delete(Long userId) {
+        userRepository.deleteByUserId(userId);
+    }
 
-    // 회원 정보 입력
+    // 유저 권장량 조회
+    public UserAmount userAmount(User user) {
 
-    // 회원 정보 조회
+        UserAmount amount = UserAmount.builder()
+                .userCaffeine(user.getUserCaffeine())
+                .userSugar(user.getUserSugar())
+                .build();
 
-    // 회원 권장량 조회
+        return amount;
+    }
 
-    // 회원 당, 카페인 최고 섭취량 및 날짜 조회
+    // 유저 회원, 당 카페인 최고 섭취량 및 날짜 조회
+    public MaxRecord userMax(User user) {
 
-    //회원 정보 수정
+        MaxRecord max = MaxRecord.builder()
+                .maxSugarValue(user.getMaxSugarValue())
+                .maxCaffenineValue(user.getMaxCaffeineValue())
+                .maxSugarDate(user.getMaxSugarDate())
+                .maxCaffeineDate((user.getMaxCaffeineDate()))
+                .build();
+        return max;
+    }
 
-    // 회원 탈퇴
+
 }
