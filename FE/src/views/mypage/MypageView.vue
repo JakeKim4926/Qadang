@@ -1,12 +1,13 @@
 <template>
+  <UserUpdateView v-if="isUpdateModal" />
   <div class="mypage-container">    
     <div class="profile-section">
       <div class="profile-image">
-        <h2>{{ userInfo.userName }}</h2>
+        <h2 v-if="userInfo && userInfo.userName">{{ userInfo.userName }}</h2>
       </div>
       <div class="message">{{ message }}</div>
       <div class="user-actions">
-        <RouterLink :to="{name: 'editinfo'}" class="button-edit-info">추가정보입력</RouterLink>        
+        <button @click="openUpdateModal" class="button-edit-info">추가정보입력</button>        
       </div>
       <div v-if="isInfoFilled" class="shading">
         <h3>하루 권장 카페인 섭취량: {{ rdiCaffeine }}</h3>
@@ -32,14 +33,16 @@
       <button @click="handleLogout" class="button-logout">로그아웃</button>
     </div>
   </div>
-  <RouterView/>
+  <!-- <RouterView/> -->
 </template>
 
 <script setup>
 import { ref, onMounted,computed } from 'vue';
 import { useUserStore } from '../../stores/user'; 
 import router from '@/router';
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView } from 'vue-router';
+import { isUpdateModal } from '../../stores/util'
+import UserUpdateView from '@/components/user/UserUpdateView.vue'
 
 const store = useUserStore();
 const isInfoFilled = store.isInfoFilled;
@@ -52,6 +55,15 @@ const userInfo = ref({});
 const rdiCaffeine = ref(0);
 const rdiSugar = ref(0);
 
+// const userInfo = ref({
+//   userName: '', 
+// });
+
+const openUpdateModal = () => {
+  isUpdateModal.value = true
+  console.log('!',isUpdateModal.value)
+}
+
 const bringMaxintake = async () => {
   try {
     await store.researchMax();
@@ -63,7 +75,6 @@ const bringMaxintake = async () => {
     console.error("데이터를 가져오지 못했습니다.", error);
   }
 };
-
 
 
 const bringRDI = async () => {
@@ -113,6 +124,8 @@ onMounted(() => {
   bringRDI();
 });
 
+
+
 </script>
 
 <style scoped>
@@ -120,9 +133,12 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 600px;
+  max-width: 600px; /* 최대 너비 유지 */
   margin: auto;
-  margin-top: 40px;
+  margin-top: 20px;
+  padding: 20px;
+ 
+ 
 }
 
 .profile-section {
@@ -183,7 +199,7 @@ onMounted(() => {
   cursor: pointer;
   font-weight: bold;
   margin-right: 25px; 
-  margin-top: 10px;
+  
 }
 
 
@@ -191,13 +207,13 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   width: 100%;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .intake-card {
   flex-basis: 48%;
   margin: 10px;
-  padding: 20px;
+  padding: 5px;
   text-align: center;
   border-radius: 22px;
   background: #FFF;
@@ -269,7 +285,7 @@ h4 {
   .user-actions {
     justify-content: center;
     padding-right: 0;
-    margin-top: 20px;
+    margin-top: 10px;
   }
 }
 </style>

@@ -1,49 +1,53 @@
 <template>
   <div class="search-frame">    
-        <searchTopView />
+    <searchTopView />
     
-    <a @click="goToFullList">전체보기</a>
+    <div class="full-list-link">
+      <h4 @click="goToFullList"> < 전체보기 </h4>
+    </div>
 
     <div v-if="!searchResults.length">
       <div class="rankings">
-        <h3>많이 검색한 순위</h3>
+        <div class="shading">
+          <h3 class="ranking-title search">많이 <span class="highlight">검색</span>한 순위</h3>
+
         <div class="ranking-row">          
           <div v-for="(drink, index) in keywordRanking" :key="drink.drinkId" v-if="index < 3">
-            {{ drink.rank }}. {{ drink.name }}
+            {{ index + 1 }}. {{ drink.drinkName }}
           </div>
         </div>
         <div class="ranking-row">          
           <div v-for="(drink, index) in keywordRanking" :key="drink.drinkId" v-if="index >= 3 && index < 6">
-            {{ drink.rank }}. {{ drink.name }}
+            {{ index + 1 }}. {{ drink.drinkName }}
           </div>
         </div>
-
-        <h3>많이 기록한 음료 순위</h3>
+        </div>
+        <div class="shading">
+          <h3 class="ranking-title search">많이 <span class="highlight">기록</span>한 음료 순위</h3>
         <div class="ranking-row">          
           <div v-for="(drink, index) in recordRanking" :key="drink.drinkId" v-if="index < 3">
-            {{ drink.rank }}. {{ drink.name }}
+            {{ index + 1 }}. {{ drink.drinkName }}
           </div>
         </div>
         <div class="ranking-row">          
           <div v-for="(drink, index) in recordRanking" :key="drink.drinkId" v-if="index >= 3 && index < 6">
-            {{ drink.rank }}. {{ drink.name }}
+            {{ index + 1 }}. {{ drink.drinkName }}
           </div>
         </div>
       </div>
+      </div>
     </div>
   </div>
-
-
-    
 </template>
+
 
 <script setup>
 import { ref, computed } from 'vue';
 import { useSearchStore } from '../../stores/search';
-;
 import router from '@/router';
-import '../../components/color/color.css'
+import '../../components/color/color.css';
 import searchTopView from './SearchTopView.vue';
+
 const searchStore = useSearchStore();
 
 const searchResults = computed(() => searchStore.getSearchDrinkList);
@@ -53,9 +57,9 @@ const recordRanking = computed(() => searchStore.getRecordRanking);
 const goToFullList = () => {
   router.push({ name: 'searchDetail' });
 };
-
-
 </script>
+
+
 
 <style>
 .search-frame {
@@ -69,30 +73,48 @@ const goToFullList = () => {
   padding: 20px;
 }
 
+.full-list-link {
+  align-self: flex-start;
+  margin-bottom: 20px; 
+  margin-left: 55px;  
+}
+.highlight {
+  color: #846046; /* 특별한 색상 적용 */
+}
 .rankings {
   display: flex;
   flex-direction: column;
-  align-items: center; /* 추가: 순위 섹션을 가운데로 정렬 */
+  align-items: center;
   width: 100%;
 }
+
+.ranking-title {
+  color: #000; /* 기본 색상 */
+}
+
 
 .ranking-row {
   display: flex;
-  justify-content: center; /* 추가: 순위 행을 가운데로 정렬 */
+  justify-content: center;
   width: 100%;
-  margin-bottom: 10px; /* 추가: 각 순위 행 사이의 여백 */
+  margin-bottom: 10px;
 }
 
-/* ... 기존 스타일 ... */
-
-.sort-menu button {
-  margin-bottom: 5px;
-  cursor: pointer;
+.shading {
+  display: flex; 
+  flex-direction: column; 
+  flex-wrap: wrap; 
+  align-items: left; 
+  justify-content: flex-start;
+  border-radius: 45px; 
+  border: 1px solid #EFEFEF;
+  background: var(--Color, #FFF);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  padding: 20px; 
+  margin-bottom: 20px; 
+  width: 100%;
 }
 
-.sort-menu button:last-child {
-  margin-bottom: 0;
-}
 
-/* ... 기존 스타일 ... */
 </style>
+
