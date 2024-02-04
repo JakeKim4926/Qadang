@@ -15,14 +15,28 @@
   
 <script setup>
 import '../components/font/font.css';
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import { useUserStore } from '@/stores/user';
-
-onMounted(() => {
-  console.log("are you here");
-})
+import { useAccumulateStore } from '@/stores/accumulate';
 
 const userStore = useUserStore();
+const accumulateStore = useAccumulateStore();
+
+
+onMounted(async () => {
+  console.log("are you here");
+
+  
+  const date = new Date();
+  const year = date.getFullYear();
+  let month = date.getMonth() + 1; // Adding 1 to adjust for zero-based months
+  month = month < 10 ? "0" + month.toString() : month.toString();
+  const now = ref(year.toString() + month.toString());
+
+
+  await accumulateStore.month(now);
+})
+
 
 
 </script>
