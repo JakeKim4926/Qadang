@@ -9,7 +9,7 @@ import MypageView from '@/views/mypage/MypageView.vue'
 import SearchDetatilView from '@/views/search/SearchDetatilView.vue'
 import SearchRankView from '@/views/search/SearchRankView.vue'
 import SearchTopView from '@/views/search/SearchTopView.vue'
-import DrinkDetailView from '@/views/search/DrinkDetailView.vue'
+import drinkDetailView from '@/views/search/drinkDetailView.vue'
 import CompareDrinkView from '@/views/search/CompareDrinkView.vue'
 import SurveyView from '@/views/survey/SurveyView.vue'
 import SurveyCaffeineView from '@/views/survey/SurveyCaffeineView.vue'
@@ -86,7 +86,7 @@ const router = createRouter({
     {
       path: '/drinkDetail/:drinkId',
       name: 'drinkDetail',
-      component: DrinkDetailView
+      component: drinkDetailView
     },
     {
       path: '/compareDrink',

@@ -121,15 +121,8 @@ const chartData = {
 
 // 데이터를 가져오기 위한 함수
 onMounted(async () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  // 'code' 파라미터 값 가져오기
-  const kakaoCode = urlParams.get('code');
-  // 현재 날짜를 알기 위한 변수
-  if(kakaoCode.length > 0) {
-    userStore.sendKakaoToken(kakaoCode);
-    userStore.userCode.value = kakaoCode;
-  }
 
+  // 현재 날짜를 알기 위한 변수
   const todayDate = new Date()
   const year = todayDate.getFullYear()
   let month = todayDate.getMonth() + 1
@@ -153,7 +146,7 @@ onMounted(async () => {
   
   // 차트 데이터에 넣을 데이터가 생긴 뒤 데이터 삽입
   watch(() => accumulateStore.getAccumulateList, (newData) => {
-    if (newData.length > 1) {
+    if (newData.length >= 1) {
       console.log('!!!', newData)
 
       const tmpDayData = []
@@ -188,7 +181,7 @@ const goDetail = () => {
 
 // 채팅으로 이동
 const goChat = () => {
-  router.push({ name: 'chat' })
+  router.push({name : 'chat'})
 }
 </script>
 
@@ -214,6 +207,7 @@ p {
 
 .toggle {
   width: 75px;
+  cursor: pointer;
 }
 
 .user-info {
@@ -293,6 +287,7 @@ p {
   border: none;
   margin-left: auto;
   margin-right: 10px;
+  cursor: pointer;
 }
 
 .chat {

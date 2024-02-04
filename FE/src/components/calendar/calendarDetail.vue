@@ -109,7 +109,7 @@
 import { useRecordsStore } from '@/stores/records';
 import { useAccumulateStore } from '@/stores/accumulate';
 import { ref, onMounted, computed } from 'vue';
-import { isCalendarModal } from "@/stores/util"
+import { isCalendarModal, isInputModal } from "@/stores/util"
 import { useUserStore } from '@/stores/user';
 
 
@@ -132,12 +132,15 @@ function close() {
 
 function editRecord(recordDrink) {
     console.log(recordDrink);
-
+    updateRecord = recordDrink;
+    close();
+    isInputModal.value = true;
 }
 
 function deleteRecord(recordId) {
     const confirmed = window.confirm("정말 삭제를 원하십니까?");
     if (confirmed) {
+        console.log("삭제");
         recordStore.deleteDrink(recordId);
     }
 }
