@@ -76,7 +76,7 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref, watchEffect } from 'vue';
+import { ref, watch } from 'vue';
 import { onMounted } from 'vue';
 import router from '@/router';
 
@@ -93,7 +93,7 @@ const accumulateStore = useAccumulateStore()
 const recordsStore = useRecordsStore()
 const recommendStore = useRecommendStore()
 
-const chartData = reactive({
+const chartData = {
     type: 'bar',
     data: {
       labels: [], // 날짜
@@ -117,7 +117,7 @@ const chartData = reactive({
       },
       responsive: false,
     }
-  })
+  }
 
 // 데이터를 가져오기 위한 함수
 onMounted(async () => {
@@ -142,25 +142,30 @@ onMounted(async () => {
 
   // chart.js
   const chartElement = document.querySelector('#chartCanvas').getContext('2d');
-  
-  const tmp_data = ref([])
   const chartCanvas = new Chart(chartElement, chartData)
   
   // 차트 데이터에 넣을 데이터가 생긴 뒤 데이터 삽입
-  watchEffect(() => {
-    if (accumulateStore.getAccumulateList.length > 1) {
-      // console.log(accumulateStore.getAccumulateList)
-      accumulateStore.getAccumulateList.forEach(data => {
-        // console.log(data)
-        chartData.data.labels.push(data.accumulateDate)
-        // console.log(data.accumulateCaffeine)
-        // console.log(chartData.data.datasets[0].data)
-        tmp_data.value.push(data.accumulateCaffeine)
-        // chartData.data.datasets[0].data.push(data.accumulateCaffeine)
-      });
-      chartData.data.datasets[0].data = tmp_data.value
-      console.log(chartData.data.datasets[0].data)
+  watch(() => accumulateStore.getAccumulateList, (newData) => {
+    if (newData.length > 1) {
+      console.log('!!!', newData)
+
+      const tmpDayData = []
+      const tmpDataData = []
+
+      // 차트 데이터에 넣을 데이터 적절하게 삽입
+      newData.forEach(data => {
+        tmpDayData.push(data.accumulateDate)
+        tmpDataData.push(data.accumulateCaffeine)
+      })
+
+      // 다 끝난 뒤 차트에 대입
+      chartData.data.labels = tmpDayData
+      chartData.data.datasets[0].data = tmpDataData
+
+      console.log('@@@', chartData.data.labels, chartData.data.datasets[0].data)
     }
+
+    // 차트 업데이트
     chartCanvas.update()
   })
 })
