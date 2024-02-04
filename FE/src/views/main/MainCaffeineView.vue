@@ -24,7 +24,8 @@
         <div class="mid-info">
           <p class="recent-drink">방금 마신 음료</p>
           <div v-if="recordsStore.getDayDrink.length > 0" class="drink-info">
-            {{ recordsStore.getDayDrink[recordsStore.getDayDrink.length-1].drinkCaffeine }}mg
+            {{ recordsStore.getDayDrink[recordsStore.getDayDrink.length-1].drinkCaffeine
+            + 75 * recordsStore.getDayDrink[recordsStore.getDayDrink.length-1].plusShot}}mg
           </div>
           <div v-else class="drink-info">
             오늘 마신 음료가 없습니다!
