@@ -20,35 +20,36 @@
         </div>
 
         <div class="mid-info">
-          <p>방금 마신 음료</p>
-          <div v-if="recordsStore.getDayDrink.length > 0">
+          <p class="recent-drink">방금 마신 음료</p>
+          <div v-if="recordsStore.getDayDrink.length > 0" class="drink-info">
             {{ recordsStore.getDayDrink[recordsStore.getDayDrink.length-1].drinkCaffeine }}mg
           </div>
-          <div v-else>
+          <div v-else class="drink-info">
             오늘 마신 음료가 없습니다!
           </div>
 
-          <p>하루 총합 섭취량 / 권장량</p>
-          <p>{{ accumulateStore.getAccumulateToday.accumulateCaffeine }} / 
+          <p class="today-title">하루 총합 섭취량 / 권장량</p>
+          <p class="today-info"
+          :class="{ 'red-text': accumulateStore.getAccumulateToday.accumulateCaffeine >= accumulateStore.getAccumulateToday.userCaffeine,
+          'green-text': accumulateStore.getAccumulateToday.accumulateCaffeine < accumulateStore.getAccumulateToday.userCaffeine }">
+            {{ accumulateStore.getAccumulateToday.accumulateCaffeine }} / 
             {{ accumulateStore.getAccumulateToday.userCaffeine }}mg</p>
         </div>
 
-        <div class="right-info">
+        <div class="right-info superbig-font">
           <div v-if="accumulateStore.getAccumulateToday.accumulateCaffeine < 200.0">
             <p>양호 메시지</p>
           </div>
           <div v-else-if="accumulateStore.getAccumulateToday.accumulateCaffeine < 400.0">
             <p>보통 메시지</p>
           </div>
-          <div v-else-if="accumulateStore.getAccumulateToday.accumulateCaffeine >= 400">
+          <div v-else="accumulateStore.getAccumulateToday.accumulateCaffeine >= 400">
             <p>나쁨 메시지</p>
           </div>
         </div>
       </div>
     </div>
 
-
-    
     <div>
       <p>최근에 마신 카페인을 한눈에 보아요</p>
       <div class="info-box">
@@ -60,13 +61,13 @@
       <p>오늘은 이 음료 어때요?</p>
       <div class="info-box">
         <img :src="recommendStore.getRecommendedCaffeine.drinkUrl" alt="Recommended Drink" class="photo"/>
-        {{ recommendStore.getRecommendedCaffeine.cafeName }} {{ recommendStore.getRecommendedCaffeine.drinkName }}
-        추천 음료 상세보기
+        <p>{{ recommendStore.getRecommendedCaffeine.cafeName }} {{ recommendStore.getRecommendedCaffeine.drinkName }}</p>
+        <button @click="goDetail" class="button_caffeine">상세보기</button>
       </div>
     </div>
 
-    <div @click="goChat">
-      <font-awesome-icon :icon="['fas', 'comments']" style="color: #000000;" />
+    <div @click="goChat" class="chat">
+      <font-awesome-icon :icon="['fas', 'comments']" style="color: #000000;" size="2xl"/>
     </div>
   </div>
 </template>
@@ -177,6 +178,10 @@ h2 {
   text-align: left;
 }
 
+p {
+  font-weight: bold;
+}
+
 .main-container {
   display: flex;
   flex-direction: column;
@@ -188,6 +193,7 @@ h2 {
   flex-direction: flex;
   justify-content: space-between;
   align-items: center;
+  width: 700px;
 }
 
 .info-box {
@@ -201,6 +207,17 @@ h2 {
   width: 700px;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   margin-bottom: 10px;
+}
+
+.recent-drink {
+  font-size: 25px;
+  margin-bottom: 0;
+}
+
+.drink-info {
+  font-size: 30px;
+  color: #562B1A;
+  font-weight: bold;
 }
 
 .status-img {
@@ -222,11 +239,44 @@ h2 {
   flex: 3;
 }
 
+.today-title {
+  margin-bottom: 0;
+}
+
+.today-info {
+  margin-top: 0;
+}
+
+.red-text {
+  color: red;
+}
+
+.green-text {
+  color: green;
+}
+
 #chartCanvas {
   margin: auto;
 }
 
 .photo {
-  width: 10%;
+  width: 50px;
+  margin: 10px;
+  border-radius: 20px;
+}
+
+.button_caffeine {
+  width: 75px;
+  height: 30px;
+  color: white;
+  font-weight: bold;
+  border: none;
+  margin-left: 320px;
+}
+
+.chat {
+  width: 700px;
+  right: 20px;
+  margin-left: 1300px;
 }
 </style>
