@@ -24,8 +24,8 @@
         <div class="mid-info">
           <p class="recent-drink">방금 마신 음료</p>
           <div v-if="recordsStore.getDayDrink.length > 0" class="drink-info">
-            {{ recordsStore.getDayDrink[recordsStore.getDayDrink.length-1].drinkCaffeine
-            + 75 * recordsStore.getDayDrink[recordsStore.getDayDrink.length-1].plusShot}}mg
+            {{ (recordsStore.getDayDrink[recordsStore.getDayDrink.length-1].drinkCaffeine
+            + 75 * recordsStore.getDayDrink[recordsStore.getDayDrink.length-1].plusShot).toFixed(2) }}mg
           </div>
           <div v-else class="drink-info">
             오늘 마신 음료가 없습니다!
@@ -36,7 +36,7 @@
           :class="{ 'font_red': accumulateStore.getAccumulateToday.accumulateCaffeine >= userStore.getUserRDI.userCaffeine,
           'font_green': accumulateStore.getAccumulateToday.accumulateCaffeine < userStore.getUserRDI.userCaffeine }">
             {{ accumulateStore.getAccumulateToday.accumulateCaffeine }} / 
-            {{ accumulateStore.getAccumulateToday.userCaffeine }}mg</p>
+            {{ userStore.getUserRDI.userCaffeine }}mg</p>
         </div>
 
         <div class="right-info superbig-font">
@@ -139,7 +139,8 @@ onMounted(async () => {
   date.value = year + month + day
 
   // await userStore.researchUser()                // 닉네임 <- 404 error
-  // await userStore.researchAmount()              // 권장량, 섭취량 <- 404 error
+  // await userStore.researchAmount()              // 권장량 <- 404 error
+  await accumulateStore.today()                    // 섭취량
   await accumulateStore.duration()                // chart.js를 위한 기간별 섭취량
   await recommendStore.researchRecommendCaffeine()     // 기록 기반 음료추천 카페인
   await recordsStore.researchDayDrink(date)       // 방금 마신 음료 계산을 위한 일자별 기록
