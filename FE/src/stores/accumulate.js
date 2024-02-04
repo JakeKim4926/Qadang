@@ -9,6 +9,7 @@ export const useAccumulateStore = defineStore("accumulate", () => {
 
   const accumulateList = ref([]);
   const accumulateMonth = ref([]);
+  const accumulateTemp = ref([]);
 
   const accumulateToday = ref({});
   const accumulateDay = ref({});
@@ -29,6 +30,10 @@ export const useAccumulateStore = defineStore("accumulate", () => {
 
   const getAccumulateDay = computed(() => {
     return accumulateDay.value;
+  });
+
+  const getAccumulateTemp = computed(() => {
+    return accumulateTemp.value;
   });
 
   // =========== ACTION ===============
@@ -69,10 +74,12 @@ export const useAccumulateStore = defineStore("accumulate", () => {
       params: { ym: date.value },
     })
       .then((res) => {
-        if(res.status == responseState.SUCCESS) {
-          console.log("success ", res.data );
+        if (res.status == responseState.SUCCESS) {
+          console.log("success ", res.data);
+          accumulateMonth.value = res.data;
+          if(accumulateMonth != undefined)
+            sessionStorage.setItem('calendarMonth', JSON.stringify(accumulateMonth.value));
         }
-        accumulateMonth.value = res.data;
       })
       .catch((err) => {
         console.log(err);
@@ -87,9 +94,9 @@ export const useAccumulateStore = defineStore("accumulate", () => {
       params: { date: date.value },
     })
       .then((res) => {
-        console.log('get it : ', parseFloat(res.data.accumulateCaffeine));
-        console.log(date.value);
-        accumulateDay.value = res.data;
+        if (res.status == responseState.SUCCESS) {
+          accumulateDay.value = res.data;
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -97,6 +104,7 @@ export const useAccumulateStore = defineStore("accumulate", () => {
   };
 
   return {
+    accumulateTemp,
     accumulateList: accumulateList,
     accumulateMonth: accumulateMonth,
     accumulateToday: accumulateToday,
@@ -105,6 +113,7 @@ export const useAccumulateStore = defineStore("accumulate", () => {
     getAccumulateMonth: getAccumulateMonth,
     getAccumulateToday: getAccumulateToday,
     getAccumulateDay: getAccumulateDay,
+    getAccumulateTemp,
     today,
     duration,
     month,
