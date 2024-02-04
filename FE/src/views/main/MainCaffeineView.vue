@@ -284,7 +284,8 @@ p {
   color: white;
   font-weight: bold;
   border: none;
-  margin-left: 320px;
+  margin-left: auto;
+  margin-right: 10px;
 }
 
 .chat {

@@ -293,7 +293,8 @@ p {
   font-weight: bold;
   border: none;
   border-radius: 20px;
-  margin-left: 320px;
+  margin-left: auto;
+  margin-right: 10px;
 }
 
 .chat {
