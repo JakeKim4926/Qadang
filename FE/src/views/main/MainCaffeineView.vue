@@ -11,10 +11,10 @@
       <p>카페인 섭취량</p>
       <div class="info-box">
 
-        <div v-if="accumulateStore.getAccumulateToday.accumulateCaffeine < 200.0">
+        <div v-if="accumulateStore.getAccumulateToday.accumulateCaffeine < userStore.getUserRDI.userCaffeine * 1/2">
           <img src="@/components/icons/ca_good.png" alt="양호 이미지" class="status-img left-info">
         </div>
-        <div v-else-if="accumulateStore.getAccumulateToday.accumulateCaffeine < 400.0">
+        <div v-else-if="accumulateStore.getAccumulateToday.accumulateCaffeine < userStore.getUserRDI.userCaffeine">
           <img src="@/components/icons/ca_soso.png" alt="보통 이미지" class="status-img left-info">
         </div>
         <div v-else>
@@ -33,20 +33,20 @@
 
           <p class="today-title">하루 총합 섭취량 / 권장량</p>
           <p class="today-info"
-          :class="{ 'font_red': accumulateStore.getAccumulateToday.accumulateCaffeine >= accumulateStore.getAccumulateToday.userCaffeine,
-          'font_green': accumulateStore.getAccumulateToday.accumulateCaffeine < accumulateStore.getAccumulateToday.userCaffeine }">
+          :class="{ 'font_red': accumulateStore.getAccumulateToday.accumulateCaffeine >= userStore.getUserRDI.userCaffeine,
+          'font_green': accumulateStore.getAccumulateToday.accumulateCaffeine < userStore.getUserRDI.userCaffeine }">
             {{ accumulateStore.getAccumulateToday.accumulateCaffeine }} / 
             {{ accumulateStore.getAccumulateToday.userCaffeine }}mg</p>
         </div>
 
         <div class="right-info superbig-font">
-          <div v-if="accumulateStore.getAccumulateToday.accumulateCaffeine < 200.0">
+          <div v-if="accumulateStore.getAccumulateToday.accumulateCaffeine < userStore.getUserRDI.userCaffeine * 1/2">
             <p>양호 메시지</p>
           </div>
-          <div v-else-if="accumulateStore.getAccumulateToday.accumulateCaffeine < 400.0">
+          <div v-else-if="accumulateStore.getAccumulateToday.accumulateCaffeine < userStore.getUserRDI.userCaffeine">
             <p>보통 메시지</p>
           </div>
-          <div v-else="accumulateStore.getAccumulateToday.accumulateCaffeine >= 400">
+          <div v-else="accumulateStore.getAccumulateToday.accumulateCaffeine >= userStore.getUserRDI.userCaffeine">
             <p>나쁨 메시지</p>
           </div>
         </div>
