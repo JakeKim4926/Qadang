@@ -36,7 +36,7 @@
           :class="{ 'font_red': accumulateStore.getAccumulateToday.accumulateSugar >= accumulateStore.getAccumulateToday.userSugar,
           'font_green': accumulateStore.getAccumulateToday.accumulateSugar < accumulateStore.getAccumulateToday.userSugar }">
             {{ accumulateStore.getAccumulateToday.accumulateSugar }} / 
-            {{ accumulateStore.getAccumulateToday.userSugar }}mg</p>
+            {{ accumulateStore.getAccumulateToday.userSugar }}g</p>
         </div>
 
         <div class="right-info superbig-font">
