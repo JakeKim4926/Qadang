@@ -14,7 +14,7 @@
         <div v-if="accumulateStore.getAccumulateToday.accumulateCaffeine < 200.0">
           <img src="@/components/icons/ca_good.png" alt="양호 이미지" class="status-img left-info">
         </div>
-        <div v-else if="accumulateStore.getAccumulateToday.accumulateCaffeine < 400.0">
+        <div v-else-if="accumulateStore.getAccumulateToday.accumulateCaffeine < 400.0">
           <img src="@/components/icons/ca_soso.png" alt="보통 이미지" class="status-img left-info">
         </div>
         <div v-else>
@@ -168,6 +168,10 @@ onMounted(async () => {
 // 당 섭취량 메인페이지로 이동
 const goSugar = () => {
   router.push({name : 'mainSugar'})
+}
+
+// 추천 음료 상세페이지로 이동
+const goDetail = () => {
 }
 
 // 채팅으로 이동
