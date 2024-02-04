@@ -33,8 +33,8 @@
 
           <p class="today-title">하루 총합 섭취량 / 권장량</p>
           <p class="today-info"
-          :class="{ 'red-text': accumulateStore.getAccumulateToday.accumulateCaffeine >= accumulateStore.getAccumulateToday.userCaffeine,
-          'green-text': accumulateStore.getAccumulateToday.accumulateCaffeine < accumulateStore.getAccumulateToday.userCaffeine }">
+          :class="{ 'font_red': accumulateStore.getAccumulateToday.accumulateCaffeine >= accumulateStore.getAccumulateToday.userCaffeine,
+          'font_green': accumulateStore.getAccumulateToday.accumulateCaffeine < accumulateStore.getAccumulateToday.userCaffeine }">
             {{ accumulateStore.getAccumulateToday.accumulateCaffeine }} / 
             {{ accumulateStore.getAccumulateToday.userCaffeine }}mg</p>
         </div>
@@ -261,14 +261,6 @@ p {
 
 .today-info {
   margin-top: 0;
-}
-
-.red-text {
-  color: red;
-}
-
-.green-text {
-  color: green;
 }
 
 #chartCanvas {
