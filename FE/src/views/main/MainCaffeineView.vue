@@ -65,7 +65,7 @@
       <div class="info-box">
         <img :src="recommendStore.getRecommendedCaffeine.drinkUrl" alt="Recommended Drink" class="photo"/>
         <p>{{ recommendStore.getRecommendedCaffeine.cafeName }} {{ recommendStore.getRecommendedCaffeine.drinkName }}</p>
-        <button @click="goDetail" class="button_caffeine">상세보기</button>
+        <button @click="viewDetailsModal(recommendStore.getRecommendedCaffeine.drinkId)" class="button_caffeine">상세보기</button>
       </div>
     </div>
 
@@ -87,11 +87,15 @@ import { useUserStore } from '@/stores/user';
 import { useAccumulateStore } from '@/stores/accumulate';
 import { useRecordsStore } from '@/stores/records';
 import { useRecommendStore } from '@/stores/recommend';
+import { useDrinksStore } from '@/stores/drinks';
+
+import { isDetailModal } from '../../stores/util'
 
 const userStore = useUserStore()
 const accumulateStore = useAccumulateStore()
 const recordsStore = useRecordsStore()
 const recommendStore = useRecommendStore()
+const drinksStore = useDrinksStore()
 
 const chartData = {
     type: 'bar',
@@ -176,7 +180,16 @@ const goSugar = () => {
 }
 
 // 추천 음료 상세페이지로 이동
-const goDetail = () => {
+const selectedDrink = ref(null)
+
+const viewDetailsModal = (drinkId) => {
+  const drink = drinksStore.getAllDrinkList.find(d => d.id === drinkId);
+  if (drink) {
+    selectedDrink.value = drink;
+    isDetailModal.value = true;
+  } else {
+    alert('해당 음료를 찾을 수 없습니다.');
+  }
 }
 
 // 채팅으로 이동
