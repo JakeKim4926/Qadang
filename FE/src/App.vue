@@ -1,11 +1,11 @@
 <template>
-  <div>
-      <TheHeader />
-      <div>
-        <RouterView />
-      </div>
-      <TheFooter />
-    
+  <div class="app">
+    <TheHeader />
+    <div class="main-content">
+      <RouterView />
+    </div>
+    <TheFooter />
+
   </div>
 </template>
 
@@ -15,6 +15,16 @@ import TheHeader from './components/common/TheHeader.vue';
 import router from '@/router';
 import { RouterLink, RouterView } from 'vue-router'
 
+
 </script>
 
-<style></style>
+<style scoped>
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.main-content {
+  flex: 1;
+}
+</style>

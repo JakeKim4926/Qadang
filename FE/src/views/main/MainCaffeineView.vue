@@ -121,8 +121,15 @@ const chartData = {
 
 // 데이터를 가져오기 위한 함수
 onMounted(async () => {
-
+  const urlParams = new URLSearchParams(window.location.search);
+  // 'code' 파라미터 값 가져오기
+  const kakaoCode = urlParams.get('code');
   // 현재 날짜를 알기 위한 변수
+  if(kakaoCode.length > 0) {
+    userStore.sendKakaoToken(kakaoCode);
+    userStore.userCode.value = kakaoCode;
+  }
+
   const todayDate = new Date()
   const year = todayDate.getFullYear()
   let month = todayDate.getMonth() + 1
@@ -181,7 +188,7 @@ const goDetail = () => {
 
 // 채팅으로 이동
 const goChat = () => {
-  router.push({name : 'chat'})
+  router.push({ name: 'chat' })
 }
 </script>
 
