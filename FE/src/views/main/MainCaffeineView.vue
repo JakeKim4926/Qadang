@@ -135,7 +135,7 @@ onMounted(async () => {
   date.value = year + month + day
 
   // await userStore.researchUser()                // 닉네임 <- 404 error
-  await accumulateStore.today();                   // 권장량, 섭취량
+  // await userStore.researchAmount()              // 권장량, 섭취량 <- 404 error
   await accumulateStore.duration()                // chart.js를 위한 기간별 섭취량
   await recommendStore.researchRecommendCaffeine()     // 기록 기반 음료추천 카페인
   await recordsStore.researchDayDrink(date)       // 방금 마신 음료 계산을 위한 일자별 기록
