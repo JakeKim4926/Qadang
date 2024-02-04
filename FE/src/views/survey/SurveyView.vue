@@ -11,7 +11,7 @@
                     </option>
                 </select>
                 <div class="div5">음료명</div>
-                <select id="drinkSelect" v-model="drinkTemp" class="rectangle-4272" @change="selectDrink" >
+                <select id="drinkSelect" v-model="drinkTemp" class="rectangle-4272" @change="selectDrink">
                     <option v-for="drink in drinkStore.getCafeDrinkList" :key="drink.drinkId" :value="drink">
                         {{ drink.drinkName }}
                     </option>
@@ -22,12 +22,12 @@
             <div class="rectangle-4274">
                 <div class="div2">해당 음료를 하루에 몇 잔 마시나요?</div>
 
-                <a class="minus">
+                <a class="minus" @click="clickMinus">
                     <font-awesome-icon :icon="['fas', 'minus']" style="color: #000000;" />
                 </a>
                 <div class="value">{{ drinkCount }}</div>
 
-                <a class="plus">
+                <a class="plus" @click="clickPlus">
                     <font-awesome-icon :icon="['fas', 'plus']" style="color: #000000;" />
                 </a>
 
@@ -35,23 +35,37 @@
 
             <div class="rectangle-4275">
                 <div class="div3">당신의 하루 총 섭취량은?</div>
-                <div class="caffeine">카페인 {{ caffeine }} mg</div>
+
+                <div v-if="caffeine >= 200.0" class="caffeine">
+                    카페인 {{ caffeine * drinkCount }} mg
+                </div>
+                <div v-else class="caffeine" style="color:blue">
+                    카페인 {{ caffeine * drinkCount }} mg
+                </div>
                 <div class="caffeine_ex">
                     식약청 카페인 최대 섭취 권장량
                     <br />
                     성인 기준 400mg 이하
                 </div>
-                <div class="sugar">당 {{sugar}}g</div>
+
+                <div v-if="sugar >= 200.0" class="sugar">
+                    당 {{ sugar * drinkCount }} g
+                </div>
+                <div v-else class="sugar" style="color:blue">
+                    당 {{ sugar * drinkCount }} g
+                </div>
                 <div class="sugar_ex">
                     식약청 당 일일 섭취 권장량
                     <br />
                     남성 37.5g / 여성 25.g
                 </div>
-                
+
             </div>
 
-            <div class="rectangle-4269">건너뛰기</div>
-            <div class="rectangle-4270">결과보기</div>
+            <RouterLink to="/mainCaffeine" class="rectangle-4269">건너뛰기</RouterLink>
+            <RouterLink to="/mainSugar" class="rectangle-4270">결과보기</RouterLink>
+            <!-- <div class="rectangle-4269">건너뛰기</div>
+            <div class="rectangle-4270">결과보기</div> -->
 
             <div class="div8"></div>
             <div class="div9"></div>
@@ -73,7 +87,7 @@ const caffeine = ref(0);
 const sugar = ref(0);
 
 function selectCafe() {
-    if(cafeId.value > 0) {
+    if (cafeId.value > 0) {
         drinkStore.researchCafeDrinks(cafeId.value);
     }
 }
@@ -81,6 +95,24 @@ function selectCafe() {
 function selectDrink() {
     caffeine.value = drinkTemp.value.drinkCaffeine;
     sugar.value = drinkTemp.value.drinkSugar;
+}
+
+function clickMinus() {
+    if(drinkCount.value <= 0.0) {
+        window.alert("0개 미만은 입력하실 수 없습니다.")
+        return;
+    }
+    
+    drinkCount.value -= 1;
+}
+
+function clickPlus() {
+    if(drinkCount.value >= 9.0) {
+        window.alert("10개 이상은 입력하실 수 없습니다.")
+        return;
+    }
+    
+    drinkCount.value += 1;
 }
 
 onMounted(() => {
@@ -227,7 +259,7 @@ onMounted(() => {
 }
 
 .sugar {
-    color: #0000ff;
+    color: #ff0000;
     text-align: center;
     font-family: "DmSans-Bold", sans-serif;
     font-size: 25px;
@@ -302,8 +334,8 @@ onMounted(() => {
     height: 6.66%;
     color: #000000;
     text-align: center;
-    
-    color:white;
+
+    color: white;
     font-family: "DmSans-Bold", sans-serif;
     font-size: 25px;
     line-height: 18px;
@@ -311,6 +343,7 @@ onMounted(() => {
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
 }
 
 .rectangle-4271 {
@@ -411,7 +444,7 @@ onMounted(() => {
     top: 9.00%;
     height: 6.66%;
 
-    color:white;
+    color: white;
     font-family: "DmSans-Bold", sans-serif;
     font-size: 25px;
     line-height: 18px;
@@ -419,6 +452,8 @@ onMounted(() => {
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
+    z-index: 2;
 }
 
 .div9 {
