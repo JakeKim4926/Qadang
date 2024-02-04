@@ -2,7 +2,9 @@
   <div class="main-container">
     <div class="user-info">
       <h2>{{ userStore.getUserName }} 님</h2>
-      <RouterLink :to="{name:'mainSugar'}">당 섭취량으로 가는 버튼</RouterLink>
+      <div @click="goSugar">
+        <img src="@/components/icons/ca_toggle.png" alt="당 섭취량 메인페이지로 이동" class="toggle">
+      </div>
     </div>
 
     <div>
@@ -162,6 +164,11 @@ onMounted(async () => {
   })
 })
 
+// 당 섭취량 메인페이지로 이동
+const goSugar = () => {
+  router.push({name : 'mainSugar'})
+}
+
 // 채팅으로 이동
 const goChat = () => {
   router.push({name : 'chat'})
@@ -186,6 +193,10 @@ p {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.toggle {
+  width: 75px;
 }
 
 .user-info {
