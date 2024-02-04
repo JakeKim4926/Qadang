@@ -11,10 +11,10 @@
       <p>당 섭취량</p>
       <div class="info-box">
 
-        <div v-if="accumulateStore.getAccumulateToday.accumulateSugar < 200.0">
+        <div v-if="accumulateStore.getAccumulateToday.accumulateSugar < userStore.getUserRDI.userSugar * 1/2">
           <img src="@/components/icons/su_good.png" alt="양호 이미지" class="status-img left-info">
         </div>
-        <div v-else-if="accumulateStore.getAccumulateToday.accumulateSugar < 400.0">
+        <div v-else-if="accumulateStore.getAccumulateToday.accumulateSugar < userStore.getUserRDI.userSugar">
           <img src="@/components/icons/su_soso.png" alt="보통 이미지" class="status-img left-info">
         </div>
         <div v-else>
@@ -33,20 +33,20 @@
 
           <p class="today-title">하루 총합 섭취량 / 권장량</p>
           <p class="today-info"
-          :class="{ 'font_red': accumulateStore.getAccumulateToday.accumulateSugar >= accumulateStore.getAccumulateToday.userSugar,
-          'font_green': accumulateStore.getAccumulateToday.accumulateSugar < accumulateStore.getAccumulateToday.userSugar }">
+          :class="{ 'font_red': accumulateStore.getAccumulateToday.accumulateSugar >= userStore.getUserRDI.userSugar,
+          'font_green': accumulateStore.getAccumulateToday.accumulateSugar < userStore.getUserRDI.userSugar }">
             {{ accumulateStore.getAccumulateToday.accumulateSugar }} / 
             {{ accumulateStore.getAccumulateToday.userSugar }}g</p>
         </div>
 
         <div class="right-info superbig-font">
-          <div v-if="accumulateStore.getAccumulateToday.accumulateSugar < 200.0">
+          <div v-if="accumulateStore.getAccumulateToday.accumulateSugar < userStore.getUserRDI.userSugar * 1/2">
             <p>양호 메시지</p>
           </div>
-          <div v-else-if="accumulateStore.getAccumulateToday.accumulateSugar < 400.0">
+          <div v-else-if="accumulateStore.getAccumulateToday.accumulateSugar < userStore.getUserRDI.userSugar">
             <p>보통 메시지</p>
           </div>
-          <div v-else="accumulateStore.getAccumulateToday.accumulateSugar >= 400">
+          <div v-else="accumulateStore.getAccumulateToday.accumulateSugar >= userStore.getUserRDI.userSugar">
             <p>나쁨 메시지</p>
           </div>
         </div>
