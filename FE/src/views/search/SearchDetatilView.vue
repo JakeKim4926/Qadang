@@ -11,7 +11,7 @@
       <div class="right-buttons">
         <button
           :class="{'button_caffeine': comparisonStore.basket.length >= 2, 'button_nonActive_color': comparisonStore.basket.length < 2}"
-          @click="compareDrinks"
+          @click="compareDrinksModal"
           :disabled="comparisonStore.basket.length < 2">
           비교하기
         </button>
@@ -81,6 +81,7 @@ import { useSearchStore } from '../../stores/search';
 import { useUserStore } from '../../stores/user';
 import { useDrinksStore} from '../../stores/drinks'
 import { useComparisonStore } from '../../stores/comparison';
+import { useAccumulateStore } from '../../stores/accumulate';
 import router from '@/router';
 import '../../components/color/color.css'
 import searchTopView from './SearchTopView.vue';
@@ -96,7 +97,7 @@ const comparisonStore = useComparisonStore();
 const activeButtons = ref({});
 const showSortMenu = ref(false);
 const userRDI = computed(() => userStore.getUserRDI);
-
+const accumulateStore = useAccumulateStore();
 const searchResults = computed(() => searchStore.getSearchDrinkList);
 const allDrinkList = computed(() => drinkStore.getAllDrinkList);
 const sortedDrinks = ref([]);
@@ -127,9 +128,8 @@ const compareDrinksModal = () => {
 const setSort = (field, order) => {
   sortState.sortField = field;
   sortState.sortOrder = order;
-  showSortMenu.value = false; // 정렬 메뉴 닫기
+  showSortMenu.value = false; 
 
-  // 선택된 음료 목록(검색 결과 또는 전체 목록)을 정렬
   const drinksToSort = searchResults.value.length > 0 ? searchResults.value : allDrinkList.value;
   sortedDrinks.value = [...drinksToSort].sort((a, b) => {
     let result = 0;
@@ -149,19 +149,18 @@ const currentSortLabel = computed(() => {
   return `${labels[sortState.sortField]} ${suffix}`;
 });
 
-// 토글 메뉴 표시
 const toggleSortMenu = () => {
   showSortMenu.value = !showSortMenu.value;
 };
 
 const sugarClass = (drink) => ({
-  'high-sugar': drink.drinkSugar + userRDI.value.accumulateSugar > userRDI.value.userSugar,
-  'low-sugar': drink.drinkSugar + userRDI.value.accumulateSugar <= userRDI.value.userSugar
+  'high-sugar': drink.drinkSugar + accumulateStore.accumulateToday.accumulateSugar > userRDI.userSugar,
+  'low-sugar': drink.drinkSugar + accumulateStore.accumulateToday.accumulateSugar <= userRDI.userSugar
 });
 
 const caffeineClass = (drink) => ({
-  'high-caffeine': drink.drinkCaffeine + userRDI.value.accumulateCaffeine > userRDI.value.userCaffeine,
-  'low-caffeine': drink.drinkCaffeine + userRDI.value.accumulateCaffeine <= userRDI.value.userCaffeine
+  'high-caffeine': drink.drinkCaffeine + accumulateStore.accumulateToday.accumulateCaffeine > userRDI.userCaffeine,
+  'low-caffeine': drink.drinkCaffeine + accumulateStore.accumulateToday.accumulateCaffeine <= userRDI.userCaffeine
 });
 
 // 여기에 drink 정보를 가져오기
@@ -180,18 +179,6 @@ const disableButtons = (id) => {
   activeButtons.value[id] = false;
 };
 
-
-// const compareDrinks = () => {
-//   if (comparisonStore.basket.length > 1) {
-//     router.push({
-//       name: 'compareDrink',      
-//       state: { drinks: comparisonStore.basket }
-//     });
-//   }
-// };
-// const viewDetails = (drink) => {
-//   router.push({ name: 'drinkDetail', params: { drink } });
-// };
 
 onMounted(() => {
   comparisonStore.loadBasketFromSession();

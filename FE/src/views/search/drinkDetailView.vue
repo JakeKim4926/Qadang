@@ -11,7 +11,7 @@
     </div>
     <hr class="fact-line2" />
     <div>
-      <button class="comparebox">비교함담기</button>
+      <button class="comparebox" @click="addToBasket">비교함담기</button>
     </div>
     <img :src="drinkDetail.drinkUrl" alt="음료 이미지" class="drink-image" />
     
@@ -106,7 +106,12 @@ const drinkDetail = computed(() => {
     cafeUrl: '',
   };
 });
-  
+
+const addToBasket = () => {
+  comparisonStore.addToBasket(drinkDetail.value);
+  alert(`${drinkDetail.value.drinkName}이(가) 비교함에 추가되었습니다.`);
+}
+
 </script>
   
 <style scoped>
