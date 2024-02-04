@@ -24,7 +24,7 @@ library.add(fas, far, fab)
 
 const app = createApp(App)
 
-// window.Kakao.init(import.meta.env.VITE_KAKAO_API_KEY)
+window.Kakao.init(import.meta.env.VITE_KAKAO_API_KEY)
 
 app.component('font-awesome-icon', FontAwesomeIcon)
 app.use(createPinia())

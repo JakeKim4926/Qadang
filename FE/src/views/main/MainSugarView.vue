@@ -146,7 +146,7 @@ onMounted(async () => {
   
   // 차트 데이터에 넣을 데이터가 생긴 뒤 데이터 삽입
   watch(() => accumulateStore.getAccumulateList, (newData) => {
-    if (newData.length > 1) {
+    if (newData.length >= 1) {
       console.log('!!!', newData)
 
       const tmpDayData = []
@@ -207,6 +207,7 @@ p {
 
 .toggle {
   width: 75px;
+  cursor:pointer;
 }
 
 .user-info {
@@ -295,6 +296,7 @@ p {
   border-radius: 20px;
   margin-left: auto;
   margin-right: 10px;
+  cursor:pointer;
 }
 
 .chat {
