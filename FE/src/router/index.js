@@ -12,6 +12,10 @@ import SearchTopView from '@/views/search/SearchTopView.vue'
 import DrinkDetailView from '@/views/search/DrinkDetailView.vue'
 import CompareDrinkView from '@/views/search/CompareDrinkView.vue'
 import SurveyView from '@/views/survey/SurveyView.vue'
+import SurveyCaffeineView from '@/views/survey/SurveyCaffeineView.vue'
+import SurveySugarView from '@/views/survey/SurveySugarView.vue'
+import SurveyHealthView from '@/views/survey/SurveyHealthView.vue'
+
 import UserUpdateView from '@/views/mypage/UserUpdateView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -92,6 +96,21 @@ const router = createRouter({
       path: '/survey',
       name: 'survey',
       component: SurveyView
+    },
+    {
+      path: '/survey/caffeine',
+      name: 'surveyCaffeine',
+      component: SurveyCaffeineView
+    },
+    {
+      path: '/survey/sugar',
+      name: 'surveySugar',
+      component: SurveySugarView
+    },
+    {
+      path: '/survey/health',
+      name: 'surveyHealth',
+      component: SurveyHealthView
     },
   ],
 })
