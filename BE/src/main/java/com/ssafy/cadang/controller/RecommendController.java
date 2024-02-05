@@ -29,6 +29,13 @@ public class RecommendController {
                 .drinkName(drink.getDrinkName())
                 .cafeName(drink.getCafeName())
                 .drinkUrl(drink.getDrinkUrl())
+                        .drinkMl(drink.getDrinkMl())
+                        .drinkOz(drink.getDrinkOz())
+                        .drinkCalorie(drink.getDrinkCalorie())
+                        .drinkNatrium(drink.getDrinkNatrium())
+                        .drinkProtein(drink.getDrinkProtein())
+                        .drinkFat(drink.getDrinkFat())
+                        .drinkAllergy(drink.getDrinkAllergy())
                 .build()
                 , HttpStatus.OK
         );
@@ -45,6 +52,13 @@ public class RecommendController {
                         .drinkName(drink.getDrinkName())
                         .cafeName(drink.getCafeName())
                         .drinkUrl(drink.getDrinkUrl())
+                        .drinkMl(drink.getDrinkMl())
+                        .drinkOz(drink.getDrinkOz())
+                        .drinkCalorie(drink.getDrinkCalorie())
+                        .drinkNatrium(drink.getDrinkNatrium())
+                        .drinkProtein(drink.getDrinkProtein())
+                        .drinkFat(drink.getDrinkFat())
+                        .drinkAllergy(drink.getDrinkAllergy())
                         .build()
                 , HttpStatus.OK
         );
