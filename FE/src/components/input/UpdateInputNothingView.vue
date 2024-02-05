@@ -124,7 +124,7 @@ div {
   border-width: 1px;
   position: absolute;
   width: 500px;
-  height: 450px;
+  height: 440px;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 
@@ -168,7 +168,6 @@ div {
 }
 
 .button_caffeine {
-  margin-left: 80px;
   color: white;
   font-size: 20px;
   font-weight: bold;
