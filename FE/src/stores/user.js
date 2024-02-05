@@ -110,8 +110,13 @@ export const useUserStore = defineStore("user", () => {
       .then((res) => {
         // 카카오 에서 받아온 토큰을 백으로 전달
         console.log('결과', res.data);
+        
+        // 헤더 설정
+        // axios.defaults.headers.common['Access-Token'] = res.data.accessToken; 
         const result = ref({});
         result.value = res.data;
+
+
         userAccessToken.value = res.data;
       })
       .catch((err) => {

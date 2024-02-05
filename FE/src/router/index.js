@@ -18,6 +18,7 @@ import SurveyHealthView from '@/views/survey/SurveyHealthView.vue'
 
 import UserUpdateView from '@/components/user/UserUpdateView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
+import {userAccessToken } from "@/stores/util"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -120,5 +121,25 @@ const router = createRouter({
     }
   ],
 })
+
+
+// == navigationguard
+// router.beforeEach((to, from, next) => {
+
+//   if (userAccessToken.value === null) {
+
+//     if (to.name !== 'home') {
+//       next({ name: 'home' });
+//     } else {
+//       next();
+//     }
+//   } else {
+//     if (to.name === 'home') {
+//       next(false); // 접근 금지
+//     } else {
+//       next(); // 허용
+//     }
+//   }
+// });
 
 export default router
