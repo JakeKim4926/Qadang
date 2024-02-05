@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -31,7 +32,7 @@ public class User {
     private int userGender; // 남자(1), 여자(2)
     @Setter
     private int userHealth; // 활동량 : 1~4 (낮은순)
-    private LocalDate registerDatetime; // 연동일자
+    private Date registerDatetime; // 연동일자
     @Setter
     private double userCaffeine; // 카페인 권장량
     @Setter
@@ -44,8 +45,6 @@ public class User {
     private LocalDate maxCaffeineDate; // 카페인 최고량 섭취 일자
     @Setter
     private LocalDate maxSugarDate; // 당 최고량 섭취 일자
-    @Setter
-    private String kakaoRefreshToken; // kakao refresh token
     @Setter
     private String jwtRefreshToken; // jwt refresh token
 

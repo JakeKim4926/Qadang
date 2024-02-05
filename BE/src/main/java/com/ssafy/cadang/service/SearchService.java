@@ -48,7 +48,7 @@ public class SearchService {
     // 음료 키워드 검색
     public List<DrinkResponseDTO> keywordList(String keyword){
 
-        List<Drinks> list = drinkRepository.findByFullNameContaining(keyword);
+        List<Drinks> list = drinkRepository.findByDrinkFullNameContaining(keyword);
         List<DrinkResponseDTO> result = new ArrayList<>();
 
         for (Drinks drink : list) {

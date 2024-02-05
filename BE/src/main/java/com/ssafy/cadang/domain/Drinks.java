@@ -1,9 +1,6 @@
 package com.ssafy.cadang.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,6 +25,7 @@ public class Drinks {
     private double drinkNatrium;
     private double drinkProtein;
     private double drinkFat;
+    @Column(length = 1000)
     private String drinkUrl;
     private String drinkAllergy;
     private String drinkFullName;
