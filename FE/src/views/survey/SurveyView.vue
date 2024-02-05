@@ -5,13 +5,15 @@
                 <div class="title01">카페에서 마시는 최애 음료는?</div>
 
                 <div class="cafe_name">카페명</div>
-                <select id="cafeSelect" v-model="cafeId" class="rectangle-4271" @change="selectCafe">
+                <select id="cafeSelect" v-model="cafeId" class="rectangle-4271" @change="selectCafe"
+                    style="text-align: center; ">
                     <option v-for="cafe in drinkStore.getCafeList" :key="cafe.cafeId" :value="cafe.cafeId">
                         {{ cafe.cafeName }}
                     </option>
                 </select>
                 <div class="div5">음료명</div>
-                <select id="drinkSelect" v-model="drinkTemp" class="rectangle-4272" @change="selectDrink">
+                <select id="drinkSelect" v-model="drinkTemp" class="rectangle-4272" @change="selectDrink"
+                    style="text-align: center;" :disabled="!cafeId">
                     <option v-for="drink in drinkStore.getCafeDrinkList" :key="drink.drinkId" :value="drink">
                         {{ drink.drinkName }}
                     </option>
@@ -37,10 +39,10 @@
                 <div class="div3">당신의 하루 총 섭취량은?</div>
 
                 <div v-if="caffeine >= 200.0" class="caffeine">
-                    카페인 {{ caffeine * drinkCount }} mg
+                    카페인 {{ caffeine }} mg
                 </div>
                 <div v-else class="caffeine" style="color:blue">
-                    카페인 {{ caffeine * drinkCount }} mg
+                    카페인 {{ caffeine }} mg
                 </div>
                 <div class="caffeine_ex">
                     식약청 카페인 최대 섭취 권장량
@@ -48,11 +50,11 @@
                     성인 기준 400mg 이하
                 </div>
 
-                <div v-if="sugar >= 200.0" class="sugar">
-                    당 {{ sugar * drinkCount }} g
+                <div v-if="sugar >= 25.0" class="sugar">
+                    당 {{ sugar }} g
                 </div>
                 <div v-else class="sugar" style="color:blue">
-                    당 {{ sugar * drinkCount }} g
+                    당 {{ sugar }} g
                 </div>
                 <div class="sugar_ex">
                     식약청 당 일일 섭취 권장량
@@ -63,7 +65,15 @@
             </div>
 
             <RouterLink to="/mainCaffeine" class="rectangle-4269">건너뛰기</RouterLink>
-            <RouterLink to="/mainSugar" class="rectangle-4270">결과보기</RouterLink>
+            <template v-if="caffeine >= 200">
+                <RouterLink to="/survey/caffeine" class="rectangle-4270">결과보기</RouterLink>
+            </template>
+            <template v-else-if="sugar >= 25.0">
+                <RouterLink to="/survey/sugar" class="rectangle-4270">결과보기</RouterLink>
+            </template>
+            <template v-else>
+                <RouterLink to="/survey/health" class="rectangle-4270">결과보기</RouterLink>
+            </template>
             <!-- <div class="rectangle-4269">건너뛰기</div>
             <div class="rectangle-4270">결과보기</div> -->
 
@@ -75,14 +85,14 @@
     </div>
 </template>
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useDrinksStore } from "@/stores/drinks";
 
 const drinkStore = useDrinksStore();
 const cafeId = ref(0);
 const drinkId = ref(0);
 const drinkCount = ref(0);
-const drinkTemp = ref({})
+let drinkTemp = ref({})
 const caffeine = ref(0);
 const sugar = ref(0);
 
@@ -93,30 +103,52 @@ function selectCafe() {
 }
 
 function selectDrink() {
-    caffeine.value = drinkTemp.value.drinkCaffeine;
-    sugar.value = drinkTemp.value.drinkSugar;
+    caffeine.value = drinkTemp.value.drinkCaffeine * drinkCount.value;
+    sugar.value = drinkTemp.value.drinkSugar * drinkCount.value;
 }
 
 function clickMinus() {
-    if(drinkCount.value <= 0.0) {
+    if (drinkTemp.value.drinkCaffeine == undefined || drinkTemp.value.drinkSugar == undefined) {
+        window.alert("음료를 먼저 골라주세요");
+        return;
+    }
+    if (drinkCount.value <= 0.0) {
         window.alert("0개 미만은 입력하실 수 없습니다.")
         return;
     }
-    
+
     drinkCount.value -= 1;
+    caffeine.value = drinkTemp.value.drinkCaffeine * drinkCount.value;
+    sugar.value = drinkTemp.value.drinkSugar * drinkCount.value;
 }
 
 function clickPlus() {
-    if(drinkCount.value >= 9.0) {
+    if (drinkTemp.value.drinkCaffeine == undefined || drinkTemp.value.drinkSugar == undefined) {
+        window.alert("음료를 먼저 골라주세요");
+        return;
+    }
+
+    if (drinkCount.value >= 9.0) {
         window.alert("10개 이상은 입력하실 수 없습니다.")
         return;
     }
-    
+
     drinkCount.value += 1;
+    caffeine.value = drinkTemp.value.drinkCaffeine * drinkCount.value;
+    sugar.value = drinkTemp.value.drinkSugar * drinkCount.value;
 }
+
+watch(cafeId, (newValue, oldValue) => {
+    drinkTemp.value = ''; // drinkTemp를 초기화합니다.
+    drinkCount.value = 0;
+    caffeine.value = 0;
+    sugar.value = 0;
+});
+
 
 onMounted(() => {
     drinkStore.researchCafe();
+    
 })
 
 
