@@ -4,7 +4,9 @@
     <div class="main-content">
       <RouterView />
     </div>
-    <TheFooter />
+    <template v-if="userAccessToken != null">
+      <TheFooter />
+    </template>
 
   </div>
 </template>
@@ -14,6 +16,7 @@ import TheFooter from './components/common/TheFooter.vue';
 import TheHeader from './components/common/TheHeader.vue';
 import router from '@/router';
 import { RouterLink, RouterView } from 'vue-router'
+import {userAccessToken } from "@/stores/util"
 
 
 </script>

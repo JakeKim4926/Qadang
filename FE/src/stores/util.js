@@ -26,3 +26,5 @@ export const isDetailModal = ref(false)
 export const isCompareModal = ref(false)
 
 export const tempRecord = ref({})
+
+export const userAccessToken = ref(null);
