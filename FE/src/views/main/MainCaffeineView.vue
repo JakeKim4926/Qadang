@@ -24,8 +24,8 @@
         <div class="mid-info">
           <p class="recent-drink">방금 마신 음료</p>
           <div v-if="recordsStore.getDayDrink.length > 0" class="drink-info">
-            {{ recordsStore.getDayDrink[recordsStore.getDayDrink.length-1].drinkCaffeine
-            + 75 * recordsStore.getDayDrink[recordsStore.getDayDrink.length-1].plusShot}}mg
+            {{ (recordsStore.getDayDrink[recordsStore.getDayDrink.length-1].drinkCaffeine
+            + 75 * recordsStore.getDayDrink[recordsStore.getDayDrink.length-1].plusShot).toFixed(2) }}mg
           </div>
           <div v-else class="drink-info">
             오늘 마신 음료가 없습니다!
@@ -36,7 +36,7 @@
           :class="{ 'font_red': accumulateStore.getAccumulateToday.accumulateCaffeine >= userStore.getUserRDI.userCaffeine,
           'font_green': accumulateStore.getAccumulateToday.accumulateCaffeine < userStore.getUserRDI.userCaffeine }">
             {{ accumulateStore.getAccumulateToday.accumulateCaffeine }} / 
-            {{ accumulateStore.getAccumulateToday.userCaffeine }}mg</p>
+            {{ userStore.getUserRDI.userCaffeine }}mg</p>
         </div>
 
         <div class="right-info superbig-font">
@@ -65,7 +65,7 @@
       <div class="info-box">
         <img :src="recommendStore.getRecommendedCaffeine.drinkUrl" alt="Recommended Drink" class="photo"/>
         <p>{{ recommendStore.getRecommendedCaffeine.cafeName }} {{ recommendStore.getRecommendedCaffeine.drinkName }}</p>
-        <button @click="goDetail" class="button_caffeine">상세보기</button>
+        <button @click="viewDetailsModal(recommendStore.getRecommendedCaffeine.drinkId)" class="button_caffeine">상세보기</button>
       </div>
     </div>
 
@@ -87,11 +87,15 @@ import { useUserStore } from '@/stores/user';
 import { useAccumulateStore } from '@/stores/accumulate';
 import { useRecordsStore } from '@/stores/records';
 import { useRecommendStore } from '@/stores/recommend';
+import { useDrinksStore } from '@/stores/drinks';
+
+import { isDetailModal } from '../../stores/util'
 
 const userStore = useUserStore()
 const accumulateStore = useAccumulateStore()
 const recordsStore = useRecordsStore()
 const recommendStore = useRecommendStore()
+const drinksStore = useDrinksStore()
 
 const chartData = {
     type: 'bar',
@@ -135,7 +139,8 @@ onMounted(async () => {
   date.value = year + month + day
 
   // await userStore.researchUser()                // 닉네임 <- 404 error
-  // await userStore.researchAmount()              // 권장량, 섭취량 <- 404 error
+  // await userStore.researchAmount()              // 권장량 <- 404 error
+  await accumulateStore.today()                    // 섭취량
   await accumulateStore.duration()                // chart.js를 위한 기간별 섭취량
   await recommendStore.researchRecommendCaffeine()     // 기록 기반 음료추천 카페인
   await recordsStore.researchDayDrink(date)       // 방금 마신 음료 계산을 위한 일자별 기록
@@ -176,7 +181,16 @@ const goSugar = () => {
 }
 
 // 추천 음료 상세페이지로 이동
-const goDetail = () => {
+const selectedDrink = ref(null)
+
+const viewDetailsModal = (drinkId) => {
+  const drink = drinksStore.getAllDrinkList.find(d => d.id === drinkId);
+  if (drink) {
+    selectedDrink.value = drink;
+    isDetailModal.value = true;
+  } else {
+    alert('해당 음료를 찾을 수 없습니다.');
+  }
 }
 
 // 채팅으로 이동
