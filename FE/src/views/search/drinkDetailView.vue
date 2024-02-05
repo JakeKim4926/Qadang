@@ -76,6 +76,7 @@
 import { ref, onMounted,computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useDrinksStore } from '../../stores/drinks';
+import { useComparisonStore } from '../../stores/comparison';
 import { isDetailModal } from '../../stores/util'
 
 const closeDetailModal = () => {
@@ -83,29 +84,11 @@ const closeDetailModal = () => {
   console.log('!',isDetailModal.value)
 }
 
-const route = useRoute();
 const drinksStore = useDrinksStore();
-const drinkId = parseInt(route.params.drinkId, 10);
+const comparisonStore = useComparisonStore();
 
-const drinkDetail = computed(() => {
-  return drinksStore.allDrinkList.find(drink => drink.drinkId === drinkId) || {
-    drinkId: 0,
-    cafeId: 0,    
-    cafeName: '',
-    drinkName: '',
-    drinkCaffeine: 0,
-    drinkSugar: 0,
-    drinkML: 0,
-    drinkOZ: 0.0,
-    drinkCalorie: 0,
-    drinkNatrium: 0,
-    drinkProtein: 0,
-    drinkFat: 0,
-    drinkUrl: '',
-    drinkAllergy: '',
-    cafeUrl: '',
-  };
-});
+const drinkDetail = computed(() => drinksStore.selectedDrink);
+
 
 const addToBasket = () => {
   comparisonStore.addToBasket(drinkDetail.value);
@@ -139,7 +122,7 @@ const addToBasket = () => {
   border-width: 1px;
   position: absolute;
   width: 500px;
-  height: 500px;
+  height: 650px;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 
