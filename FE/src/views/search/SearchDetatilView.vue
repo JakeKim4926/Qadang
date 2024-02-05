@@ -107,8 +107,9 @@ const sortState = reactive({
 });
 const selectedDrink = ref(null);
 
+// 음료 상세보기를 가져오는 함수
 const viewDetailsModal = (drinkId) => {
-  const drink = drinksStore.getAllDrinkList.find(d => d.id === drinkId);
+  const drink = drinkStore.getAllDrinkList.find(d => d.id === drinkId);
   if (drink) {
     selectedDrink.value = drink;
     isDetailModal.value = true;
