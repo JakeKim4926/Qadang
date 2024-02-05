@@ -23,6 +23,7 @@ public class RecommendController {
         Drinks drink = drinkService.getCaffeineRecommend();
         return new ResponseEntity<>(
                 DrinkResponseDTO.builder()
+                .drinkId(drink.getDrinkId())
                 .drinkCaffeine(drink.getDrinkCaffeine())
                 .drinkSugar(drink.getDrinkSugar())
                 .drinkName(drink.getDrinkName())
@@ -38,6 +39,7 @@ public class RecommendController {
         Drinks drink = drinkService.getSugarRecommend();
         return new ResponseEntity<>(
                 DrinkResponseDTO.builder()
+                        .drinkId(drink.getDrinkId())
                         .drinkCaffeine(drink.getDrinkCaffeine())
                         .drinkSugar(drink.getDrinkSugar())
                         .drinkName(drink.getDrinkName())
