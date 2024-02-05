@@ -2,6 +2,7 @@ import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import router from "@/router";
 import axios from "axios";
+import {userAccessToken } from "@/stores/util"
 
 export const useUserStore = defineStore("user", () => {
   // =========== STATE ===============
@@ -109,6 +110,9 @@ export const useUserStore = defineStore("user", () => {
       .then((res) => {
         // 카카오 에서 받아온 토큰을 백으로 전달
         console.log('결과', res.data);
+        const result = ref({});
+        result.value = res.data;
+        userAccessToken.value = res.data;
       })
       .catch((err) => {
         console.log('에러', err);

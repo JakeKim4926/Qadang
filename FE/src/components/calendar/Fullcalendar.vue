@@ -74,20 +74,32 @@ export default {
                     const caffeine = (dataForDate.accumulateCaffeine / 75.0).toFixed(1);
                     const sugar = (dataForDate.accumulateSugar / 6.0).toFixed(1);
 
+                    let caffeineHTML = `
+                            <h5>
+                            <img src="src/components/icons/caffeine.png" alt="no" style="width:15%; heigth:10%" /> x ${caffeine}
+                            </h5>
+                    `
+                    let sugarHTML = `
+                            <h5>
+                            <img src="src/components/icons/sugar.png" alt="no" style="width:15%; heigth:10%" />
+                            x ${sugar}
+                            </h5>
+                    `
+
+                    if(caffeine == 0.0)
+                        caffeineHTML = '';
+                    if(sugar == 0.0)
+                        sugarHTML = ''
+
+
                     return {
                         html: `
                         <div class="circle"></div>
-                        <div class="day-number-exist" style="text-align: right; font-weight:bold; z-index:1;"">${date.dayNumberText}</div>
+                        <div class="day-number-exist" style="text-align: right; font-weight:bold; z-index:1; right:2%"">${date.dayNumberText}</div>
                         <div style="text-align: center;
-                                justify-content: center;">
-                            <h5>
-                            <img src="src/components/icons/caffeine.png" alt="no" style="width:20%; heigth:10%" /> x ${caffeine}
-                            </h5>
-                            <h5>
-                            <img src="src/components/icons/sugar.png" alt="no" style="width:20%; heigth:10%" />
-                            x ${sugar}
-                            </h5>
-                        </div>
+                                justify-content: center;">` + caffeineHTML + sugarHTML +
+                            
+                        `</div>
                     `,
                     };
                 }
