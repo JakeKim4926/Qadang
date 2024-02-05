@@ -9,4 +9,6 @@ public interface DrinkRepository extends JpaRepository<Drinks, Long> {
     Drinks findByDrinkId(Long id);
 
     List<Drinks> findByCafeId(Long cafeId);
+
+    List<Drinks> findByFullNameContaining(String keyword);
 }

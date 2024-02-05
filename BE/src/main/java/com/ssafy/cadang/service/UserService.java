@@ -53,5 +53,111 @@ public class UserService {
         return max;
     }
 
+    // 권장량 계산
+    public void detailInfo(User user) {
+
+        // 카페인
+        if (user.getUserBirth() <= 11) { // 아동 : 0
+            user.setUserCaffeine(0);
+        } else if (user.getUserBirth() > 11 && user.getUserBirth() < 20) { // 청소년 : 몸무게 * 2.5mg
+            user.setUserCaffeine(2.5 * user.getUserWeight());
+        }
+
+        // 당
+        if (user.getUserBirth() < 20) {
+            if (user.getUserGender() == 1) { // 청소년 & 남자
+
+                double health = 0; // 활동량 점수
+
+                switch (user.getUserHealth()) {
+                    case 1:
+                        health = 1.0;
+                        break;
+                    case 2:
+                        health = 1.13;
+                        break;
+                    case 3:
+                        health = 1.26;
+                        break;
+                    case 4:
+                        health = 1.42;
+                        break;
+                }
+
+                double energy = 88.5 - 61.9 * user.getUserBirth() + health * (26.7 * user.getUserWeight() + 903 * user.getUserHeight());
+                user.setUserSugar(energy * 0.1);
+
+            }else { // 청소년 & 여자
+                double health = 0; // 활동량 점수
+
+                switch (user.getUserHealth()) {
+                    case 1:
+                        health = 1.0;
+                        break;
+                    case 2:
+                        health = 1.16;
+                        break;
+                    case 3:
+                        health = 1.31;
+                        break;
+                    case 4:
+                        health = 1.56;
+                        break;
+                }
+
+                double energy = 135.3 - 30.8 * user.getUserBirth() + health * (10.0 * user.getUserWeight() + 934 * user.getUserHeight());
+                user.setUserSugar(energy * 0.1);
+
+            }
+        }else{ // 성인
+            if (user.getUserGender() == 1) { // 성인 & 남자
+
+                double health = 0; // 활동량 점수
+
+                switch (user.getUserHealth()) {
+                    case 1:
+                        health = 1.0;
+                        break;
+                    case 2:
+                        health = 1.11;
+                        break;
+                    case 3:
+                        health = 1.25;
+                        break;
+                    case 4:
+                        health = 1.48;
+                        break;
+                }
+
+                double energy = 662 - 9.53 * user.getUserBirth() + health * (15.91 * user.getUserWeight() + 539.6 * user.getUserHeight());
+                user.setUserSugar(energy * 0.1);
+
+            }else { // 청소년 & 여자
+                double health = 0; // 활동량 점수
+
+                switch (user.getUserHealth()) {
+                    case 1:
+                        health = 1.0;
+                        break;
+                    case 2:
+                        health = 1.12;
+                        break;
+                    case 3:
+                        health = 1.27;
+                        break;
+                    case 4:
+                        health = 1.45;
+                        break;
+                }
+
+                double energy = 354 - 6.91 * user.getUserBirth() + health * (9.36 * user.getUserWeight() + 726 * user.getUserHeight());
+                user.setUserSugar(energy * 0.1);
+            }
+        }
+
+        update(user);
+
+    }
+
 
 }

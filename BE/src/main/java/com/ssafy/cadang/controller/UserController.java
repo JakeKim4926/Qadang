@@ -15,11 +15,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+@CrossOrigin
 @RestController
 @RequiredArgsConstructor
 public class UserController {
 
-    @Autowired
+
     private final KakaoService kakaoService;
     private final UserService userService;
 
@@ -148,6 +149,8 @@ public class UserController {
         user.setUserGender(userInfo.userGender);
         user.setUserHealth(userInfo.userHealth);
         userService.update(user);
+
+        userService.detailInfo(user);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
