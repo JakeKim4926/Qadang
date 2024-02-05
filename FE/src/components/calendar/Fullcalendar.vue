@@ -10,6 +10,8 @@ import { useRecordsStore } from "@/stores/records";
 import { useAccumulateStore } from "@/stores/accumulate";
 import { isCalendarModal } from "@/stores/util"
 
+export const callendarMonth = ref([]);
+
 export default {
     components: {
         FullCalendar, // make the <FullCalendar> tag available
@@ -35,49 +37,12 @@ export default {
                 month = month < 10 ? "0" + month.toString() : month.toString();
                 day = day < 10 ? "0" + day.toString() : day.toString();
                 const result = year + month + day;
-                console.log(result);
                 recordStore.recordDay = result;
                 recordStore.recordDate = days;
 
                 isCalendarModal.value = true;
             },
-            dayCellContent: (date) => {
-                const year = date.date.getFullYear();
-                let month = date.date.getMonth() + 1; // Adding 1 to adjust for zero-based months
-                month = month < 10 ? "0" + month.toString() : month.toString();
-                let day = date.date.getDate();
-                day = day < 10 ? "0" + day.toString() : day.toString();
-                const currentDate = year.toString() + '-' + month.toString() + '-' + day.toString();
-
-                const sample = JSON.parse(sessionStorage.getItem('calendarMonth').trim());
-                const dataForDate = sample.find(item => item.accumulateDate === currentDate);
-                if (dataForDate != undefined) {
-                    const caffeine = (dataForDate.accumulateCaffeine / 75.0).toFixed(1);
-                    const sugar = (dataForDate.accumulateSugar / 6.0).toFixed(1);
-
-                    return {
-                        html: `
-                        <div class="day-number-text">${date.dayNumberText}</div>
-                        <div style="text-align: center;
-                                justify-content: center;">
-                            <h5>
-                            <img src="src/components/icons/caffeine.png" alt="no" style="width:20%; heigth:10%" />
-                            x ${caffeine}
-                            </h5>
-                            <h5>
-                            <img src="src/components/icons/sugar.png" alt="no" style="width:20%; heigth:10%" />
-                            x ${sugar}
-                            </h5>
-                        </div>
-                    `,
-                    };
-                }
-                return {
-                    html: `
-                    <div class="day-number-text">${date.dayNumberText}</div>
-                    `,
-                };
-            },
+            dayCellContent: dayCellContentFunction,
 
             events: [
                 {
@@ -87,28 +52,85 @@ export default {
                 },
             ],
             height: "800px",
-            datesSet: async function (info) {
-                // 월이 바뀔 때 마다
-                const year = info.view.currentStart.getFullYear();
-                let month = info.view.currentStart.getMonth() + 1; // Adding 1 to adjust for zero-based months
-                month = month < 10 ? "0" + month.toString() : month.toString();
-                const now = ref(year.toString() + month.toString());
-                // console.log(now);
-                await accumulateStore.month(now);
-
-            },
-
+            datesSet: dateSetCallback,
         });
+
+        function dayCellContentFunction(date) {
+            const year = date.date.getFullYear();
+            let month = date.date.getMonth() + 1; // Adding 1 to adjust for zero-based months
+            month = month < 10 ? "0" + month.toString() : month.toString();
+            let day = date.date.getDate();
+            day = day < 10 ? "0" + day.toString() : day.toString();
+            const currentDate = year.toString() + '-' + month.toString() + '-' + day.toString();
+            const tempDate = ref(year.toString() + month.toString() +  day.toString());
+            console.log("please : " + accumulateStore.getAccumulateMonth.value);
+            // console.log("hello 1")
+            // accumulateStore.month(tempDate);
+
+            const sample = JSON.parse(sessionStorage.getItem('calendarMonth'));
+            if (sample != undefined) {
+                let dataForDate = sample.find(item => item.accumulateDate === currentDate);
+                if (dataForDate != undefined) {
+                    const caffeine = (dataForDate.accumulateCaffeine / 75.0).toFixed(1);
+                    const sugar = (dataForDate.accumulateSugar / 6.0).toFixed(1);
+
+                    return {
+                        html: `
+                        <div class="circle"></div>
+                        <div class="day-number-exist" style="text-align: right; font-weight:bold; z-index:1;"">${date.dayNumberText}</div>
+                        <div style="text-align: center;
+                                justify-content: center;">
+                            <h5>
+                            <img src="src/components/icons/caffeine.png" alt="no" style="width:20%; heigth:10%" /> x ${caffeine}
+                            </h5>
+                            <h5>
+                            <img src="src/components/icons/sugar.png" alt="no" style="width:20%; heigth:10%" />
+                            x ${sugar}
+                            </h5>
+                        </div>
+                    `,
+                    };
+                }
+            }
+            return {
+                html: `
+                    <div class="day-number-text">${date.dayNumberText}</div>
+                    `,
+            };
+        }
+
+        function dateSetCallback(info) {
+            // 월이 바뀔 때 마다
+            
+            console.log("hello 2", info.view.currentStart)
+            const year = info.view.currentStart.getFullYear();
+            let month = info.view.currentStart.getMonth() + 1; // Adding 1 to adjust for zero-based months
+            month = month < 10 ? "0" + month.toString() : month.toString();
+            const now = ref(year.toString() + month.toString());
+            console.log(now);
+            accumulateStore.month(now);
+            console.log("where : ",info.view);
+            const asd = {date : info.view.currentStart};
+            console.log("why : ", asd)
+            dayCellContentFunction(asd);
+
+        }
 
         const updateCalendarOptions = async () => {
             console.log("hello");
         };
+
+        onMounted(() => {
+            updateCalendarOptions();
+        });
 
         updateCalendarOptions();
 
         return {
             calendarOptions,
             updateCalendarOptions,
+            dayCellContentFunction,
+            dateSetCallback,
         };
     },
 
@@ -140,5 +162,33 @@ export default {
 .fc-daygrid-day-bottom {
     width: 10px;
     height: 0px;
+}
+
+.fc-daygrid-day-frame {
+    height: 100px;
+}
+
+.day-number-container {
+    position: relative;
+    display: inline-block;
+    color: white; /* Set the color to white */
+}
+
+.day-number-exist {
+    font-weight: bold;
+    color: white; /* Set the color to white */
+    position: relative; /* Add position relative */
+    z-index: 1; /* Set a higher z-index */
+}
+
+.circle {
+    position: absolute;
+    top: 10;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color:rgb(68, 74, 104);
+    z-index: 0;
 }
 </style>
