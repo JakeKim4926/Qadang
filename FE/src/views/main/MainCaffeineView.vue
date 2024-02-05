@@ -122,6 +122,19 @@ const chartData = {
 // 데이터를 가져오기 위한 함수
 onMounted(async () => {
 
+  const urlParams = new URLSearchParams(window.location.search);
+  // 'code' 파라미터 값 가져오기
+  const kakaoCode = urlParams.get('code');
+  // 현재 날짜를 알기 위한 변수
+  if(kakaoCode != null && kakaoCode.length > 0) {
+    userStore.sendKakaoToken(kakaoCode);
+    console.log(kakaoCode);
+
+    // URL에서 'code' 파라미터 제거
+    const newUrl = window.location.origin + window.location.pathname;
+    history.replaceState({}, document.title, newUrl);
+  }
+
   // 현재 날짜를 알기 위한 변수
   const todayDate = new Date()
   const year = todayDate.getFullYear()

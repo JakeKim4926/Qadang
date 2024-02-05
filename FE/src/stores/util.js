@@ -22,3 +22,5 @@ export const isInputNothingModal = ref(false)
 export const isUpdateModal = ref(false)
 export const isDetailModal = ref(false)
 export const isCompareModal = ref(false)
+
+export const tempRecord = ref({})

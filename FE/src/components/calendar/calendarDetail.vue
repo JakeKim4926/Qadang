@@ -60,7 +60,7 @@
 
                         <template v-if="now == recordDay">
                             <a @click="editRecord(drink)" class="update_button">수정</a>
-                            <a @click="deleteRecord(drink.recordId)" class="delete_button">삭제</a>
+                            <a @click="deleteRecord(drink)" class="delete_button">삭제</a>
                         </template>
                         <temlate v-else-if="index == 0">
                             <h4 class="cant_access"> 오늘의 기록만 수정이 가능해유~ </h4>
@@ -83,11 +83,13 @@
                         <div class="div3">당</div>
                         <div class="sugar_value">{{ drink.drinkSugar }} g</div>
 
-                        <div class="shot_title">샷</div>
-                        <div class="shot_count">{{ drink.plusShot }} 회</div>
+                        <div v-if="drink.drinkId != 0">
+                            <div class="shot_title">샷</div>
+                            <div class="shot_count">{{ drink.plusShot }} 회</div>
 
-                        <div class="div4">시럽</div>
-                        <div class="syrup_count">{{ drink.plusSyrup }} 회</div>
+                            <div class="div4">시럽</div>
+                            <div class="syrup_count">{{ drink.plusSyrup }} 회</div>
+                        </div>
                     </div>
 
                 </template>
@@ -109,7 +111,7 @@
 import { useRecordsStore } from '@/stores/records';
 import { useAccumulateStore } from '@/stores/accumulate';
 import { ref, onMounted, computed } from 'vue';
-import { isCalendarModal, isInputModal } from "@/stores/util"
+import { isCalendarModal, isInputModal, tempRecord } from "@/stores/util"
 import { useUserStore } from '@/stores/user';
 
 
@@ -131,17 +133,27 @@ function close() {
 }
 
 function editRecord(recordDrink) {
-    console.log(recordDrink);
-    updateRecord = recordDrink;
-    close();
-    isInputModal.value = true;
+    const confirmed = window.confirm("수정하겠습니까 ?");
+    if (confirmed) {
+        console.log(tempRecord);
+        tempRecord.value = recordDrink;
+        console.log("수정 할 꺼 ", tempRecord.value);
+        close();
+        // 여기에 수정할 모달을 넣어주세요
+        // mydrink 구분은 deleteRecord에 있는거 활용하면 됩니다.
+        // 변수는 tempRecord import 해서 쓰면 되요
+        isInputModal.value = true;
+    }
 }
 
-function deleteRecord(recordId) {
+function deleteRecord(recordDrink) {
     const confirmed = window.confirm("정말 삭제를 원하십니까?");
     if (confirmed) {
         console.log("삭제");
-        recordStore.deleteDrink(recordId);
+        if (recordDrink.drinkId > 0)
+            recordStore.deleteCafeDrink(recordDrink.recordId);
+        else
+            recordStore.deleteMyDrink(recordDrink.recordId);
     }
 }
 
