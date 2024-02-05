@@ -36,6 +36,7 @@ export const useSearchStore = defineStore("search", () => {
     })
       .then((res) => {
         searchDrinkList.value = res.data;
+        console.log(res.data)
       })
       .catch((err) => {
         console.log(err);

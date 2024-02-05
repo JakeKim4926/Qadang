@@ -10,7 +10,7 @@ export const useDrinksStore = defineStore("drinks", () => {
   const cafeList = ref([]);
   const cafeDrinkList = ref([]);
   const allDrinkList = ref([]);
-
+  const selectedDrink = ref(null);
   // =========== GETTER ===============
 
   const getCafeList = computed(() => {
@@ -71,6 +71,11 @@ export const useDrinksStore = defineStore("drinks", () => {
       });
   };
 
+  const setSelectedDrink = (drinkId) => {
+    const drink = allDrinkList.value.find((d) => d.drinkId === drinkId);
+    selectedDrink.value = drink;
+  };
+
   return {
     cafeList,
     cafeDrinkList,
@@ -78,6 +83,8 @@ export const useDrinksStore = defineStore("drinks", () => {
     getCafeList,
     getCafeDrinkList,
     getAllDrinkList,
+    selectedDrink,
+    setSelectedDrink,
     researchCafe,
     researchCafeDrinks,
     researchAllDrink,
