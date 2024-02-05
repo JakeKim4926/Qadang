@@ -39,6 +39,7 @@ public class SearchService {
                     .drinkProtein(drink.getDrinkProtein())
                     .drinkUrl(drink.getDrinkUrl())
                     .drinkAllergy(drink.getDrinkAllergy())
+                            .cafeUrl(drink.getCafeUrl())
                     .build());
         }
         return list;
@@ -65,6 +66,7 @@ public class SearchService {
                     .drinkProtein(drink.getDrinkProtein())
                     .drinkUrl(drink.getDrinkUrl())
                     .drinkAllergy(drink.getDrinkAllergy())
+                    .cafeUrl(drink.getCafeUrl())
                     .build());
         }
         return result;

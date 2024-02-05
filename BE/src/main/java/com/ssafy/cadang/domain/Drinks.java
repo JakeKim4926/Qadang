@@ -32,4 +32,5 @@ public class Drinks {
     private String drinkAllergy;
     private String drinkFullName;
     private String tag;
+    private String cafeUrl;
 }
