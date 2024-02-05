@@ -30,6 +30,6 @@ public class Drinks {
     private double drinkFat;
     private String drinkUrl;
     private String drinkAllergy;
-    private String drinkFullname;
+    private String drinkFullName;
     private String tag;
 }
