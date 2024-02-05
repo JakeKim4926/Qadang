@@ -98,9 +98,21 @@ export const useRecordsStore = defineStore("records", () => {
       });
   };
 
-  const deleteDrink = function (recordId) {
+  const deleteMyDrink = function (recordId) {
     axios({
-      url: `${import.meta.env.VITE_REST_RECORDS_API}`,
+      url: `${import.meta.env.VITE_REST_RECORDS_API}/make`,
+      method: "DELETE",
+      params: { recordId: recordId },
+    })
+      .then((res) => {})
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const deleteCafeDrink = function (recordId) {
+    axios({
+      url: `${import.meta.env.VITE_REST_RECORDS_API}/drink`,
       method: "DELETE",
       params: { recordId: recordId },
     })
@@ -176,7 +188,8 @@ export const useRecordsStore = defineStore("records", () => {
     createMyDrink,
     updateCafeDrink,
     updateMyDrink,
-    deleteDrink,
+    deleteCafeDrink,
+    deleteMyDrink,
     researchDayDrink,
     researchMaxSugar,
     researchMaxCaffeine,
