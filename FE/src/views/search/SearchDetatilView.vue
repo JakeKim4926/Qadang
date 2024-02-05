@@ -6,7 +6,7 @@
 
     <div class="button-row">
       <div class="left-buttons">
-        <h4 @click="goToRanklist" class="rank-button"> 순위보기</h4>
+        <h4 @click="goToRanklist" class="rank-button"> < 순위보기</h4>
       </div>
       <div class="right-buttons">
         <button
@@ -30,7 +30,7 @@
     </div>
 
 
-    <div v-if="comparisonStore.basket.length" class="comparison-basket">
+    <div v-if="comparisonStore.basket.length" class="comparison-basket shading">
     <div v-for="(item, index) in comparisonStore.basket" :key="item.drinkId" class="basket-item">
       <img :src="item.drinkImage" alt="음료 이미지" class="drink-image">
       <div class="drink-info">
@@ -389,6 +389,20 @@ const goToRanklist = () => {
   padding: 10px;
   border-radius: 10px;
   background-color: #f5f5f5;
+}
+.shading {
+  display: flex; 
+  flex-direction: column; 
+  flex-wrap: wrap; 
+  align-items: left; 
+  justify-content: flex-start;
+  border-radius: 45px; 
+  border: 1px solid #EFEFEF;
+  background: var(--Color, #FFF);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  padding: 20px; 
+  margin-bottom: 20px; 
+  width: 100%;
 }
 
 .basket-item {
