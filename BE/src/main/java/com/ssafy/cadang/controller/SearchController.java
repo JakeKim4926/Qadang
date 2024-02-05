@@ -40,11 +40,11 @@ public class SearchController {
     }
 
     // 음료 검색하기
-    @GetMapping("/search")
-    public ResponseEntity<?> searchlist(@RequestParam String keyword ) {
-
-        List<DrinkResponseDTO> list = searchService.keywordList(keyword);
-
-        return new ResponseEntity<List<DrinkResponseDTO>>(list, HttpStatus.OK);
-    }
+//    @GetMapping("/search")
+//    public ResponseEntity<?> searchlist(@RequestParam String keyword ) {
+//
+//        List<DrinkResponseDTO> list = searchService.keywordList(keyword);
+//
+//        return new ResponseEntity<List<DrinkResponseDTO>>(list, HttpStatus.OK);
+//    }
 }

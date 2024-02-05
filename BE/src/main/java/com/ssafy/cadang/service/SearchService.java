@@ -45,30 +45,30 @@ public class SearchService {
     }
 
     // 음료 키워드 검색
-    public List<DrinkResponseDTO> keywordList(String keyword){
-
-        List<Drinks> list = drinkRepository.findByFullNameContaining(keyword);
-        List<DrinkResponseDTO> result = new ArrayList<>();
-
-        for (Drinks drink : list) {
-            result.add(DrinkResponseDTO.builder()
-                    .drinkId(drink.getDrinkId())
-                    .cafeId(drink.getCafeId())
-                    .cafeName(drink.getCafeName())
-                    .drinkName(drink.getDrinkName())
-                    .drinkCaffeine(drink.getDrinkCaffeine())
-                    .drinkSugar(drink.getDrinkSugar())
-                    .drinkMl(drink.getDrinkMl())
-                    .drinkOz(drink.getDrinkOz())
-                    .drinkCalorie(drink.getDrinkCalorie())
-                    .drinkNatrium(drink.getDrinkNatrium())
-                    .drinkProtein(drink.getDrinkProtein())
-                    .drinkUrl(drink.getDrinkUrl())
-                    .drinkAllergy(drink.getDrinkAllergy())
-                    .build());
-        }
-        return result;
-
-
-    }
+//    public List<DrinkResponseDTO> keywordList(String keyword){
+//
+//        List<Drinks> list = drinkRepository.findByFullNameContaining(keyword);
+//        List<DrinkResponseDTO> result = new ArrayList<>();
+//
+//        for (Drinks drink : list) {
+//            result.add(DrinkResponseDTO.builder()
+//                    .drinkId(drink.getDrinkId())
+//                    .cafeId(drink.getCafeId())
+//                    .cafeName(drink.getCafeName())
+//                    .drinkName(drink.getDrinkName())
+//                    .drinkCaffeine(drink.getDrinkCaffeine())
+//                    .drinkSugar(drink.getDrinkSugar())
+//                    .drinkMl(drink.getDrinkMl())
+//                    .drinkOz(drink.getDrinkOz())
+//                    .drinkCalorie(drink.getDrinkCalorie())
+//                    .drinkNatrium(drink.getDrinkNatrium())
+//                    .drinkProtein(drink.getDrinkProtein())
+//                    .drinkUrl(drink.getDrinkUrl())
+//                    .drinkAllergy(drink.getDrinkAllergy())
+//                    .build());
+//        }
+//        return result;
+//
+//
+//    }
 }
