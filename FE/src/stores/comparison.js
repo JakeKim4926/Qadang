@@ -12,6 +12,7 @@ export const useComparisonStore = defineStore('comparison', {
     },
     removeFromBasket(index) {
       this.basket.splice(index, 1);
+      this.saveBasketToSession();
     },
     saveBasketToSession() {
       sessionStorage.setItem('comparisonBasket', JSON.stringify(this.basket));

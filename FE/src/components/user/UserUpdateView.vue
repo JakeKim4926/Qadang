@@ -21,10 +21,9 @@
         <div class="form-row">
           <div class="form-group half-width">
             <label for="gender" class="label-margin align tag-bold">성별</label>
-            <div class="button-group align">
-              <button type="button" :class="{ active: userInfo.gender === 1 }" @click="userInfo.gender = 1" class="shading">남성</button>
-              <button type="button" :class="{ active: userInfo.gender === 2 }" @click="userInfo.gender = 2" class="shading">여성</button>
-            </div>
+            <button type="button" :class="{ active: userInfo.gender === 1 }" @click="userInfo.gender = 1" class="shading2">남성</button>
+            <button type="button" :class="{ active: userInfo.gender === 2 }" @click="userInfo.gender = 2" class="shading2">여성</button>
+            
           </div>
           <div class="form-group half-width">
             <label for="birthYear" class="label-margin tag-bold">나이</label>
@@ -59,7 +58,9 @@
             <a @click="togglePopup" class="popup-mark"><font-awesome-icon :icon="['fas', 'circle-question']" /></a>
             <div v-if="isPopupVisible" class="popup">
               <p>여기에 특정 메시지를 입력하세요.</p>
-              <button @click="togglePopup">닫기</button>
+              <a @click="togglePopup" class="close">
+                <font-awesome-icon :icon="['fas', 'circle-xmark']" style="color: #000000;" size="xl"/>
+              </a>
             </div>
           </div>
         </div>
@@ -113,6 +114,7 @@ const bringUserInfo = async () => {
     userInfo.height = store.user.value?.userHeight || null;
     userInfo.weight = store.user.value?.userWeight || null;
     userInfo.activityLevel = store.user.value?.userActivityLevel || null;
+    
   } catch (error) {
     console.error("데이터를 가져오지 못했습니다.", error);
   } finally {
@@ -230,8 +232,21 @@ const togglePopup = () => {
   background: var(--Color, #FFF);
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   padding: 10px;
-  margin: 10px 0;
+  margin: 5px 5px;
   width: 90px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.shading2 {
+  margin-right: 10px; 
+  border-radius: 20px;
+  border: 1px solid #EFEFEF;
+  background: var(--Color, #FFF);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  padding: 10px;
+  margin: 5px 5px;
+  width: 50px;
   cursor: pointer;
   text-align: center;
 }
@@ -251,7 +266,7 @@ button.active {
   padding: 10px 20px;
   cursor: pointer;
   width: 30%;
-  /* margin-top: 50px; */
+  margin-top: 50px;
   /* margin: 70px auto;  */
   display: block;
   margin-left: 30%;

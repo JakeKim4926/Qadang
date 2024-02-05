@@ -55,10 +55,6 @@ const userInfo = ref({});
 const rdiCaffeine = ref(0);
 const rdiSugar = ref(0);
 
-// const userInfo = ref({
-//   userName: '', 
-// });
-
 const openUpdateModal = () => {
   isUpdateModal.value = true
   console.log('!',isUpdateModal.value)
@@ -199,6 +195,7 @@ onMounted(() => {
   cursor: pointer;
   font-weight: bold;
   margin-right: 25px; 
+  margin-top: 10px;
   
 }
 

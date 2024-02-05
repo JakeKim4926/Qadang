@@ -7,18 +7,30 @@
   <div class="comparison-container">
     <div class="comparison-header">
       <h2>제품 비교하기</h2>
-      <div class="comparison-images">
-        <div v-for="drink in basket" :key="drink.drinkId" class="comparison-item">
-          <img :src="drink.drinkUrl" :alt="drink.drinkName" class="drink-image">
-          <p class="drink-name">{{ drink.drinkName }}</p>
-        </div>
-      </div>
     </div>
     <table class="comparison-table">
       <tbody>
         <tr>
+          <th></th>
+          <td v-for="drink in basket" :key="`caffei-${drink.drinkId}`">
+            <img :src="drink.drinkUrl" :alt="drink.drinkName" class="drink-image">
+          </td>
+        </tr>
+        <tr>
+          <th>음료명</th>
+          <td v-for="drink in basket" :key="`caffei-${drink.drinkId}`">
+            {{ drink.drinkName }}
+          </td>
+        </tr>
+        <tr>
           <th>카페인</th>
-          <td v-for="drink in basket" :key="`caffeine-${drink.drinkId}`">
+          <td v-for="drink in basket" :key="`caffei-${drink.drinkId}`">
+            {{ drink.drinkCaffeine }} mg
+          </td>
+        </tr>
+        <tr>
+          <th>카페인</th>
+          <td v-for="drink in basket" :key="`caffei-${drink.drinkId}`">
             {{ drink.drinkCaffeine }} mg
           </td>
         </tr>
@@ -43,13 +55,13 @@
         <tr>
           <th>칼로리</th>
           <td v-for="drink in basket" :key="`calories-${drink.drinkId}`">
-            {{ drink.drinkCalories }} kcal
+            {{ drink.drinkCalorie }} kcal
           </td>
         </tr>
         <tr>
           <th>용량</th>
           <td v-for="drink in basket" :key="`volume-${drink.drinkId}`">
-            {{ drink.drinkML }} ml
+            {{ drink.drinkMl }} ml
           </td>
         </tr>        
         <tr>
@@ -109,7 +121,7 @@ const basket = comparisonStore.basket;
   border-color: #d9d9d9;
   border-width: 1px;
   position: absolute;
-  width: 500px;
+  width: 700px;
   height: 500px;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
