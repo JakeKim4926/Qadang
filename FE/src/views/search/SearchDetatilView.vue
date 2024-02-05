@@ -32,7 +32,7 @@
 
     <div v-if="comparisonStore.basket.length" class="comparison-basket shading">
     <div v-for="(item, index) in comparisonStore.basket" :key="item.drinkId" class="basket-item">
-      <img :src="item.drinkImage" alt="음료 이미지" class="drink-image">
+      <img :src="item.drinkUrl" alt="음료 이미지" class="drink-image">
       <div class="drink-info">
         <span class="drink-name">{{ item.drinkName }}</span>        
       </div>
@@ -52,21 +52,27 @@
             <th>카페인(mg)</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody>          
           <tr v-for="drink in sortedDrinks" :key="drink.drinkId" @mouseover="enableButtons(drink.drinkId)" @mouseleave="disableButtons(drink.drinkId)">
-            <td>
-              <img :src="drink.cafeUrl" alt="Cafe Image">
-            </td>
-            <td>{{ drink.drinkName }}</td>
-            <td :class="{'font_sugar_color': sugarClass(drink) === 'high-sugar', 'font_gray': sugarClass(drink) !== 'high-sugar'}">{{ drink.drinkSugar }} g</td>
-            <td :class="{'font_caffeine_color': caffeineClass(drink) === 'high-caffeine', 'font_gray': caffeineClass(drink) !== 'high-caffeine'}">{{ drink.drinkCaffeine }} mg</td>
-            <td>
-              <button v-if="activeButtons[drink.id]" @click="viewDetailsModal(drink.id)" class="detail-view-button button_select">
-              </button>
-              <button v-if="activeButtons[drink.id]" @click="comparisonStore.addToBasket(drink)" class="compare-button button_add_drink_color">
-              </button>
-              </td>
-          </tr>
+         
+          <td v-if="!activeButtons[drink.drinkId]">
+            <img :src="drink.cafeUrl" alt="Cafe Image">
+          </td>
+          <td v-if="!activeButtons[drink.drinkId]">{{ drink.drinkName }}</td>
+          <td v-if="!activeButtons[drink.drinkId]" :class="{'font_sugar_color': sugarClass(drink) === 'high-sugar', 'font_green': sugarClass(drink) !== 'high-sugar , font_red'}">{{ drink.drinkSugar }} g</td>
+          <td v-if="!activeButtons[drink.drinkId]" :class="{'font_caffeine_color': caffeineClass(drink) === 'high-caffeine', 'font_green': caffeineClass(drink) !== 'high-caffeine, font_red'}">{{ drink.drinkCaffeine }} mg</td>
+                    
+          <td v-if="activeButtons[drink.drinkId]" colspan="4">
+            <div class="button-container">
+              <a @click="viewDetailsModal(drink.drinkId)" class="detail-view-button">
+                <h4>상세보기</h4>
+              </a>
+              <a @click="comparisonStore.addToBasket(drink)" class="compare-button">
+                <h4>비교함 담기</h4>
+              </a>
+            </div>
+          </td>
+        </tr>
         </tbody>
       </table>
     </div>
@@ -108,10 +114,9 @@ const sortState = reactive({
 const selectedDrink = ref(null);
 
 const viewDetailsModal = (drinkId) => {
-  const drink = drinksStore.getAllDrinkList.find(d => d.id === drinkId);
-  if (drink) {
-    selectedDrink.value = drink;
-    isDetailModal.value = true;
+  drinkStore.setSelectedDrink(drinkId); // 선택된 음료 설정
+  if (drinkStore.selectedDrink) {
+    isDetailModal.value = true; 
   } else {
     alert('해당 음료를 찾을 수 없습니다.');
   }
@@ -139,6 +144,9 @@ const setSort = (field, order) => {
   });
 };
 
+watch(searchResults, (newResults) => {
+  setSort(sortState.sortField, sortState.sortOrder);
+}, { immediate: true });
 const currentSortLabel = computed(() => {
   const labels = {
     drinkId: '등록순',
@@ -171,13 +179,14 @@ onMounted(() => {
   }
 });
 
-const enableButtons = (id) => {
-  activeButtons.value[id] = true;
+const enableButtons = (drinkId) => {
+  activeButtons.value[drinkId] = true;
 };
 
-const disableButtons = (id) => {
-  activeButtons.value[id] = false;
+const disableButtons = (drinkId) => {
+  activeButtons.value[drinkId] = false;
 };
+
 
 
 onMounted(() => {
@@ -194,6 +203,12 @@ const goToRanklist = () => {
 </script>
 
 <style scoped>
+.rank-button{
+  cursor: pointer;
+}
+.hover_sample {
+  color:blue;
+}
 .search-frame{
   display: flex;
   flex-direction: column;
@@ -219,6 +234,13 @@ const goToRanklist = () => {
 
 .sort-container {
   position: relative; 
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0px; 
 }
 
 .sort-menu {
@@ -250,26 +272,23 @@ const goToRanklist = () => {
   display: block;
 }
 
-/* 상세보기 버튼과 비교함 담기 버튼에 적용될 기본 스타일 */
-.detail-view-button,
-.compare-button {
-  border-radius: 90px;
-  padding: 5px 10px;
-  border: none;
-  cursor: pointer;
-  margin: 2px;
-  font-size: 0.8em;
+
+.compare-button {    
+  display: inline-block; /* or 'block' if you want the button to take the full width of its container */
+  padding: 10px 20px; /* 버튼 내부 패딩을 늘려서 텍스트가 들어갈 공간을 확보합니다. */
+  margin: 5 10px; 
+  font-size: 0.9em; 
 }
 .button-row {
   display: flex;
-  justify-content: space-around; /* 변경된 부분 */
+  justify-content: space-around; 
   width: 100%;
   align-items: center;
   margin-bottom: 10px;
 }
 
 .left-buttons {
-  /* 추가적인 마진이 필요 없으면 삭제합니다 */
+  
   margin-right: 150px;
 }
 
@@ -307,11 +326,6 @@ const goToRanklist = () => {
   color: var(--font_green);
 }
 
-/* 비교함 담기 버튼 스타일 */
-.compare-button {
-  background: var(--button_add_drink_color);
-  color: #fff;
-}
 
 /* 비활성화 상태인 비교하기 버튼 스타일 */
 .button_nonActive {
@@ -322,77 +336,61 @@ const goToRanklist = () => {
 /* 활성화된 버튼에 대한 추가적인 스타일 */
 .button_caffeine.active {
   animation: pulse 1.5s infinite;
+  cursor: pointer;
 }
 
 /* 버튼에 애니메이션 효과 추가 */
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(132, 96, 70, 0.7);
-  }
-  70% {
-    box-shadow: 0 0 0 10px rgba(132, 96, 70, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(132, 96, 70, 0);
-  }
-}
+
 .button_select2 {
   border-radius: 90px;
-  background: #846046; /* 버튼 배경색 */
-  color: #FFF; /* 버튼 내 글씨 색상 */
-  padding: 3px; /* 버튼 내 패딩: 위 아래 5px, 좌우 15px */
-  cursor: pointer; /* 마우스 오버 시 커서 변경 */
-  text-align: center; /* 텍스트 중앙 정렬 */
-  font-weight: bold; /* 글씨체 두께 */
-  border: none; /* 테두리 없앰 */
+  background: #846046; 
+  color: #FFF; 
+  padding: 3px; 
+  cursor: pointer; 
+  text-align: center; 
+  font-weight: bold;
   width: 75px;
   
   transition: background-color 0.3s; 
 }
 
 .button_select2:hover {
-  background-color: #754c24; /* 호버 상태의 배경 색상 */
+  background-color: #754c24; 
 }
 
 .search-results-container {
   flex: auto;
-  width: 50%; /* 테이블의 너비를 컨테이너에 맞춤 */
+  width: 40%; /* 테이블의 너비를 컨테이너에 맞춤 */
   margin-top: 20px; /* 상단과의 여백을 조정 */
   overflow-x: auto; /* 너비가 넘치는 경우 스크롤바를 표시 */
   margin: auto;
 }
 
+
 .search-results-container table {
-  width: 100%; /* 테이블의 너비를 컨테이너에 맞춤 */
-  border-collapse: collapse; /* 테이블 셀 사이의 경계선을 하나로 합침 */
-  text-align: center; /* 텍스트를 왼쪽 정렬 */
+  width: 100%;
+  border-collapse: collapse; 
+  text-align: center; 
   margin: auto;
 }
 
 .search-results-container th,
 .search-results-container td {
-  border-bottom: 1px solid black; /* 각 셀의 하단에 경계선 추가 */
+  border-bottom: 3px solid #846046; /* 각 셀의 하단에 경계선 추가 */
   padding: 8px; /* 셀 안쪽의 여백 추가 */
 }
-
-/* 상세보기 및 비교함 담기 버튼 스타일 */
-.detail-view-button,
-.compare-button {
-  /* 버튼 스타일 지정 */
-}
-
 
 .comparison-basket {
   display: flex;
   gap: 10px;
   overflow-x: auto;
-  padding: 10px;
+  padding: 30px;
   border-radius: 10px;
-  background-color: #f5f5f5;
+  background-color: #f5f5f5;  
 }
 .shading {
   display: flex; 
-  flex-direction: column; 
+  flex-direction: row; 
   flex-wrap: wrap; 
   align-items: left; 
   justify-content: flex-start;
@@ -403,6 +401,7 @@ const goToRanklist = () => {
   padding: 20px; 
   margin-bottom: 20px; 
   width: 100%;
+  margin: auto;
 }
 
 .basket-item {
@@ -412,7 +411,8 @@ const goToRanklist = () => {
   width: 120px;
   text-align: center;
   position: relative;
-  background-color: #fff;
+  background-color: #fff;  
+  margin: auto;
 }
 
 .drink-image {
@@ -437,5 +437,33 @@ const goToRanklist = () => {
   background-color: transparent;
   cursor: pointer;
   font-size: 18px;
+}
+
+
+/* 버튼 컨테이너 스타일 */
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px; /* 버튼 사이의 간격 */
+
+}
+
+/* 상세보기 버튼과 비교함 담기 버튼 스타일 */
+.detail-view-button,
+.compare-button {
+  /* border-radius: 5px; */
+  padding: 10px 20px; /* 버튼 내부의 패딩을 조정하여 컨텐츠에 맞게 만듭니다 */
+  cursor: pointer; 
+  
+  border: none; /* 테두리 제거 */
+  
+}
+
+.detail-view-button:hover,
+
+/* 테이블 셀 스타일 조정 */
+.search-results-container td {
+  border-bottom: 1px solid #e0e0e0; /* 기본 선 색상을 조금 더 밝게 설정 */
 }
 </style>

@@ -78,6 +78,19 @@ export const useUserStore = defineStore("user", () => {
       redirectUri: `${import.meta.env.VITE_REST_KAKAO_LOGIN_API}`,
     });
   }
+  const logout = async () => {
+    try {
+      await axios({
+        url: `${import.meta.env.REST_USER_API}/logout`,
+        method: "POST",
+      });
+
+      // 로그아웃 미완성
+      router.push('/login');
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const sendKakaoToken = function (token) {
     axios({
@@ -106,19 +119,7 @@ export const useUserStore = defineStore("user", () => {
       });
   };
 
-  const logout = async () => {
-    try {
-      await axios({
-        url: `${import.meta.env.REST_USER_API}/logout`,
-        method: "POST",
-      });
 
-      // 로그아웃 미완성
-      router.push('/login');
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
   const researchUser = function () {
     axios({
@@ -173,6 +174,7 @@ export const useUserStore = defineStore("user", () => {
     })
       .then(() => {
         alert('사용자 정보가 성공적으로 업데이트되었습니다.');
+        console.log(updateData)
         router.push('/mypage');
       })
       .catch((err) => {
