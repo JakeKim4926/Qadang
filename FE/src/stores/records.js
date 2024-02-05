@@ -77,7 +77,7 @@ export const useRecordsStore = defineStore("records", () => {
   const updateCafeDrink = function (drink) {
     axios({
       url: `${import.meta.env.VITE_REST_RECORDS_API}/drink`,
-      method: "",
+      method: "PUT",
       data: drink,
     })
       .then((res) => {})
