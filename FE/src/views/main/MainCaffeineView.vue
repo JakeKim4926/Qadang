@@ -55,7 +55,6 @@
 
     <div>
       <p>최근에 마신 카페인을 한눈에 보아요</p>
-
       <div class="info-box">
         <div>
           <select name="selectDate" id="selectDate" v-model="seleteDate">
@@ -139,7 +138,7 @@ onMounted(async () => {
   const urlParams = new URLSearchParams(window.location.search);
   // 'code' 파라미터 값 가져오기
   const kakaoCode = urlParams.get('code');
-  // 현재 날짜를 알기 위한 변수
+
   if(kakaoCode != null && kakaoCode.length > 0) {
     userStore.sendKakaoToken(kakaoCode);
     console.log(kakaoCode);
@@ -180,7 +179,7 @@ onMounted(async () => {
   
   // 차트 데이터에 넣을 데이터가 생긴 뒤 데이터 삽입
   watch(() => accumulateStore.getAccumulateList, (newData) => {
-    if (newData.length >= 1) {
+    if (newData.length > 0) {
       console.log('!!!', newData)
 
       const tmpDayData = []
