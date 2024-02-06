@@ -55,7 +55,14 @@
 
     <div>
       <p>최근에 마신 카페인을 한눈에 보아요</p>
+
       <div class="info-box">
+        <div>
+          <select name="selectDate" id="selectDate" v-model="seleteDate">
+            <option value="day">일별</option>
+            <option value="week">주별</option>
+          </select>
+        </div>
         <canvas id="chartCanvas" width="500"></canvas>
       </div>
     </div>
@@ -97,6 +104,9 @@ const recordsStore = useRecordsStore()
 const recommendStore = useRecommendStore()
 const drinksStore = useDrinksStore()
 
+// 차트 날별로 선택하기 위한 변수
+const seleteDate = ref('day')
+
 const chartData = {
     type: 'bar',
     data: {
@@ -112,7 +122,7 @@ const chartData = {
         x: {
           type: 'time',
           time: {
-            unit: 'day'
+            unit: seleteDate.value
           }
         },
         y: {
@@ -161,6 +171,12 @@ onMounted(async () => {
   // chart.js
   const chartElement = document.querySelector('#chartCanvas').getContext('2d');
   const chartCanvas = new Chart(chartElement, chartData)
+
+  // 날짜가 바뀌면 데이터 변경
+  watch(() => seleteDate.value, (chartDate) => {
+    chartData.options.scales.x.time.unit = chartDate
+    chartCanvas.update()
+  })
   
   // 차트 데이터에 넣을 데이터가 생긴 뒤 데이터 삽입
   watch(() => accumulateStore.getAccumulateList, (newData) => {
