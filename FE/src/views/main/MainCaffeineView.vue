@@ -340,6 +340,7 @@ p {
 .chat {
   width: 700px;
   right: 20px;
+  margin-top: 15px;
   margin-left: 1300px;
 }
 </style>
