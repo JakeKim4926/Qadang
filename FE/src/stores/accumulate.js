@@ -67,7 +67,6 @@ export const useAccumulateStore = defineStore("accumulate", () => {
 
   // date example) 202401 (연도+월)
   const month = async function (date) {
-    console.log(date.value);
     await axios({
       url: `${import.meta.env.VITE_REST_ACCUMULATE_API}/month`,
       method: "GET",

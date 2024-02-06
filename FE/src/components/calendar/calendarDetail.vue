@@ -94,7 +94,7 @@
 
                 </template>
             </template>
-            <tempalte v-else>
+            <template v-else>
                 <!-- when it doesn't have a data -->
                 <div class="record_box" style="display: flex; justify-content: center; align-items: center;">
                     <h3 style="text-align: center;">
@@ -103,7 +103,7 @@
                         지난 일의 기록은 추가/삭제 등 수정이 불가능합니다.
                     </h3>
                 </div>
-            </tempalte>
+            </template>
         </div>
     </div>
 </template>
@@ -165,6 +165,10 @@ function deleteRecord(recordDrink) {
             recordStore.deleteCafeDrink(recordDrink.recordId);
         else
             recordStore.deleteMyDrink(recordDrink.recordId);
+
+        // 데이터를 삭제한 후에 Vue의 반응성을 강제로 트리거하여 UI를 다시 렌더링합니다.
+        recordStore.getDayDrink.splice(recordStore.getDayDrink.indexOf(recordDrink), 1);
+        accumulateStore.day(recordDay);
     }
 }
 
@@ -194,8 +198,6 @@ onMounted(() => {
     recordDay.value = recordStore.getRecordDay;
     recordStore.researchDayDrink(recordDay);
     accumulateStore.day(recordDay);
-    console.log("geti", now);
-    console.log('??', recordDay);
 })
 
 
