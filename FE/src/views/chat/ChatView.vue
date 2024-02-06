@@ -1,8 +1,8 @@
 <template>
-  <div>
-    <h2>이야기 나누고 싶은 카페명을 선택하세요</h2>
+  <div class="container">
+    <div class="title">이야기 나누고 싶은 카페명을 선택하세요</div>
     <br />
-    <select v-model="cafe" @change="sendOpen">
+    <select v-model="cafe" @change="sendOpen" class="select-cafe">
       <option v-for="cafe in testCafeList" :key="cafe.id" :value="cafe">
         {{ cafe.cafe }}
       </option>
@@ -20,11 +20,24 @@
             </div>
           </div>
         </div>
-        <textarea style="resize: none" v-model="message" class="chat-input" placeholder="메시지 입력"
-          @keydown.enter="sendMessage" />
+        <hr class="chat-line">
+        <div class="chat-input-container">
+          <a class="chat-icon">
+            <font-awesome-icon :icon="['fas', 'paper-plane']" style="color: #000000;" />
+          </a>
+          <textarea v-model="message" class="chat-input" placeholder="Jake로 대화 시작" @keydown.enter.prevent="sendMessage" />
+        </div>
       </div>
     </template>
-    <button @click="sendClose">통신 종료</button>
+    <template v-else>
+      <div class="chat-container-disable">
+        <hr class="chat-line-disable">
+        <div class="chat-icon-disable">
+          <font-awesome-icon :icon="['fas', 'paper-plane']" style="color: #000000;" />
+        </div>
+      </div>
+    </template>
+    <!-- <button @click="sendClose">통신 종료</button> -->
   </div>
 </template>
 
@@ -45,7 +58,7 @@ const cafe = ref({});
 const receivedMessages = ref([]);
 const Msgcnt = ref(0);
 // for test
-const userId = ref(0);
+const userId = ref(1);
 
 onMounted(async () => {
   // console.log(import.meta.env.VITE_SOCKET_API)
@@ -130,13 +143,13 @@ async function sendOpen() {
   // messageToSend = JSON.parse(messageToSend)
   socketStore.stompClient.send("http://localhost:8080/ws/chat", chat);
   socketStore.stompClient.subscribe("http://localhost:8080/ws/chat", function (message) {
-        if (message.body) {
-          console.log(message.body);
+    if (message.body) {
+      console.log(message.body);
 
-        } else {
-          console.log("nothing on message");
-        }
-      });
+    } else {
+      console.log("nothing on message");
+    }
+  });
   // Check if the StompClient is connected before sending the message
   if (socketStore.stompClient && socketStore.stompClient.connected) {
     // socketStore.stompClient.send(`${import.meta.env.VITE_SOCKET_API}`, {}, JSON.stringify(chat));
@@ -215,12 +228,137 @@ watchEffect(() => {
 </script>
 
 <style scoped>
+.container {
+  width: 80%;
+  height: 80%;
+  /* 컴포넌트의 높이를 화면의 80%로 지정 */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.title {
+  color: #562b1a;
+  text-align: center;
+  font-family: "Roboto-Bold", sans-serif;
+  font-size: 30px;
+  line-height: 140%;
+  font-weight: 700;
+  position: absolute;
+  width: 100.46%;
+  bottom: 94.39%;
+  top: 0%;
+  height: 5.61%;
+  margin: 0 auto;
+}
+
+.select-cafe {
+  background: #ffffff;
+  text-align: center;
+  border-radius: 90px;
+  border-style: solid;
+  border-color: #846046;
+  border-width: 2px;
+  position: relative;
+  left: 30%;
+  width: 40.89%;
+  bottom: 50.68%;
+  top: 10.29%;
+  height: 5.02%;
+  margin: 0 auto;
+  font-family: "DmSans-Bold", sans-serif;
+  font-size: 20px;
+  line-height: 18px;
+  font-weight: 700;
+}
+
+
 .chat-container {
-  border: 1px solid cornflowerblue;
-  display: flex;
-  flex-direction: column;
-  height: 80vh;
-  padding: 20px;
+  background: #FFFFFF;
+  border-radius: 30px;
+  border-style: solid;
+  border-color: #d9d9d9;
+  border-width: 1px;
+  position: absolute;
+  right: 0%;
+  left: 10%;
+  width: 80%;
+  bottom: 0%;
+  top: 23.8%;
+  height: 76.2%;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.chat-container-disable {
+  background-color: #d9d9d9;
+  border-radius: 30px;
+  border-style: solid;
+  border-color: #d9d9d9;
+  border-width: 1px;
+  position: absolute;
+  right: 0%;
+  left: 10%;
+  width: 80%;
+  bottom: 0%;
+  top: 23.8%;
+  height: 76.2%;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.chat-line {
+  border-style: solid;
+  border-color: #f0f0f0;
+  border-width: 1px 0 0 0;
+  position: absolute;
+  right: 0%;
+  left: 0%;
+  width: 100%;
+  bottom: 9.36%;
+  top: 90.64%;
+  height: 0%;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+
+}
+
+.chat-line-disable {
+  border-style: solid;
+  border-color: #e5e5e5;
+  border-width: 1px 0 0 0;
+  position: absolute;
+  right: 0%;
+  left: 0%;
+  width: 100%;
+  bottom: 9.36%;
+  top: 90.64%;
+  height: 0%;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+
+}
+
+.chat-icon {
+  position: absolute;
+  right: 4.12%;
+  left: 90.84%;
+  bottom: 2.54%;
+  top: 95.05%;
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 18px;
+  font-weight: 400;
+  text-align: right;
+}
+
+.chat-icon-disable {
+  position: absolute;
+  right: 4.12%;
+  left: 90.84%;
+  bottom: 2.54%;
+  top: 95.05%;
+  font-size: 20px;
+  line-height: 18px;
+  font-weight: 400;
+  text-align: right;
 }
 
 .chat-messages {
@@ -255,9 +393,35 @@ watchEffect(() => {
 }
 
 .chat-input {
+  color: black;
+  text-align: left;
+  font-family: "DmSans-Regular", sans-serif;
+  font-size: 20px;
+  line-height: 18px;
+  font-weight: 400;
+  position: absolute;
+  right: 68.09%;
+  left: 3.73%;
+  width: 85.18%;
+  bottom: 3.48%;
+  top: 94.52%;
+  height: 4.41%;
+  border: none;
   display: flex;
   align-items: center;
-  margin-top: 10px;
+  justify-content: flex-start;
+  resize: none;
+  overflow: hidden;
+  resize: none;
+}
+
+.chat-input:focus {
+  outline: none;
+}
+
+.chat-input-container {
+  display: flex;
+  align-items: center;
 }
 
 input[type="text"] {
@@ -267,7 +431,7 @@ input[type="text"] {
   border-radius: 5px;
   margin-right: 10px;
 }
-
+/* 
 button {
   background-color: #0084ff;
   color: #fff;
@@ -275,5 +439,5 @@ button {
   padding: 8px 16px;
   border-radius: 5px;
   cursor: pointer;
-}
+} */
 </style>
