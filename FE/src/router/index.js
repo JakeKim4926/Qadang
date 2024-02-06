@@ -15,6 +15,7 @@ import SurveyView from '@/views/survey/SurveyView.vue'
 import SurveyCaffeineView from '@/views/survey/SurveyCaffeineView.vue'
 import SurveySugarView from '@/views/survey/SurveySugarView.vue'
 import SurveyHealthView from '@/views/survey/SurveyHealthView.vue'
+import SurveyUnHealthView from '@/views/survey/SurveyUnHealthView.vue'
 
 import UserUpdateView from '@/components/user/UserUpdateView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
@@ -115,6 +116,11 @@ const router = createRouter({
       component: SurveyHealthView
     },
     {
+      path: '/survey/unhealth',
+      name: 'surveyUnhealth',
+      component: SurveyUnHealthView
+    },
+    {
       path: '/api/kakao-login',
       name: 'kakoLogin',
       component: MainCaffeineView,
@@ -135,6 +141,7 @@ const router = createRouter({
 //     }
 //   } else {
 //     if (to.name === 'home') {
+//       window.alert("로그인이 필요합니다");
 //       next(false); // 접근 금지
 //     } else {
 //       next(); // 허용
