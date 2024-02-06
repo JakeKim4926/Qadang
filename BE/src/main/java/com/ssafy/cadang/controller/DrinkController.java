@@ -26,11 +26,13 @@ public class DrinkController {
 
     @GetMapping("{cafeId}")
     public List<Drinks> drinksList(@PathVariable Long cafeId){
+        //user check
         return drinkService.drinkList(cafeId);
     }
 
     @GetMapping("/{cafeId}/{keyword}")
     public List<Drinks> drinksList(@PathVariable Long cafeId, @PathVariable String keyword){
+        //user check
         return drinkService.drinkCafeKeyword(cafeId,keyword);
     }
 }

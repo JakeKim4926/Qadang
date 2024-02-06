@@ -5,10 +5,7 @@ import com.ssafy.cadang.domain.Drinks;
 import com.ssafy.cadang.domain.User;
 import com.ssafy.cadang.dto.UserAmount;
 import com.ssafy.cadang.response.DrinkResponseDTO;
-import com.ssafy.cadang.service.CafeService;
-import com.ssafy.cadang.service.DrinkService;
-import com.ssafy.cadang.service.KakaoService;
-import com.ssafy.cadang.service.SearchService;
+import com.ssafy.cadang.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +21,7 @@ public class SearchController {
 
     private final KakaoService kakaoService;
     private final SearchService searchService;
+    private final SearchLogService searchLogService;
 
     // 검색량 높은 키워드 순위
     // 기록량 높은 음료 순위
@@ -42,7 +40,12 @@ public class SearchController {
     // 음료 검색하기
     @GetMapping("/search/{keyword}")
     public ResponseEntity<?> searchList(@PathVariable String keyword ) {
+        //user check
+        Long userId = 1L;
+        if(userId == 0)
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
+        searchLogService.log(userId,keyword);
         List<DrinkResponseDTO> list = searchService.keywordList(keyword);
 
         return new ResponseEntity<List<DrinkResponseDTO>>(list, HttpStatus.OK);
