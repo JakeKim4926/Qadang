@@ -36,11 +36,10 @@ export const useChatStore = defineStore("chat", () => {
       });
   };
 
-  const researchChatList = function (id) {
+  const researchChatList = function (chatId) {
     axios({
-      url: `${import.meta.env.VITE_REST_CHAT_API}/chatcontent`,
+      url: `${import.meta.env.VITE_REST_CHAT_API}/${chatId}`,
       method: "GET",
-      params: { chatId: id },
     })
       .then((res) => {
         if (res.status == responseState.SUCCESS) {
