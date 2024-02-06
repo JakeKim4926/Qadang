@@ -4,14 +4,29 @@
     <div class="profile-section">
       <div class="profile-image">
         <h2 v-if="userInfo && userInfo.userName">{{ userInfo.userName }}</h2>
+        <p>jake</p>
       </div>
       <div class="message">{{ message }}</div>
       <div class="user-actions">
         <button @click="openUpdateModal" class="button-edit-info">추가정보입력</button>        
       </div>
-      <div v-if="isInfoFilled" class="shading">
-        <h3>하루 권장 카페인 섭취량: {{ rdiCaffeine }}</h3>
-        <h3>하루 권장 설탕 섭취량: {{ rdiSugar }}</h3>
+      <div v-if="isInfoFilled" class="shading2">
+      <!-- <div v-if="isInfoFilled" class="shading"> --> 
+        <div class="nutrition-info">
+      <div class="nutrition-item">
+        <h2> 
+          {{ rdiCaffeine }} mg
+        </h2>      
+        <h3>하루 권장 카페인 섭취량</h3>
+      </div>
+      <div class="nutrition-item">
+        <h2> 
+          {{ rdiSugar }} g
+        </h2>      
+        <h3>하루 권장 설탕 섭취량</h3>
+      </div>        
+    </div>
+        
       </div>
     </div>
     
@@ -33,6 +48,7 @@
       <button @click="handleLogout" class="button-logout">로그아웃</button>
     </div>
   </div>
+
   <!-- <RouterView/> -->
 </template>
 
@@ -224,6 +240,14 @@ onMounted(() => {
   background: #FFF;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
+.shading2 {
+  border-radius: 22px;
+  background: #FFF;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  width: 580px;
+  margin: auto;
+  height: 200px;
+}
 .shading h3 {
   color: #562B1A; 
 }
@@ -285,4 +309,20 @@ h4 {
     margin-top: 10px;
   }
 }
+
+
+.nutrition-info {
+  margin-top: 10px;
+  display: flex; /* Flexbox 레이아웃 적용 */
+  justify-content: space-between; /* 컨테이너 사이에 공간을 동일하게 배분 */
+  align-items: center; /* 세로 중앙 정렬 */
+  padding: 20px; /* 여백 추가 */
+  background: #fff; /* 배경색 설정 */
+}
+
+.nutrition-item {
+  text-align: center; /* 텍스트 중앙 정렬 */
+  /* 필요한 경우 여기에 추가 스타일을 적용하세요. */
+}
+
 </style>

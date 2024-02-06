@@ -19,7 +19,11 @@ const searchQuery = ref('');
 const doSearch = () => {
   if (searchQuery.value.trim()) {
     searchStore.researchKeywordRank(searchQuery.value.trim());
-    router.push({ name: 'searchDetail', query: { keyword: searchQuery.value.trim() } });
+    router.push({ name: 'searchDetail', params: { keyword: searchQuery.value.trim() } });
+  }else {
+    // 검색어가 비어있을 경우 페이지 새로고침
+    router.push({ name: 'searchDetail'});
+    window.location.reload();
   }
 };
 </script>
@@ -30,7 +34,7 @@ const doSearch = () => {
   align-items: center;
   position: relative;
   width: 100%;
-  max-width: 500px; /* 최대 너비 설정, 필요에 따라 조정 */
+  max-width: 550px; /* 최대 너비 설정, 필요에 따라 조정 */
   margin-bottom: 1%;
 }
 

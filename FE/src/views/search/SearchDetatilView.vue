@@ -6,7 +6,7 @@
 
     <div class="button-row">
       <div class="left-buttons">
-        <h4 @click="goToRanklist" class="rank-button"> 순위보기</h4>
+        <h4 @click="goToRanklist" class="rank-button"> < 순위보기</h4>
       </div>
       <div class="right-buttons">
         <button
@@ -59,15 +59,30 @@
             <img :src="drink.cafeUrl" alt="Cafe Image" class="cafe-img">
           </td>
           <td v-if="!activeButtons[drink.drinkId]">{{ drink.drinkName }}</td>
-          <td v-if="!activeButtons[drink.drinkId]" :class="{'font_sugar_color': sugarClass(drink) === 'high-sugar', 'font_green': sugarClass(drink) !== 'high-sugar , font_red'}">{{ drink.drinkSugar }} g</td>
-          <td v-if="!activeButtons[drink.drinkId]" :class="{'font_caffeine_color': caffeineClass(drink) === 'high-caffeine', 'font_green': caffeineClass(drink) !== 'high-caffeine, font_red'}">{{ drink.drinkCaffeine }} mg</td>
-                    
+
+          <td v-if="!activeButtons[drink.drinkId]">
+            <template v-if="(drink.drinkSugar + accumulateStore.getAccumulateDay.accumulateSugar) >= userRDISugar">
+              <span class="font_green">{{ drink.drinkSugar }} g</span>
+            </template>
+            <template v-else>
+              <span class="font_red">{{ drink.drinkSugar }} g</span>
+            </template>
+          </td>
+          <td v-if="!activeButtons[drink.drinkId]">
+            <template v-if="(drink.drinkCaffeine + accumulateStore.getAccumulateDay.accumulateCaffeine) >= userRDICaffeine">
+              <span class="font_green">{{ drink.drinkCaffeine }} mg</span>
+            </template>
+            <template v-else>
+              <span class="font_red">{{ drink.drinkCaffeine }} mg</span>
+            </template>
+          </td>
+
           <td v-if="activeButtons[drink.drinkId]" colspan="4">
             <div class="button-container">
               <a @click="viewDetailsModal(drink.drinkId)" class="detail-view-button">
                 <h4>상세보기</h4>
               </a>
-              <a @click="comparisonStore.addToBasket(drink)" class="compare-button">
+              <a @click="comparisonStore.addToBasket(drink)" class="detail-view-button">
                 <h4>비교함 담기</h4>
               </a>
             </div>
@@ -112,6 +127,10 @@ const sortState = reactive({
   sortOrder: 'asc'
 });
 const selectedDrink = ref(null);
+const userRDISugar = computed(() => userRDI.value.userRDISugar);
+const userRDICaffeine = computed(() => userRDI.value.userRDICaffeine);
+
+
 
 // 음료 상세보기를 가져오는 함수
 const viewDetailsModal = (drinkId) => {
@@ -162,15 +181,6 @@ const toggleSortMenu = () => {
   showSortMenu.value = !showSortMenu.value;
 };
 
-const sugarClass = (drink) => ({
-  'high-sugar': drink.drinkSugar + accumulateStore.accumulateToday.accumulateSugar > userRDI.userSugar,
-  'low-sugar': drink.drinkSugar + accumulateStore.accumulateToday.accumulateSugar <= userRDI.userSugar
-});
-
-const caffeineClass = (drink) => ({
-  'high-caffeine': drink.drinkCaffeine + accumulateStore.accumulateToday.accumulateCaffeine > userRDI.userCaffeine,
-  'low-caffeine': drink.drinkCaffeine + accumulateStore.accumulateToday.accumulateCaffeine <= userRDI.userCaffeine
-});
 
 // 여기에 drink 정보를 가져오기
 // (추후 데이터 불러오는 상황을 봐서 이 코드를 수정해야할 수 있을듯)
@@ -314,29 +324,6 @@ const goToRanklist = () => {
   color: #AAA;
 }
 
-/* 당과 카페인 수치에 따른 글자색 변경 */
-.high-sugar {
-  color: var(--font_red);
-}
-
-.low-sugar {
-  color: var(--font_green);
-}
-
-.high-caffeine {
-  color: var(--font_red);
-}
-
-.low-caffeine {
-  color: var(--font_green);
-}
-
-
-/* 비활성화 상태인 비교하기 버튼 스타일 */
-.button_nonActive {
-  background: var(--button_nonActive_color);
-  color: #AAA;
-}
 
 /* 활성화된 버튼에 대한 추가적인 스타일 */
 .button_caffeine.active {
@@ -344,7 +331,6 @@ const goToRanklist = () => {
   cursor: pointer;
 }
 
-/* 버튼에 애니메이션 효과 추가 */
 
 .button_select2 {
   border-radius: 90px;
@@ -365,7 +351,7 @@ const goToRanklist = () => {
 
 .search-results-container {
   flex: auto;
-  width: 40%; /* 테이블의 너비를 컨테이너에 맞춤 */
+  width: 500px; /* 테이블의 너비를 컨테이너에 맞춤 */
   margin-top: 20px; /* 상단과의 여백을 조정 */
   overflow-x: auto; /* 너비가 넘치는 경우 스크롤바를 표시 */
   margin: auto;
@@ -389,7 +375,7 @@ const goToRanklist = () => {
   display: flex;
   gap: 10px;
   overflow-x: auto;
-  padding: 30px;
+  padding: 20px;
   border-radius: 10px;
   background-color: #f5f5f5;  
 }
@@ -405,7 +391,7 @@ const goToRanklist = () => {
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   padding: 20px; 
   margin-bottom: 20px; 
-  width: 100%;
+  width: 90%;
   margin: auto;
 }
 
@@ -456,14 +442,6 @@ const goToRanklist = () => {
 
 /* 상세보기 버튼과 비교함 담기 버튼 스타일 */
 .detail-view-button,
-.compare-button {
-  /* border-radius: 5px; */
-  padding: 10px 20px; /* 버튼 내부의 패딩을 조정하여 컨텐츠에 맞게 만듭니다 */
-  cursor: pointer; 
-  
-  border: none; /* 테두리 제거 */
-  
-}
 
 .detail-view-button:hover,
 

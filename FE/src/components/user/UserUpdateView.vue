@@ -11,13 +11,7 @@
         <h2 class="update-title">사용자 정보를 입력해주세요</h2>        
       </div>
 
-      <form @submit.prevent="updateUserInfo" class="update-form">
-        <div class="form-row">
-          <div class="form-group half-width">
-            <label for="username" class="label-margin align tag-bold">닉네임</label>
-            <input type="text" v-model="userInfo.username" class="input-field2">
-          </div>
-        </div>
+      <form @submit.prevent="updateUserInfo" class="update-form">        
         <div class="form-row">
           <div class="form-group half-width">
             <label for="gender" class="label-margin align tag-bold">성별</label>
@@ -164,6 +158,7 @@ const togglePopup = () => {
 .user-update-form {
   width: 100%;
   margin-left: 35px;
+  margin-top: 25px;
 }
 
 .form-header {
@@ -266,7 +261,7 @@ button.active {
   padding: 10px 20px;
   cursor: pointer;
   width: 30%;
-  margin-top: 50px;
+  margin-top: 70px;
   /* margin: 70px auto;  */
   display: block;
   margin-left: 30%;
