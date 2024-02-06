@@ -11,12 +11,17 @@
     <template v-if="cafe.id > 0">
       <div class="chat-container">
         <div class="chat-messages" ref="chatContainer">
-          <div v-for="chat in chatStore.getChatList" :key="chat.index"
-            :class="chat.userId == userId ? 'my-chat' : 'their-chat'">
-            <h2>{{ chat.userName }}</h2>
-            <div>
-              <p class="message">{{ chat.message }}</p>
+          <div v-for="chat in chatStore.getChatList" :key="chat.index">
+            <template v-if="chat.userId == userId">
+              <div class="my-chat">
+                <span class="time">{{ extractTimeFromDate(chat.time) }}</span>
+                <div class="message">{{ chat.message }}</div>
+              </div>
+            </template>
+            <div v-else class="their-chat">
               <p>{{ extractTimeFromDate(chat.time) }}</p>
+              <p class="message">{{ chat.message }}</p>
+
             </div>
           </div>
         </div>
@@ -84,8 +89,6 @@ onMounted(async () => {
       socketStore.stompClient.subscribe("http://localhost:8080/ws/chat", function (message) {
         if (message.body) {
           console.log(message.body);
-
-
         } else {
           console.log("nothing on message");
         }
@@ -96,13 +99,28 @@ onMounted(async () => {
         senderId: userId.value,
         message: "a",
       };
-      // let messageToSend = JSON.stringify(chat);
-      // messageToSend = JSON.parse(messageToSend)
+      let messageToSend = JSON.stringify(chat);
+      messageToSend = JSON.parse(messageToSend)
       socketStore.stompClient.send("http://localhost:8080/ws/chat", chat);
 
     },
     (error) => {
       console.log("Connection error: " + error);
+      chatStore.getChatList.push({
+        index: 1,
+        userId: 1,
+        userName: 'user01',
+        message: 'I love drink',
+        time: '2024-02-07 12:00:00' // 형식을 맞추어서 날짜 및 시간을 적절히 설정하세요
+      });
+
+      chatStore.getChatList.push({
+        index: 1,
+        userId: 2,
+        userName: 'user02',
+        message: 'me too',
+        time: '2024-02-07 12:00:03' // 형식을 맞추어서 날짜 및 시간을 적절히 설정하세요
+      });
     }
 
   );
@@ -158,7 +176,7 @@ async function sendOpen() {
   } else {
     console.error("StompClient is not connected.");
   }
-
+  socketStore.stompClient.send(`${import.meta.env.VITE_SOCKET_API}`, {}, JSON.stringify(chat));
   console.log(chat);
   message.value = "";
   // await chatStore.researchChatList(cafe.value.id);
@@ -284,10 +302,14 @@ watchEffect(() => {
   right: 0%;
   left: 10%;
   width: 80%;
-  bottom: 0%;
+  bottom: 3%;
   top: 23.8%;
   height: 76.2%;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column; /* 채팅 컨테이너를 열 방향으로 배치합니다. */
+  align-items: flex-end; /* 채팅 메시지를 오른쪽으로 정렬합니다. */
+  bottom: 10%; /* 채팅 입력란과 겹치지 않게 조정합니다. */
 }
 
 .chat-container-disable {
@@ -336,6 +358,12 @@ watchEffect(() => {
 
 }
 
+.time {
+  font-size: 12px;
+  color: #999;
+  margin-right: 5px;
+}
+
 .chat-icon {
   position: absolute;
   right: 4.12%;
@@ -364,25 +392,29 @@ watchEffect(() => {
 .chat-messages {
   flex: 1;
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   overflow: auto;
 }
 
 .my-chat {
+  
   align-self: flex-end;
-  background-color: #0084ff;
-  color: #fff;
-  max-width: 70%;
-  padding: 8px;
-  margin: 8px 8px 8px 0;
-  border-radius: 6px;
+  /* background: linear-gradient(135deg, #4CAF50, #2E7D32); */
+  background-color: #f5f5f5;
+  border-radius: 20px;
+  color: black;
+  max-width: 80%;
+  padding: 12px 16px;
+  margin: 8px 0;
+  border-radius: 20px;
   text-align: right;
   position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .their-chat {
   align-self: flex-start;
-  background-color: #f0f0f0;
+  background-color: #f5f5f5;
   max-width: 70%;
   padding: 8px;
   margin: 8px 0;
@@ -390,6 +422,11 @@ watchEffect(() => {
   text-align: left;
   color: #282828;
   position: relative;
+  right: 0;
+  /* 말풍선을 화면 오른쪽에 위치시킵니다. */
+  left: auto;
+  /* 말풍선을 왼쪽에 붙이는 스타일을 초기화합니다. */
+
 }
 
 .chat-input {
@@ -431,6 +468,7 @@ input[type="text"] {
   border-radius: 5px;
   margin-right: 10px;
 }
+
 /* 
 button {
   background-color: #0084ff;
