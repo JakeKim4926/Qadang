@@ -24,8 +24,8 @@ public class DrinkController {
         return cafeService.cafeList();
     }
 
-    @GetMapping("/drink")
-    public List<Drinks> drinksList(@RequestParam Long cafeId){
+    @GetMapping("{cafeId}")
+    public List<Drinks> drinksList(@PathVariable Long cafeId){
         return drinkService.drinkList(cafeId);
     }
 

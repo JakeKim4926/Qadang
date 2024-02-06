@@ -29,7 +29,7 @@ public class SearchController {
     // 기록량 높은 음료 순위
     // 음료 전체보기
     @GetMapping("/drinks")
-    public ResponseEntity<?> alldrink(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> allDrink(@RequestHeader("Authorization") String token) {
 
         String jwt = kakaoService.getJwtToken(token);
         User user = kakaoService.getUser(jwt);
@@ -40,8 +40,8 @@ public class SearchController {
     }
 
     // 음료 검색하기
-    @GetMapping("/search")
-    public ResponseEntity<?> searchlist(@RequestParam String keyword ) {
+    @GetMapping("/search/{keyword}")
+    public ResponseEntity<?> searchList(@PathVariable String keyword ) {
 
         List<DrinkResponseDTO> list = searchService.keywordList(keyword);
 
