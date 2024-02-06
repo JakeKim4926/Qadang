@@ -56,6 +56,12 @@
     <div>
       <p>최근에 마신 당을 한눈에 보아요</p>
       <div class="info-box">
+        <div>
+          <select name="selectDate" id="selectDate" v-model="seleteDate">
+            <option value="day">일별</option>
+            <option value="week">주별</option>
+          </select>
+        </div>
         <canvas id="chartCanvas" width="500"></canvas>
       </div>
     </div>
@@ -97,6 +103,9 @@ const recordsStore = useRecordsStore()
 const recommendStore = useRecommendStore()
 const drinksStore = useDrinksStore()
 
+// 차트 날별로 선택하기 위한 변수
+const seleteDate = ref('day')
+
 const chartData = {
     type: 'bar',
     data: {
@@ -112,7 +121,7 @@ const chartData = {
         x: {
           type: 'time',
           time: {
-            unit: 'day'
+            unit: seleteDate.value
           }
         },
         y: {
@@ -125,6 +134,19 @@ const chartData = {
 
 // 데이터를 가져오기 위한 함수
 onMounted(async () => {
+
+  const urlParams = new URLSearchParams(window.location.search);
+  // 'code' 파라미터 값 가져오기
+  const kakaoCode = urlParams.get('code');
+
+  if(kakaoCode != null && kakaoCode.length > 0) {
+    userStore.sendKakaoToken(kakaoCode);
+    console.log(kakaoCode);
+
+    // URL에서 'code' 파라미터 제거
+    const newUrl = window.location.origin + window.location.pathname;
+    history.replaceState({}, document.title, newUrl);
+  }
 
   // 현재 날짜를 알기 위한 변수
   const todayDate = new Date()
@@ -148,10 +170,16 @@ onMounted(async () => {
   // chart.js
   const chartElement = document.querySelector('#chartCanvas').getContext('2d');
   const chartCanvas = new Chart(chartElement, chartData)
+
+  // 날짜가 바뀌면 데이터 변경
+  watch(() => seleteDate.value, (chartDate) => {
+    chartData.options.scales.x.time.unit = chartDate
+    chartCanvas.update()
+  })
   
   // 차트 데이터에 넣을 데이터가 생긴 뒤 데이터 삽입
   watch(() => accumulateStore.getAccumulateList, (newData) => {
-    if (newData.length >= 1) {
+    if (newData.length > 0) {
       console.log('!!!', newData)
 
       const tmpDayData = []
@@ -162,6 +190,11 @@ onMounted(async () => {
         tmpDayData.push(data.accumulateDate)
         tmpDataData.push(data.accumulateSugar)
       })
+
+      // 오늘 날짜까지 갱신하기 위해 현재 날짜가 없으면 날짜 삽입
+      if (!tmpDayData.includes(`${year}-${month}-${day}`)) {        
+        tmpDayData.push(date.value)
+      }
 
       // 다 끝난 뒤 차트에 대입
       chartData.data.labels = tmpDayData
