@@ -23,15 +23,16 @@
 
             <div class="rectangle-4274">
                 <div class="div2">해당 음료를 하루에 몇 잔 마시나요?</div>
+                <template v-if="cafeId && drinkTemp != ''">
+                    <a class="minus" @click="clickMinus">
+                        <font-awesome-icon :icon="['fas', 'minus']" style="color: #000000;" />
+                    </a>
+                    <div class="value">{{ drinkCount }}</div>
 
-                <a class="minus" @click="clickMinus">
-                    <font-awesome-icon :icon="['fas', 'minus']" style="color: #000000;" />
-                </a>
-                <div class="value">{{ drinkCount }}</div>
-
-                <a class="plus" @click="clickPlus">
-                    <font-awesome-icon :icon="['fas', 'plus']" style="color: #000000;" />
-                </a>
+                    <a class="plus" @click="clickPlus">
+                        <font-awesome-icon :icon="['fas', 'plus']" style="color: #000000;" />
+                    </a>
+                </template>
 
             </div>
 
@@ -65,7 +66,10 @@
             </div>
 
             <RouterLink to="/mainCaffeine" class="rectangle-4269">건너뛰기</RouterLink>
-            <template v-if="caffeine >= 200">
+            <tempalte v-if="caffeine >= 200 && sugar >= 25.0">
+                <RouterLink to="/survey/unhealth" class="rectangle-4270">결과보기</RouterLink>
+            </tempalte>
+            <template v-else-if="caffeine >= 200">
                 <RouterLink to="/survey/caffeine" class="rectangle-4270">결과보기</RouterLink>
             </template>
             <template v-else-if="sugar >= 25.0">
@@ -91,7 +95,7 @@ import { useDrinksStore } from "@/stores/drinks";
 const drinkStore = useDrinksStore();
 const cafeId = ref(0);
 const drinkId = ref(0);
-const drinkCount = ref(0);
+const drinkCount = ref(1);
 let drinkTemp = ref({})
 const caffeine = ref(0);
 const sugar = ref(0);
@@ -140,7 +144,7 @@ function clickPlus() {
 
 watch(cafeId, (newValue, oldValue) => {
     drinkTemp.value = ''; // drinkTemp를 초기화합니다.
-    drinkCount.value = 0;
+    drinkCount.value = 1;
     caffeine.value = 0;
     sugar.value = 0;
 });
@@ -148,7 +152,7 @@ watch(cafeId, (newValue, oldValue) => {
 
 onMounted(() => {
     drinkStore.researchCafe();
-    
+
 })
 
 

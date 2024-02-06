@@ -19,11 +19,11 @@
           <font-awesome-icon :icon="['fas', 'calendar-alt']" class="footer-icon" />
         </div>
       </RouterLink>
-      <button class="footer-link" @click="openInputModal">
+      <a class="footer-link" @click="openInputModal">
         <div class="footer-item">
-          <font-awesome-icon :icon="['fas', 'plus']" class="footer-icon plus-icon" />
+          <font-awesome-icon icon="circle-plus" style="height: 40px;" class="footer-icon"  />
         </div>
-      </button>
+      </a>
       <RouterLink to="/searchRank" class="footer-link">
         <div class="footer-item">
           <font-awesome-icon :icon="['fas', 'search']" class="footer-icon" />
@@ -101,5 +101,6 @@
 
 .footer-icon:hover {
   color: #000; /* 마우스 호버 시 검정색으로 변경 */
+  cursor: pointer;
 }
 </style>
