@@ -1,7 +1,6 @@
 <template>
   <div class="container">
-    <h2>당신의 카페인과 당을 줄여줄 <br> 인생 콰당 방지 서비스</h2>
-    <img src="@/components/icons/logo.png" alt="logo" style="color" />
+    <img src="@/components/icons/logo.png" alt="logo" class="logo" style="color" />
     <a id="custom-login-btn" @click="userStore.loginKakao()">
       <img src="https://k.kakaocdn.net/14/dn/btroDszwNrM/I6efHub1SN5KCJqLm1Ovx1/o.jpg" width="222" alt="카카오 로그인 버튼" />
     </a>
@@ -42,6 +41,10 @@ onMounted(async () => {
 </script>
   
 <style scoped>
+.logo{
+  width: 50%;
+  height: 60%;
+}
 .container {
   display: flex;
   flex-direction: column;
@@ -49,6 +52,11 @@ onMounted(async () => {
   align-items: center;
   height: 100vh; /* 화면 전체 높이를 차지하기 위해 */
 }
+
+#custom-login-btn {
+  margin-top: 5%; /* 버튼과 이미지 사이의 간격 조정 */
+}
+
 
 .content {
   margin-top: 20px; /* 내용과의 간격 조정 */
