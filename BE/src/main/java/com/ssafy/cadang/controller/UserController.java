@@ -169,8 +169,16 @@ public class UserController {
     @PutMapping("/user")
     public ResponseEntity<HttpStatus> adduserInfo(@RequestHeader("Authorization") String token, @RequestBody UserInfo userInfo) {
 
-        String jwt = kakaoService.getJwtToken(token);
-        User user = kakaoService.getUser(jwt);
+        // 토큰 유효성 검사
+        String passAccess = kakaoService.checkToken(token); // 통과한 access token
+        System.out.println(" 유효성검사 시작 "+passAccess);
+        if (passAccess == null) {
+            System.out.println("유효성검사 실패");
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        User user = kakaoService.getUser(passAccess);
+
 
         user.setUserBirth(userInfo.userBirth);
         user.setUserHeight(userInfo.userHeight);
@@ -188,8 +196,13 @@ public class UserController {
     @GetMapping("/user/amount")
     public ResponseEntity<UserAmount> userAmount(@RequestHeader("Authorization") String token) {
 
-        String jwt = kakaoService.getJwtToken(token);
-        User user = kakaoService.getUser(jwt);
+        // 토큰 유효성 검사
+        String passAccess = kakaoService.checkToken(token); // 통과한 access token
+        System.out.println(" 유효성검사 시작 "+passAccess);
+        if (passAccess == null) {
+            System.out.println("유효성검사 실패");
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
 
         return new ResponseEntity<UserAmount>(userService.userAmount(user), HttpStatus.OK);
     }
@@ -198,8 +211,14 @@ public class UserController {
     @GetMapping("/user/max")
     public ResponseEntity<MaxRecord> userMax(@RequestHeader("Authorization") String token) {
 
-        String jwt = kakaoService.getJwtToken(token);
-        User user = kakaoService.getUser(jwt);
+        // 토큰 유효성 검사
+        String passAccess = kakaoService.checkToken(token); // 통과한 access token
+        System.out.println(" 유효성검사 시작 "+passAccess);
+        if (passAccess == null) {
+            System.out.println("유효성검사 실패");
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        User user = kakaoService.getUser(passAccess);
 
         return new ResponseEntity<>(userService.userMax(user), HttpStatus.OK);
     }
@@ -207,8 +226,14 @@ public class UserController {
     // 회원탈퇴
     @DeleteMapping("/user")
     public ResponseEntity<Void> deleteUser(@RequestHeader("Authorization") String token) {
-        String jwt = kakaoService.getJwtToken(token);
-        User user = kakaoService.getUser(jwt);
+        // 토큰 유효성 검사
+        String passAccess = kakaoService.checkToken(token); // 통과한 access token
+        System.out.println(" 유효성검사 시작 "+passAccess);
+        if (passAccess == null) {
+            System.out.println("유효성검사 실패");
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        User user = kakaoService.getUser(passAccess);
 
         userService.delete(user.getUserId());
 
