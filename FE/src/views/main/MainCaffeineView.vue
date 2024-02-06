@@ -192,6 +192,11 @@ onMounted(async () => {
         tmpDataData.push(data.accumulateCaffeine)
       })
 
+      // 오늘 날짜까지 갱신하기 위해 현재 날짜가 없으면 날짜 삽입
+      if (!tmpDayData.includes(`${year}-${month}-${day}`)) {        
+        tmpDayData.push(date.value)
+      }
+
       // 다 끝난 뒤 차트에 대입
       chartData.data.labels = tmpDayData
       chartData.data.datasets[0].data = tmpDataData
