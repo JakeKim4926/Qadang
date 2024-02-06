@@ -42,8 +42,8 @@ onMounted(async () => {
   
 <style scoped>
 .logo{
-  width: 50%;
-  height: 60%;
+  /* width: 50%;
+  height: 60%; */
 }
 .container {
   display: flex;
