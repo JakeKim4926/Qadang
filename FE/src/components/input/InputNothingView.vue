@@ -91,8 +91,8 @@ const makeSubmit = () => {
     const drink = {
       cafeName: cafeName.value,
       drinkName: drinkName.value,
-      drinkCaffeine: drinkCaffeine.value.toFixed(2),
-      drinkSugar: drinkSugar.value.toFixed(2)
+      drinkCaffeine: drinkCaffeine.value.toFixed(1),
+      drinkSugar: drinkSugar.value.toFixed(1)
     }
 
     console.log(drink)
