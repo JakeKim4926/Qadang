@@ -80,42 +80,67 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { onMounted } from 'vue';
 
 import { useDrinksStore } from "@/stores/drinks";
 import { useRecordsStore } from "@/stores/records"
-import { isUpdateModal } from '@/stores/util';
+import { isUpdateModal, tempRecord } from '@/stores/util';
 
 const drinkStore = useDrinksStore()
 const recordsStore = useRecordsStore()
-
-// 음료 전체 정보
-const drinkInfo = ref({})
-
-// 음료 업데이트를 위해 보내줄 데이터
-// 초기값은 캘린더에서 받아오는 값으로 설정
-const cafeName = ref(null)
-const drinkName = ref(null)
-const plusShot = ref(0)
-const plusSyrup = ref(0)
-
-// 카페 id, 음료 id, 각 음료의 카페인 함량, 당 함량
-// 초기값은 캘린더에서 받아오는 값으로 설정
-const cafeId = ref(0)
-const drinkId = ref(0)
-const drinkCaffeine = ref(0)
-const drinkSugar = ref(0)
-
-const minusCaffeineButton = ref(false)
-const minusSugarButton = ref(false)
-const plusCaffeineButton = ref(false)
-const plusSugarButton = ref(false)
 
 // 데이터를 가져오기 위한 함수
 onMounted(() => {
   drinkStore.researchCafe()
 })
+
+console.log('가져온 데이터', tempRecord.value);
+
+// 음료 업데이트를 위해 보내줄 데이터
+// 초기값은 캘린더에서 받아오는 값으로 설정
+const recordId = tempRecord.value.recordId
+const cafeName = ref(tempRecord.value.cafeName)
+const drinkName = ref(tempRecord.value.drinkName)
+const plusShot = ref(tempRecord.value.plusShot)
+const plusSyrup = ref(tempRecord.value.plusSyrup)
+
+// 카페 id, 음료 id, 각 음료의 카페인 함량, 당 함량
+// 초기값은 캘린더에서 받아오는 값으로 설정
+const cafeId = ref(0)
+watch(() => drinkStore.getCafeList, (cafeList) => {
+  if (cafeList.length > 0) {
+    let findCafeId = cafeList.find(cafeList => cafeList.cafeName === tempRecord.value.cafeName)
+
+    cafeId.value = findCafeId.cafeId
+    drinkStore.researchCafeDrinks(cafeId.value)
+  }
+})
+
+// 음료 전체 정보
+// 초기값은 캘린더에서 받아오는 값으로 설정
+const drinkInfo = ref({})
+watch(() => drinkStore.getCafeDrinkList, (drinkList) => {
+  if (drinkList.length > 0) {
+    let findDrinkId = drinkList.find(drinkList => drinkList.cafeName === tempRecord.value.cafeName)
+    drinkInfo.value = findDrinkId
+
+    // 샷, 시럽 버튼 활성화
+    activeminusCaffeineButton()
+    activminusSugarButton()
+    activeplusCaffeineButton()
+    activeplusSugarButton()
+  }
+})
+
+const drinkId = ref(tempRecord.value.drinkId)
+const drinkCaffeine = ref(tempRecord.value.drinkCaffeine)
+const drinkSugar = ref(tempRecord.value.drinkSugar)
+
+const minusCaffeineButton = ref(false)
+const minusSugarButton = ref(false)
+const plusCaffeineButton = ref(false)
+const plusSugarButton = ref(false)
 
 // 모달창을 닫기 위한 함수
 const closeUpdateModal = () => {
@@ -207,10 +232,15 @@ const changeDrinkInfo = () => {
     drinkCaffeine.value = drinkInfo.value.drinkCaffeine
     drinkSugar.value = drinkInfo.value.drinkSugar
 
+    // 샷, 시럽 버튼 활성화
     activeminusCaffeineButton()
     activminusSugarButton()
     activeplusCaffeineButton()
     activeplusSugarButton()
+
+    // 기존 입력한 샷, 시럽 추가 초기화
+    plusShot.value = 0
+    plusSyrup.value = 0
   }
 }
 
@@ -250,7 +280,7 @@ const drinkUpdateSubmit = () => {
 
     // 음료 업데이트를 위해 보내줄 데이터
     const drink = {
-      recordId: null,             // 음료 업데이트를 하면서 가져오는 recordid값
+      recordId: recordId,
       drinkId: drinkId.value,
       cafeName: cafeName.value,
       drinkName: drinkName.value,
