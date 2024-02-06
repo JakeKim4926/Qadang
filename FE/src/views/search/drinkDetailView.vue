@@ -20,50 +20,52 @@
         <hr class="fact-line" />
         <div class="fact-row">
           <label class="fact-label">카페인</label>
-          <h3 class="fact-value">{{ drinkDetail.drinkCaffeine }}mg</h3>
+          <h3 class="fact-value">{{ drinkDetail.drinkCaffeine || '-'}}mg</h3>
         </div>
       </div>
       <div class="fact">
         <div class="fact-row">
           <label class="fact-label">당</label>
-          <h3 class="fact-value">{{ drinkDetail.drinkSugar }}g</h3>
+          <h3 class="fact-value">{{ drinkDetail.drinkSugar || '-'}}g</h3>
         </div>
         <hr class="fact-line" />
       </div>
       <div class="fact">
         <div class="fact-row">
           <label class="fact-label">포화지방</label>
-          <h3 class="fact-value">{{ drinkDetail.drinkFat }}g</h3>
+          <h3 class="fact-value">{{ drinkDetail.drinkFat || '-'}}g</h3>
         </div>
       </div>
       <div class="fact">
         <div class="fact-row">
           <label class="fact-label">나트륨</label>
-          <h3 class="fact-value">{{ drinkDetail.drinkNatrium }}mg</h3>
+          <h3 class="fact-value">{{ drinkDetail.drinkNatrium || '-'}}mg</h3>
         </div>
       </div>
       <div class="fact">
         <div class="fact-row">
           <label class="fact-label">칼로리</label>
-          <h3 class="fact-value">{{ drinkDetail.drinkCalorie }}kcal</h3>
+          <h3 class="fact-value">{{ drinkDetail.drinkCalorie || '-'}}kcal</h3>
         </div>
       </div>
       <div class="fact">
         <div class="fact-row">
           <label class="fact-label">용량</label>
-          <h3 class="fact-value">{{ drinkDetail.drinkMl }}ml</h3>
+          <h3 class="fact-value">
+            {{ drinkDetail.drinkMl === 0 ? drinkDetail.drinkOz + 'oz' : drinkDetail.drinkMl + 'ml' }}
+          </h3>
         </div>
       </div>
       <div class="fact">
         <div class="fact-row">
           <label class="fact-label">단백질</label>
-          <h3 class="fact-value">{{ drinkDetail.drinkProtein }}g</h3>
+          <h3 class="fact-value">{{ drinkDetail.drinkProtein || '-'}}g</h3>
         </div>
       </div>
       <div class="fact">
         <div class="fact-row">
           <label class="fact-label">알러지 유무</label>
-          <h3 class="fact-value">{{ drinkDetail.drinkAllergy }}</h3>
+          <h3 class="fact-value">{{ drinkDetail.drinkAllergy || '-' }}</h3>
         </div>
       </div>
     </div>
@@ -138,6 +140,7 @@ const addToBasket = () => {
   width: 500px;
   height: 650px;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  margin-bottom: 50px;
 }
 
 .close {
@@ -158,7 +161,7 @@ const addToBasket = () => {
 
 .drink-detail-header h1 {
   font-size: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   color: #562B1A;
   
 }
@@ -174,7 +177,7 @@ const addToBasket = () => {
 .drink-image {
   width: 100%;
   height: auto;
-  margin-bottom: 20px;
+  margin-bottom: 0px;
 }
 
 .nutrition-facts .fact {
@@ -188,18 +191,18 @@ const addToBasket = () => {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  max-width: 300px; /* Adjust as needed */
+  max-width: 300px;
 }
 
-.fact-label {
-  
+.fact-label {  
   color: black;
-  
+  font-size: 18px;
+  font-weight: bold;  
 }
 
 .fact-value {
-  font-size: 14px;
-  color: black;
+  font-size: 16px;
+  color: #562B1A;
   font-weight: bold;
 }
 

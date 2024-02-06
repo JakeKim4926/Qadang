@@ -3,13 +3,13 @@
     <searchTopView />
     
     <div class="full-list-link">
-      <h4 @click="goToFullList">  전체보기 </h4>
+      <h4 @click="goToFullList"> < 전체보기 </h4>
     </div>
 
     
     <div class="rankings">
       <div class="shading">
-        <h3 class="ranking-title search">많이 <span class="highlight">검색</span>한 순위</h3>
+        <h2 class="ranking-title search">많이 <span class="highlight">검색</span>한 순위</h2>
         <div class="ranking-rows">
           <div class="ranking-column rank-text">     
             <div v-for="(keyword, index) in firstThreeKeywords" :key="`first-${index}`" class="ranking-item">
@@ -25,7 +25,7 @@
       </div>
 
       <div class="shading">
-        <h3 class="ranking-title search">많이 <span class="highlight">기록</span>한 음료 순위</h3>
+        <h2 class="ranking-title search">많이 <span class="highlight">기록</span>한 음료 순위</h2>
         <div class="ranking-rows">
           <div class="ranking-column rank-text">     
             <div v-for="(drink, index) in firstThreeRecords" :key="`record-first-${index}`" class="ranking-item">
@@ -61,9 +61,8 @@ const keywordRanking = computed(() => searchStore.getKeywordRanking);
 const recordRanking = computed(() => searchStore.getRecordRanking);
 
 
-// 음료 상세보기를 가져오는 함수
 const viewDetailsModal = (drinkId) => {
-  drinkStore.setSelectedDrink(drinkId); // 선택된 음료 설정
+  drinkStore.setSelectedDrink(drinkId); 
   if (drinkStore.selectedDrink) {
     isDetailModal.value = true; 
   } else {
@@ -85,12 +84,11 @@ const nextThreeKeywords = computed(() => {
   return keywordRanking.value.slice(3, 6);
 });
 
-// 첫 번째 세 기록된 음료 항목을 위한 계산된 속성
+
 const firstThreeRecords = computed(() => {
   return recordRanking.value.slice(0, 3);
 });
 
-// 다음 세 기록된 음료 항목을 위한 계산된 속성
 const nextThreeRecords = computed(() => {
   return recordRanking.value.slice(3, 6);
 });
@@ -118,7 +116,8 @@ onMounted(() => {
 .full-list-link {
   align-self: flex-start;
   margin-bottom: 20px; 
-  margin-left: 55px;  
+  margin-left: 55px; 
+  cursor: pointer; 
 }
 .highlight {
   color: #846046; 
@@ -127,7 +126,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
+  width: 97%;
 }
 
 .ranking-title {
@@ -158,16 +157,15 @@ onMounted(() => {
   border: 1px solid #EFEFEF;
   background: var(--Color, #FFF);
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-  padding: 20px; 
+  padding: 15px; 
   margin-bottom: 20px; 
-  width: 90%;
-  
+  width: 90%;  
 }
 
 .rank-text{
-  font-size: medium;
+  font-size: 20px;
   margin-top: 15x;
-  margin-left: 5px;
+  margin-left: 10px;
 }
 
 </style>

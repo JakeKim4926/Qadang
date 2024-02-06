@@ -22,7 +22,7 @@ const doSearch = () => {
     router.push({ name: 'searchDetail', params: { keyword: searchQuery.value.trim() } });
   }else {
     // 검색어가 비어있을 경우 페이지 새로고침
-    router.push({ name: 'searchDetail'});
+    // router.push({ name: 'searchDetail'});
     window.location.reload();
   }
 };
