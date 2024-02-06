@@ -5,6 +5,9 @@
       <InputView v-if="isInputModal" />
       <InputNothingView v-if="isInputNothingModal" />
 
+      <UpdateInputView v-if="isUpdateModal" />
+      <UpdateInputNothingView v-if="isUpdateNothingModal" />
+
       <div class="empty-space"></div> <!-- 왼쪽 끝의 빈 공간 -->
       <RouterLink :to="{name:'mainCaffeine'}" class="footer-link">
         <div class="footer-item">
@@ -39,8 +42,10 @@
 <script setup>
   import InputView from '@/components/input/InputView.vue';
   import InputNothingView from '@/components/input/InputNothingView.vue';
+  import UpdateInputView from '@/components/input/UpdateInputView.vue';
+  import UpdateInputNothingView from '@/components/input/UpdateInputNothingView.vue';
 
-  import { isInputModal, isInputNothingModal } from '@/stores/util';
+  import { isInputModal, isInputNothingModal, isUpdateModal, isUpdateNothingModal } from '@/stores/util';
 
   // open input modal
   const openInputModal = () => {
