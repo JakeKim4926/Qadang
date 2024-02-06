@@ -56,13 +56,13 @@
     <div>
       <p>최근에 마신 카페인을 한눈에 보아요</p>
       <div class="info-box">
-        <div>
-          <select name="selectDate" id="selectDate" v-model="seleteDate">
+        <canvas id="chartCanvas" width="500"></canvas>
+        <div class="chart_select_box">
+          <select name="selectDate" id="selectDate" v-model="seleteDate" class="button_select selete_date_button">
             <option value="day">일별</option>
             <option value="week">주별</option>
           </select>
         </div>
-        <canvas id="chartCanvas" width="500"></canvas>
       </div>
     </div>
 
@@ -318,6 +318,20 @@ p {
 
 #chartCanvas {
   margin: auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.chart_select_box {
+  height: 230px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.selete_date_button {
+  display: flex;
+  align-items: start;
+  margin-right: 30px
 }
 
 .photo {
