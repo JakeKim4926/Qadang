@@ -28,6 +28,7 @@
 
     <!-- plus icon -->
     <font-awesome-icon :icon="['fas', 'plus']" style="color: #000000;" />
+    <font-awesome-icon icon="circle-plus" />
 
     <!-- minus icon -->
     <font-awesome-icon :icon="['fas', 'minus']" style="color: #000000;" />
