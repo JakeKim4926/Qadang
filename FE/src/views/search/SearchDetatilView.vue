@@ -56,7 +56,7 @@
           <tr v-for="drink in sortedDrinks" :key="drink.drinkId" @mouseover="enableButtons(drink.drinkId)" @mouseleave="disableButtons(drink.drinkId)">
          
           <td v-if="!activeButtons[drink.drinkId]">
-            <img :src="drink.cafeUrl" alt="Cafe Image">
+            <img :src="drink.cafeUrl" alt="Cafe Image" class="cafe-img">
           </td>
           <td v-if="!activeButtons[drink.drinkId]">{{ drink.drinkName }}</td>
           <td v-if="!activeButtons[drink.drinkId]" :class="{'font_sugar_color': sugarClass(drink) === 'high-sugar', 'font_green': sugarClass(drink) !== 'high-sugar , font_red'}">{{ drink.drinkSugar }} g</td>
@@ -204,6 +204,10 @@ const goToRanklist = () => {
 </script>
 
 <style scoped>
+.cafe-img{
+  width: 40px;
+  height: auto;
+}
 .rank-button{
   cursor: pointer;
 }
