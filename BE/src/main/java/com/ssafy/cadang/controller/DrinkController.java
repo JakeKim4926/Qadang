@@ -28,4 +28,9 @@ public class DrinkController {
     public List<Drinks> drinksList(@RequestParam Long cafeId){
         return drinkService.drinkList(cafeId);
     }
+
+    @GetMapping("/{cafeId}/{keyword}")
+    public List<Drinks> drinksList(@PathVariable Long cafeId, @PathVariable String keyword){
+        return drinkService.drinkCafeKeyword(cafeId,keyword);
+    }
 }
