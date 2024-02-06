@@ -85,7 +85,7 @@ import { onMounted } from 'vue';
 
 import { useDrinksStore } from "@/stores/drinks";
 import { useRecordsStore } from "@/stores/records"
-import { isUpdateModal, tempRecord } from '@/stores/util';
+import { isUpdateInputModal, tempRecord } from '@/stores/util';
 
 const drinkStore = useDrinksStore()
 const recordsStore = useRecordsStore()
@@ -144,7 +144,7 @@ const plusSugarButton = ref(false)
 
 // 모달창을 닫기 위한 함수
 const closeUpdateModal = () => {
-  isUpdateModal.value = false
+  isUpdateInputModal.value = false
 }
 
 // 이전 선택값 초기화해주는 함수

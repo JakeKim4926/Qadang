@@ -5,7 +5,7 @@
       <InputView v-if="isInputModal" />
       <InputNothingView v-if="isInputNothingModal" />
 
-      <UpdateInputView v-if="isUpdateModal" />
+      <UpdateInputView v-if="isUpdateInputModal" />
       <UpdateInputNothingView v-if="isUpdateNothingModal" />
 
       <div class="empty-space"></div> <!-- 왼쪽 끝의 빈 공간 -->
@@ -45,7 +45,7 @@
   import UpdateInputView from '@/components/input/UpdateInputView.vue';
   import UpdateInputNothingView from '@/components/input/UpdateInputNothingView.vue';
 
-  import { isInputModal, isInputNothingModal, isUpdateModal, isUpdateNothingModal } from '@/stores/util';
+  import { isInputModal, isInputNothingModal, isUpdateInputModal, isUpdateNothingModal } from '@/stores/util';
 
   // open input modal
   const openInputModal = () => {
