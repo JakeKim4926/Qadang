@@ -35,7 +35,7 @@
         </div>
 
         <div class="item-container">
-          <button @click="drinkUpdateSubmit" class="button_caffeine buttons">입력완료</button>
+          <button @click="drinkUpdateSubmit" class="button_caffeine buttons">수정완료</button>
         </div>
       </div>
     </div>
