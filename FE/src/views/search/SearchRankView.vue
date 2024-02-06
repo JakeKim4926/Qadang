@@ -3,7 +3,7 @@
     <searchTopView />
     
     <div class="full-list-link">
-      <h4 @click="goToFullList"> < 전체보기 </h4>
+      <h4 @click="goToFullList">  전체보기 </h4>
     </div>
 
     <div v-if="!searchResults.length">

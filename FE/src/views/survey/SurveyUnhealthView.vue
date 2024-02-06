@@ -3,17 +3,17 @@
     <div class="container">
       <div class="content-wrapper">
         <div class="image-container">
-          <img src="@/components/icons/su_bad.png" alt="나쁨 이미지" class="image-21">
+          <img src="@/components/icons/bad.png" alt="나쁨 이미지" class="image-21">
         </div>
         <div class="text-block">
-          <span class="div-2-span">당신은 슈가 러버</span>
+          <span class="div-2-span">당신 이거 맞아 ?</span>
           <br>
-          <span class="div-2-span2">이러다가 당뇨와요</span>
+          <span class="div-2-span2">이러다가 훅 가유</span>
         </div>
       </div>
 
       <div class="div-2-span">처방전</div>
-      <div class="_1">달달이 사랑을 줄여주세요</div>
+      <div class="_1">오늘부터 콰당 1일</div>
       <div class="button-wrapper">
         <img class="image-24" src="@/components/icons/doctor.png" alt="doctor" />
         <router-link to="/mainCaffeine" class="rectangle-4270">시작하기</router-link>
