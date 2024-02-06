@@ -111,7 +111,7 @@
 import { useRecordsStore } from '@/stores/records';
 import { useAccumulateStore } from '@/stores/accumulate';
 import { ref, onMounted, computed } from 'vue';
-import { isCalendarModal, isUpdateModal, isUpdateNothingModal, tempRecord } from "@/stores/util"
+import { isCalendarModal, isUpdateInputModal, isUpdateNothingModal, tempRecord } from "@/stores/util"
 import { useUserStore } from '@/stores/user';
 
 
@@ -146,7 +146,7 @@ function editRecord(recordDrink) {
             // drinkId가 있다면 선택입력한 것이므로
             // 선택 입력을 수정할 수 있는 모달창 띄움
             close()
-            isUpdateModal.value = true
+            isUpdateInputModal.value = true
 
         } else {
             // drinkId가 없으면 직접 입력한 것이므로
