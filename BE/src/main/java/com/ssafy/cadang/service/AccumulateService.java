@@ -2,8 +2,10 @@ package com.ssafy.cadang.service;
 
 import com.ssafy.cadang.domain.AccumulatePK;
 import com.ssafy.cadang.domain.Accumulates;
+import com.ssafy.cadang.domain.Records;
 import com.ssafy.cadang.dto.Facts;
 import com.ssafy.cadang.repository.AccumulateRepository;
+import com.ssafy.cadang.repository.RecordReporsitory;
 import com.ssafy.cadang.response.DayAccumulateResponseDTO;
 import com.ssafy.cadang.response.DurationAccumulateResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AccumulateService {
     private final AccumulateRepository accumulateRepository;
+    private final RecordReporsitory recordReporsitory;
 
     public void create(Accumulates accumulate) {
         accumulateRepository.save(accumulate);
@@ -41,6 +44,12 @@ public class AccumulateService {
                     .accumulateCaffeine(accumulate.getAccumulateCaffeine() + facts.getCaffeine())
                     .accumulateSugar(accumulate.getAccumulateSugar() + facts.getSugar())
                     .build();
+            //remain record check
+            List<Records> records = recordReporsitory.findByUserIdAndRecordDate(userId,LocalDate.now());
+            if(records.isEmpty()){
+                accumulateRepository.delete(accumulate);
+                return;
+            }
         }
         else{
             accumulate = Accumulates.builder()
