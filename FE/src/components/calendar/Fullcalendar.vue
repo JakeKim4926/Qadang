@@ -76,12 +76,12 @@ export default {
 
                     let caffeineHTML = `
                             <h5>
-                            <img src="src/components/icons/caffeine.png" alt="no" style="width:15%; heigth:10%" /> x ${caffeine}
+                            <img src="src/components/icons/caffeine.png" alt="no" class="icons" /> x ${caffeine}
                             </h5>
                     `
                     let sugarHTML = `
                             <h5>
-                            <img src="src/components/icons/sugar.png" alt="no" style="width:15%; heigth:10%" />
+                            <img src="src/components/icons/sugar.png" alt="no" class="icons" />
                             x ${sugar}
                             </h5>
                     `
@@ -177,7 +177,7 @@ export default {
 }
 
 .fc-daygrid-day-frame {
-    height: 100px;
+    height: 150px;
 }
 
 .day-number-container {
@@ -202,5 +202,10 @@ export default {
     border-radius: 50%;
     background-color:rgb(68, 74, 104);
     z-index: 0;
+}
+
+.icons{
+    width:20%; 
+    height:10%;
 }
 </style>
