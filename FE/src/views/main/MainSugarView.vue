@@ -323,6 +323,10 @@ p {
   align-items: flex-start;
 }
 
+.button_select {
+  border: 2px solid #374B59;
+}
+
 .selete_date_button {
   display: flex;
   align-items: start;
