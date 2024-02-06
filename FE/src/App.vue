@@ -4,10 +4,10 @@
     <div class="main-content">
       <RouterView />
     </div>
-    <template v-if="userAccessToken != null">
+    <!-- <template v-if="userAccessToken != null">
       <TheFooter />
-    </template>
-
+    </template> -->
+    <TheFooter />
   </div>
 </template>
 
