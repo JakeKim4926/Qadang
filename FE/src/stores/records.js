@@ -98,23 +98,10 @@ export const useRecordsStore = defineStore("records", () => {
       });
   };
 
-  const deleteMyDrink = function (recordId) {
+  const deleteDrink = function (recordId) {
     axios({
-      url: `${import.meta.env.VITE_REST_RECORDS_API}/make`,
+      url: `${import.meta.env.VITE_REST_RECORDS_API}/${recordId}`,
       method: "DELETE",
-      params: { recordId: recordId },
-    })
-      .then((res) => {})
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const deleteCafeDrink = function (recordId) {
-    axios({
-      url: `${import.meta.env.VITE_REST_RECORDS_API}/drink`,
-      method: "DELETE",
-      params: { recordId: recordId },
     })
       .then((res) => {})
       .catch((err) => {
@@ -125,9 +112,8 @@ export const useRecordsStore = defineStore("records", () => {
   // date example) 20240124
   const researchDayDrink = function (date) {
     axios({
-      url: `${import.meta.env.VITE_REST_RECORDS_API}/day`,
+      url: `${import.meta.env.VITE_REST_RECORDS_API}/${date}/day`,
       method: "GET",
-      params: { date: date.value },
     })
       .then((res) => {
         if(res.status == responseState.SUCCESS) {
@@ -188,8 +174,7 @@ export const useRecordsStore = defineStore("records", () => {
     createMyDrink,
     updateCafeDrink,
     updateMyDrink,
-    deleteCafeDrink,
-    deleteMyDrink,
+    deleteDrink,
     researchDayDrink,
     researchMaxSugar,
     researchMaxCaffeine,
