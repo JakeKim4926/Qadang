@@ -45,14 +45,17 @@
 <script setup>
 import { ref } from 'vue';
 import { useRecordsStore } from "@/stores/records";
-import { isUpdateNothingModal } from '@/stores/util';
+import { isUpdateNothingModal, tempRecord } from '@/stores/util';
 
 const store = useRecordsStore()
 
-const cafeName = ref(null)
-const drinkName = ref(null)
-const drinkCaffeine = ref(0)
-const drinkSugar = ref(0)
+// console.log('!!!', tempRecord.value)
+
+const recordId = tempRecord.value.recordId
+const cafeName = ref(tempRecord.value.cafeName)
+const drinkName = ref(tempRecord.value.drinkName)
+const drinkCaffeine = ref(tempRecord.value.drinkCaffeine)
+const drinkSugar = ref(tempRecord.value.drinkSugar)
 
 // 모달창을 닫기 위한 함수
 const closeUpdateNothingModal = () => {
@@ -65,7 +68,7 @@ const drinkUpdateSubmit = () => {
     console.log('입력값이 올바릅니다. 데이터를 전송합니다.')
 
     const drink = {
-      recordId: null,             // 음료 업데이트를 하면서 가져오는 recordid값
+      recordId: recordId,
       cafeName: cafeName.value,
       drinkName: drinkName.value,
       drinkCaffeine: drinkCaffeine.value.toFixed(2),
@@ -84,6 +87,20 @@ const drinkUpdateSubmit = () => {
       alert('입력값이 올바르지 않습니다. 다시 확인해주세요.')
     }
   }
+
+const isValid = () => {  
+  // 모든 정보를 입력한 상태에서 카페인과 당이 0을 포함한 양수일 경우
+  // 유의미한 정보를 입력했다고 간주하고 유효성 검사 통과
+  if (
+    cafeName.value && drinkName.value &&
+    drinkCaffeine.value !== "" && drinkSugar.value !== "" &&
+    drinkCaffeine.value >= 0 && drinkSugar.value >= 0
+    ) {
+      return true
+    } {
+    return false
+  }
+}
 </script>
 
 <style scoped>

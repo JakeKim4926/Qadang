@@ -111,7 +111,7 @@
 import { useRecordsStore } from '@/stores/records';
 import { useAccumulateStore } from '@/stores/accumulate';
 import { ref, onMounted, computed } from 'vue';
-import { isCalendarModal, isInputModal, tempRecord } from "@/stores/util"
+import { isCalendarModal, isUpdateModal, isUpdateNothingModal, tempRecord } from "@/stores/util"
 import { useUserStore } from '@/stores/user';
 
 
@@ -135,14 +135,25 @@ function close() {
 function editRecord(recordDrink) {
     const confirmed = window.confirm("수정하겠습니까 ?");
     if (confirmed) {
-        console.log(tempRecord);
         tempRecord.value = recordDrink;
         console.log("수정 할 꺼 ", tempRecord.value);
-        close();
-        // 여기에 수정할 모달을 넣어주세요
-        // mydrink 구분은 deleteRecord에 있는거 활용하면 됩니다.
-        // 변수는 tempRecord import 해서 쓰면 되요
-        isInputModal.value = true;
+
+        console.log('@@@', tempRecord.value.drinkId)
+
+        // 선택해서 입력했는지 직접 입력했는지에 따라
+        // 뜨는 모달창을 다르게 변경
+        if (tempRecord.value.drinkId) {
+            // drinkId가 있다면 선택입력한 것이므로
+            // 선택 입력을 수정할 수 있는 모달창 띄움
+            close()
+            isUpdateModal.value = true
+
+        } else {
+            // drinkId가 없으면 직접 입력한 것이므로
+            // 직접 입력을 수정할 수 있는 모달창 띄움
+            close()
+            isUpdateNothingModal.value = true
+        }
     }
 }
 

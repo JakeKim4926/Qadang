@@ -7,8 +7,9 @@
     <!-- <template v-if="userAccessToken != null">
       <TheFooter />
     </template> -->
-    <TheFooter />
   </div>
+  <TheFooter />
+
 </template>
 
 <script setup>
@@ -29,5 +30,6 @@ import {userAccessToken } from "@/stores/util"
 }
 .main-content {
   flex: 1;
+  margin-bottom: 100px;
 }
 </style>
