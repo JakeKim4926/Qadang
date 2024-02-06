@@ -32,8 +32,8 @@ import { userAccessToken } from "@/stores/util"
   position: relative;
   
   z-index: 2;
-  padding-bottom: 20%;
-  margin-bottom: 10%;
+  padding-bottom: 5%;
+  margin-bottom: 5%;
 }
 
 .main-content {
