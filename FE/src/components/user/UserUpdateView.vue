@@ -21,7 +21,7 @@
           </div>
           <div class="form-group half-width">
             <label for="birthYear" class="label-margin tag-bold">나이</label>
-            <input type="number" v-model="userInfo.birthYear" class="input-field2"/>
+            <input type="number" v-model="userInfo.birthYear" class="input-field2" min="0"/>
           </div>
         </div>
 
@@ -218,6 +218,7 @@ const togglePopup = () => {
   flex-direction: row; /* 버튼들을 가로로 배치 */
   justify-content: flex-start; /* 버튼들을 컨테이너 시작점으로 */
   align-items: center; /* 버튼들을 수직 중앙으로 */
+  text-align: center;
 }
 
 .shading {

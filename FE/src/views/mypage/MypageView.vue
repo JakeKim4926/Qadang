@@ -3,6 +3,7 @@
   <div class="mypage-container">    
     <div class="profile-section">
       <div class="profile-image">
+        
         <h2 v-if="userInfo && userInfo.userName">{{ userInfo.userName }}</h2>
         <p>jake</p>
       </div>
@@ -10,36 +11,35 @@
       <div class="user-actions">
         <button @click="openUpdateModal" class="button-edit-info">추가정보입력</button>        
       </div>
-      <div v-if="isInfoFilled" class="shading2">
-      <!-- <div v-if="isInfoFilled" class="shading"> --> 
+      <!-- <div v-if="isInfoFilled" class="shading2"> -->
+      <div class="shading2"> 
         <div class="nutrition-info">
-      <div class="nutrition-item">
-        <h2> 
-          {{ rdiCaffeine }} mg
-        </h2>      
-        <h3>하루 권장 카페인 섭취량</h3>
-      </div>
-      <div class="nutrition-item">
-        <h2> 
-          {{ rdiSugar }} g
-        </h2>      
-        <h3>하루 권장 설탕 섭취량</h3>
-      </div>        
-    </div>
-        
+          <div class="nutrition-item">
+            <h1> 
+              100.0 {{ rdiCaffeine }} mg
+            </h1>      
+            <h3>하루 권장 카페인 섭취량</h3>
+          </div>
+          <div class="nutrition-item">
+            <h1> 
+              200.0 {{ rdiSugar }} g
+            </h1>      
+            <h3>하루 권장 설탕 섭취량</h3>
+          </div>        
+        </div>        
       </div>
     </div>
     
     <div class="intake-section">
       <div class="intake-card shading">
-        <h1>{{ maxCaffeine }}</h1>
-        <h4>하루 최고 카페인 섭취량</h4>
-        <h4>{{ maxCaffeineDate }}</h4>
+        <h1>300.0{{ maxCaffeine }} mg</h1>
+        <h3>하루 최고 카페인 섭취량</h3>
+        <h4>{{ maxCaffeineDate }}2024-01-25</h4>
       </div>
       <div class="intake-card shading">
-        <h1>{{ maxSugar }}</h1>
-        <h4>하루 최고 당 섭취량</h4>
-        <h4>{{ maxSugarDate }}</h4>
+        <h1>500.0{{ maxSugar }} g</h1>
+        <h3>하루 최고 당 섭취량</h3>
+        <h4>{{ maxSugarDate }}2024-01-21</h4>
       </div>
     </div>
     
@@ -153,6 +153,12 @@ onMounted(() => {
  
 }
 
+.low-height{
+  margin-top: auto;
+}
+.mid-fontsize{
+  font-size: medium;
+}
 .profile-section {
   position: relative;
   display: flex;
@@ -163,7 +169,7 @@ onMounted(() => {
 }
 
 .profile-image {
-  background-color: #ccc;
+  background-color: #CB8A58;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -171,6 +177,8 @@ onMounted(() => {
   margin-bottom: 10px;  
   width: 100px;
   height: 100px;
+  color: #EFEFEF;
+  font-size: x-large;
 }
 
 .profile-image h2 {
@@ -246,7 +254,7 @@ onMounted(() => {
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   width: 580px;
   margin: auto;
-  height: 200px;
+  height: 150px;
 }
 .shading h3 {
   color: #562B1A; 
@@ -312,17 +320,20 @@ h4 {
 
 
 .nutrition-info {
-  margin-top: 10px;
-  display: flex; /* Flexbox 레이아웃 적용 */
-  justify-content: space-between; /* 컨테이너 사이에 공간을 동일하게 배분 */
-  align-items: center; /* 세로 중앙 정렬 */
-  padding: 20px; /* 여백 추가 */
-  background: #fff; /* 배경색 설정 */
+  margin-bottom: 30px;
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  padding: 0px 60px; 
+  
 }
 
 .nutrition-item {
   text-align: center; /* 텍스트 중앙 정렬 */
   /* 필요한 경우 여기에 추가 스타일을 적용하세요. */
+}
+.nutrition-item h1{
+  color: #562B1A; 
 }
 
 </style>

@@ -192,6 +192,7 @@ export const useUserStore = defineStore("user", () => {
     .then(() => {
       alert('사용자 정보가 성공적으로 업데이트되었습니다.');
       router.push('/mypage'); 
+      console.log(updateData)
     })
     .catch((err) => {
       console.error("Error updating user:", err);

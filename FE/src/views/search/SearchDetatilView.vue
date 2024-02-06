@@ -216,14 +216,12 @@ const goToRanklist = () => {
 <style scoped>
 .cafe-img{
   width: 40px;
-  height: auto;
+  height: 40px;
 }
 .rank-button{
   cursor: pointer;
 }
-.hover_sample {
-  color:blue;
-}
+
 .search-frame{
   display: flex;
   flex-direction: column;
@@ -256,26 +254,33 @@ const goToRanklist = () => {
   justify-content: center;
   align-items: center;
   gap: 0px; 
+  height: 48px;
+  background-color: #CB8A58;
+  color: #f5f5f5;
 }
 
 .sort-menu {
   position: absolute;
   top: 100%;
   left: 0;
-  background-color: #fff;
-  border: 1px solid #ddd;
+  /* background-color: #CB8A58;   */
   border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  /* box-shadow: 0 2px 5px rgba(0,0,0,0.2); */
   display: flex;
   flex-direction: column;
-  padding: 10px;
+  padding: 5px;
   z-index: 100;
   white-space: nowrap;
+
 }
 
 .sort-menu button {
   margin-bottom: 5px;
+  background-color: #CB8A58;
   cursor: pointer;
+  color: #f5f5f5;
+  border-radius: 10px;
+
 }
 
 .sort-menu button:last-child {
@@ -311,12 +316,13 @@ const goToRanklist = () => {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  
+  cursor: pointer;  
 }
 /* 활성화 상태에 따른 버튼 스타일 변경 */
 .button_caffeine {
-  background: #846046;
+  background: #CB8A58; 
   color: #fff;
+  cursor: pointer; 
 }
 
 .button_nonActive_color {
@@ -351,12 +357,16 @@ const goToRanklist = () => {
 
 .search-results-container {
   flex: auto;
-  width: 500px; /* 테이블의 너비를 컨테이너에 맞춤 */
-  margin-top: 20px; /* 상단과의 여백을 조정 */
-  overflow-x: auto; /* 너비가 넘치는 경우 스크롤바를 표시 */
+  width: 530px; 
+  margin-top: 20px; 
+  overflow-x: auto; 
   margin: auto;
 }
 
+.cafe-image{
+  width: 20px;
+  height: 20px;
+}
 
 .search-results-container table {
   width: 100%;
@@ -408,7 +418,7 @@ const goToRanklist = () => {
 
 .drink-image {
   width: 100px;
-  height: auto;
+  height: 100px;
   border-radius: 5px;
 }
 
@@ -431,22 +441,22 @@ const goToRanklist = () => {
 }
 
 
-/* 버튼 컨테이너 스타일 */
+
 .button-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px; /* 버튼 사이의 간격 */
+  gap: 20px;
 
 }
 
 /* 상세보기 버튼과 비교함 담기 버튼 스타일 */
-.detail-view-button,
+.detail-view-button{
+  cursor: pointer;
+}
 
-.detail-view-button:hover,
 
-/* 테이블 셀 스타일 조정 */
 .search-results-container td {
-  border-bottom: 1px solid #e0e0e0; /* 기본 선 색상을 조금 더 밝게 설정 */
+  border-bottom: 1px solid #e0e0e0; 
 }
 </style>
