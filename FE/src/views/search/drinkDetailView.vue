@@ -7,7 +7,7 @@
         <font-awesome-icon :icon="['fas', 'circle-xmark']" style="color: #000000;" size="xl"/>
       </div>
     <div class="drink-detail-header">
-      <h1>{{ drinkDetail.drinkName }}</h1>
+      <h1>{{ drinkDetail.cafeName }} {{ drinkDetail.drinkName }}</h1>
     </div>
     <hr class="fact-line2" />
     <div>
@@ -51,7 +51,7 @@
       <div class="fact">
         <div class="fact-row">
           <label class="fact-label">용량</label>
-          <h3 class="fact-value">{{ drinkDetail.drinkML }}ml</h3>
+          <h3 class="fact-value">{{ drinkDetail.drinkMl }}ml</h3>
         </div>
       </div>
       <div class="fact">
@@ -73,8 +73,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted,computed } from 'vue';
-import { useRoute } from 'vue-router';
+import { computed } from 'vue';
 import { useDrinksStore } from '../../stores/drinks';
 import { useComparisonStore } from '../../stores/comparison';
 import { isDetailModal } from '../../stores/util'
@@ -92,12 +91,27 @@ const drinkDetail = computed(() => drinksStore.selectedDrink);
 
 const addToBasket = () => {
   comparisonStore.addToBasket(drinkDetail.value);
+  isDetailModal.value = false
   alert(`${drinkDetail.value.drinkName}이(가) 비교함에 추가되었습니다.`);
 }
 
 </script>
   
 <style scoped>
+
+
+
+.nutrition-facts .fact {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 0.5px; /* 위 간격 설정 */
+  margin-bottom: 0.5px; /* 아래 간격 설정 */
+}
+
+
+
 .board-create-container {
   position: fixed;
   width: 100vw;
@@ -136,7 +150,7 @@ const addToBasket = () => {
 .drink-detail-container {
   margin-bottom: 10%;
   background-color: #fff;
-  padding: 20px;
+  padding: 5px;
   border-radius: 20px;
   text-align: center;
   font-family: Arial, sans-serif;
