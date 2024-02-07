@@ -25,18 +25,22 @@
           <p class="recent-drink">방금 마신 음료</p>
           <div v-if="recordsStore.getDayDrink.length > 0" class="drink-info">
             {{ (recordsStore.getDayDrink[recordsStore.getDayDrink.length-1].drinkCaffeine
-            + 75 * recordsStore.getDayDrink[recordsStore.getDayDrink.length-1].plusShot).toFixed(2) }}mg
+            + 75 * recordsStore.getDayDrink[recordsStore.getDayDrink.length-1].plusShot).toFixed(1) }}mg
           </div>
           <div v-else class="drink-info">
             오늘 마신 음료가 없습니다!
           </div>
 
           <p class="today-title">하루 총합 섭취량 / 권장량</p>
-          <p class="today-info"
-          :class="{ 'font_red': accumulateStore.getAccumulateToday.accumulateCaffeine >= userStore.getUserRDI.userCaffeine,
-          'font_green': accumulateStore.getAccumulateToday.accumulateCaffeine < userStore.getUserRDI.userCaffeine }">
-            {{ accumulateStore.getAccumulateToday.accumulateCaffeine }} / 
-            {{ userStore.getUserRDI.userCaffeine }}mg</p>
+            <p v-if="accumulateStore.getAccumulateToday.accumulateCaffeine < userStore.getUserRDI.userCaffeine" class="today-info font_green">
+              {{ accumulateStore.getAccumulateToday.accumulateCaffeine }} / 
+              {{ userStore.getUserRDI.userCaffeine }}mg
+            </p>
+            <p v-else class="today-info font_red">
+              {{ accumulateStore.getAccumulateToday.accumulateCaffeine }} / 
+              {{ userStore.getUserRDI.userCaffeine }}mg
+            </p>
+
         </div>
 
         <div class="right-info superbig-font">
@@ -54,15 +58,15 @@
     </div>
 
     <div>
-      <p>최근에 마신 카페인을 한눈에 보아요</p>
+      <div class="chart-container">
+        <p>최근에 마신 카페인을 한눈에 보아요</p>
+        <select name="selectDate" id="selectDate" v-model="seleteDate" class="button_select chart-date-button">
+          <option value="day" class="date-text">일</option>
+          <option value="week" class="date-text">주</option>
+        </select>
+      </div>
       <div class="info-box">
         <canvas id="chartCanvas" width="500"></canvas>
-        <div class="chart_select_box">
-          <select name="selectDate" id="selectDate" v-model="seleteDate" class="button_select selete_date_button">
-            <option value="day">일별</option>
-            <option value="week">주별</option>
-          </select>
-        </div>
       </div>
     </div>
 
@@ -71,7 +75,7 @@
       <div class="info-box">
         <img :src="recommendStore.getRecommendedCaffeine.drinkUrl" alt="Recommended Drink" class="photo"/>
         <p>{{ recommendStore.getRecommendedCaffeine.cafeName }} {{ recommendStore.getRecommendedCaffeine.drinkName }}</p>
-        <button @click="viewDetailsModal(recommendStore.getRecommendedCaffeine.drinkId)" class="button_caffeine">상세보기</button>
+        <button @click="viewDetailsModal(recommendStore.getRecommendedCaffeine)" class="button_caffeine">상세보기</button>
       </div>
     </div>
 
@@ -214,15 +218,13 @@ const goSugar = () => {
 }
 
 // 추천 음료 상세페이지로 이동
-const selectedDrink = ref(null)
+const viewDetailsModal = (recommendDrinkInfo) => {
+  drinksStore.selectedDrink.value = recommendDrinkInfo
 
-const viewDetailsModal = (drinkId) => {
-  const drink = drinksStore.getAllDrinkList.find(d => d.id === drinkId);
-  if (drink) {
-    selectedDrink.value = drink;
-    isDetailModal.value = true;
+  if (drinksStore.selectedDrink) {
+    isDetailModal.value = true
   } else {
-    alert('해당 음료를 찾을 수 없습니다.');
+    alert('해당 음료를 찾을 수 없습니다.')
   }
 }
 
@@ -316,22 +318,25 @@ p {
   margin-top: 0;
 }
 
+.chart-date-button {
+  width: 50px;
+  height: 20px;
+  margin-top: 10px;
+}
+
+.date-text {
+  text-align: center;
+}
+
 #chartCanvas {
   margin: auto;
   margin-top: 20px;
   margin-bottom: 20px;
 }
 
-.chart_select_box {
-  height: 230px;
+.chart-container {
   display: flex;
-  align-items: flex-start;
-}
-
-.selete_date_button {
-  display: flex;
-  align-items: start;
-  margin-right: 30px
+  justify-content: space-between;
 }
 
 .photo {
@@ -347,7 +352,7 @@ p {
   font-weight: bold;
   border: none;
   margin-left: auto;
-  margin-right: 10px;
+  margin-right: 15px;
   cursor: pointer;
 }
 
