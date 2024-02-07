@@ -170,7 +170,7 @@ export const useUserStore = defineStore(
 
     const researchName = function () {
       axios({
-        url: `${import.meta.env.VITE_REST_USER_API}/amount`,
+        url: `${import.meta.env.VITE_REST_USER_API}/name`,
         method: "GET",
       })
         .then((res) => {
