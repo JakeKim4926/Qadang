@@ -1,5 +1,5 @@
-<template>
-  <footer class="footer">
+<template >
+  <footer class="footer" v-if="userAccessToken != null">
     <div class="footer-content">
 
       <InputView v-if="isInputModal" />
@@ -45,7 +45,7 @@
   import UpdateInputView from '@/components/input/UpdateInputView.vue';
   import UpdateInputNothingView from '@/components/input/UpdateInputNothingView.vue';
 
-  import { isInputModal, isInputNothingModal, isUpdateInputModal, isUpdateNothingModal } from '@/stores/util';
+  import { isInputModal, isInputNothingModal, isUpdateInputModal, isUpdateNothingModal, userAccessToken } from '@/stores/util';
 
   // open input modal
   const openInputModal = () => {

@@ -4,7 +4,7 @@
     <div class="profile-section">
       <div class="profile-image">
         
-        <h2>{{ userInfo.userName }}</h2>
+        <h2>{{ store.getUser.userName }}</h2>
       </div>
       <div class="message">{{ message }}</div>
       <div class="user-actions">

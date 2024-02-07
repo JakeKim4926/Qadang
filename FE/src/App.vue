@@ -7,11 +7,8 @@
 
   </div>
   <div>
-    <template v-if="userAccessToken != null">
-      <TheFooter />
-    </template>
+    <TheFooter />
   </div>
-
 </template>
 
 <script setup>
@@ -28,7 +25,7 @@ import { userAccessToken } from "@/stores/util"
   flex-direction: column;
   min-height: 100vh;
   position: relative;
-  
+
   z-index: 2;
   padding-bottom: 5%;
   margin-bottom: 5%;
@@ -46,4 +43,5 @@ import { userAccessToken } from "@/stores/util"
   /* Place the footer at the bottom of the parent container */
   width: 100%;
   /* Occupy the full width of the parent container */
-}</style>
+}
+</style>

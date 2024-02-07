@@ -114,23 +114,24 @@ export const useUserStore = defineStore(
           // 카카오 에서 받아온 토큰을 백으로 전달
           console.log("결과", res);
 
-          // 로컬 스토리지에 액세스 토큰 저장
-          // localStorage.setItem("userAccessToken", res);
-
           // 스토어에 액세스 토큰 업데이트
           // userAccessToken.value = accessToken;
 
           const success = res.data.isLogin;
           console.log(success, " ? ");
           if (success == 1) {
-              const getToken = res.data.accesstoken;
-              if(res.data.isUser == 0){
-                router.push('/survey');
-              }
-              // 헤더 설정
-              axios.defaults.headers.common["Authorization"] = getToken;
-              userAccessToken.value = getToken;
+            const getToken = res.data.accesstoken;
+            if (res.data.isUser == 0) {
+              router.push("/survey");
+            }
+            // 헤더 설정
+            axios.defaults.headers.common["Authorization"] = getToken;
+            userAccessToken.value = getToken;
+
+            // 로컬 스토리지에 액세스 토큰 저장
+            localStorage.setItem("userAccessToken", getToken);
           }
+
 
           console.log("헤더 체크", axios.defaults.headers);
         })
@@ -173,6 +174,7 @@ export const useUserStore = defineStore(
           userRDI.value = res.data;
           userRDICaffeine.value = userRDI.value.userCaffeine;
           userRDISugar.value = userRDI.value.userSugar;
+          console.log('amount', res.data);
         })
         .catch((err) => {
           console.log(err);
@@ -190,6 +192,7 @@ export const useUserStore = defineStore(
           userMaxCaffeineDate.value = userMax.value.maxCaffeineDate;
           userMaxSugar.value = userMax.value.maxSugarValue;
           userMaxSugarDate.value = userMax.value.maxSugarDate;
+          console.log(res.data, 'Max');
         })
         .catch((err) => {
           console.log(err);
