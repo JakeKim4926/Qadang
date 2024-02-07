@@ -25,7 +25,6 @@ const accumulateStore = useAccumulateStore();
 onMounted(async () => {
   console.log("are you here");
 
-  
   const date = new Date();
   const year = date.getFullYear();
   let month = date.getMonth() + 1; // Adding 1 to adjust for zero-based months

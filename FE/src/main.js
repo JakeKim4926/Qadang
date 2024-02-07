@@ -39,6 +39,8 @@ axios.interceptors.request.use((config)=> {
     return config;
 }, (error) => {
     // console.log('[요청 실패]: ', error);
+    console.log("[요청 헤더] : ", config.headers)
+    console.log("[요청 상태] : ", config.status)
     return Promise.reject(error);
 })
 
