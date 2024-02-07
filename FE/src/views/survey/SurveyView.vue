@@ -5,14 +5,14 @@
                 <div class="title01">카페에서 마시는 최애 음료는?</div>
 
                 <div class="cafe_name">카페명</div>
-                <select id="cafeSelect" v-model="cafeId" class="rectangle-4271" @change="selectCafe"
+                <select id="cafeSelect" v-model="cafeId" class="rectangle-4271 select-font" @change="selectCafe"
                     style="text-align: center; ">
                     <option v-for="cafe in drinkStore.getCafeList" :key="cafe.cafeId" :value="cafe.cafeId">
                         {{ cafe.cafeName }}
                     </option>
                 </select>
                 <div class="div5">음료명</div>
-                <select id="drinkSelect" v-model="drinkTemp" class="rectangle-4272" @change="selectDrink"
+                <select id="drinkSelect" v-model="drinkTemp" class="rectangle-4272 select-font" @change="selectDrink"
                     style="text-align: center;" :disabled="!cafeId">
                     <option v-for="drink in drinkStore.getCafeDrinkList" :key="drink.drinkId" :value="drink">
                         {{ drink.drinkName }}
@@ -584,6 +584,14 @@ onMounted(() => {
     height: 4.99%;
     object-fit: cover;
     cursor: pointer;
+}
+
+.select-font {
+    font-family: "DmSans-Bold", sans-serif;
+    font-size: 20px;
+    line-height: 18px;
+    font-weight: 700;
+    text-align: center; 
 }
 </style>
   
