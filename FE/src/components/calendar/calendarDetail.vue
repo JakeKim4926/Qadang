@@ -161,10 +161,8 @@ function deleteRecord(recordDrink) {
     const confirmed = window.confirm("정말 삭제를 원하십니까?");
     if (confirmed) {
         console.log("삭제");
-        if (recordDrink.drinkId > 0)
-            recordStore.deleteCafeDrink(recordDrink.recordId);
-        else
-            recordStore.deleteMyDrink(recordDrink.recordId);
+        recordStore.deleteDrink(recordDrink.recordId);
+
 
         // 데이터를 삭제한 후에 Vue의 반응성을 강제로 트리거하여 UI를 다시 렌더링합니다.
         recordStore.getDayDrink.splice(recordStore.getDayDrink.indexOf(recordDrink), 1);
