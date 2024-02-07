@@ -75,7 +75,7 @@
       <div class="info-box">
         <img :src="recommendStore.getRecommendedCaffeine.drinkUrl" alt="Recommended Drink" class="photo"/>
         <p>{{ recommendStore.getRecommendedCaffeine.cafeName }} {{ recommendStore.getRecommendedCaffeine.drinkName }}</p>
-        <button @click="viewDetailsModal(recommendStore.getRecommendedCaffeine.drinkId)" class="button_caffeine">상세보기</button>
+        <button @click="viewDetailsModal(recommendStore.getRecommendedCaffeine)" class="button_caffeine">상세보기</button>
       </div>
     </div>
 
@@ -135,9 +135,6 @@ const chartData = {
       responsive: false,
     }
   }
-
-
-// const accumulateNum = ref(null)
 
 // 데이터를 가져오기 위한 함수
 onMounted(async () => {
@@ -221,15 +218,13 @@ const goSugar = () => {
 }
 
 // 추천 음료 상세페이지로 이동
-const selectedDrink = ref(null)
+const viewDetailsModal = (recommendDrinkInfo) => {
+  drinksStore.selectedDrink.value = recommendDrinkInfo
 
-const viewDetailsModal = (drinkId) => {
-  const drink = drinksStore.getAllDrinkList.find(d => d.id === drinkId);
-  if (drink) {
-    selectedDrink.value = drink;
-    isDetailModal.value = true;
+  if (drinksStore.selectedDrink) {
+    isDetailModal.value = true
   } else {
-    alert('해당 음료를 찾을 수 없습니다.');
+    alert('해당 음료를 찾을 수 없습니다.')
   }
 }
 
@@ -357,7 +352,7 @@ p {
   font-weight: bold;
   border: none;
   margin-left: auto;
-  margin-right: 10px;
+  margin-right: 15px;
   cursor: pointer;
 }
 

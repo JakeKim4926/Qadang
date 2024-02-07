@@ -346,7 +346,7 @@ p {
   border: none;
   border-radius: 20px;
   margin-left: auto;
-  margin-right: 10px;
+  margin-right: 15px;
   cursor:pointer;
 }
 
