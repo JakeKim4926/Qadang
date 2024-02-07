@@ -8,13 +8,13 @@
   <!-- <div class="update-container"> -->
     <div class="user-update-form">
       <div class="form-header">
-        <h2 class="update-title">사용자 정보를 입력해주세요</h2>        
+        <h2 class="update-title">회원 정보 수정</h2>        
       </div>
 
       <form @submit.prevent="updateUserInfo" class="update-form">        
         <div class="form-row">
           <div class="form-group half-width">
-            <label for="gender" class="label-margin align tag-bold">성별</label>
+            <label for="gender" class="label-margin tag-bold">성별</label>
             <button type="button" :class="{ active: userInfo.gender === 1 }" @click="userInfo.gender = 1" class="shading2">남성</button>
             <button type="button" :class="{ active: userInfo.gender === 2 }" @click="userInfo.gender = 2" class="shading2">여성</button>
             
@@ -43,8 +43,8 @@
         </div>
 
         <div class="form-group">
-          <label class="label-margin align tag-bold">활동량</label>
-          <div class="button-group align">
+          <label class="label-margin tag-bold">활동량</label>
+          <div class="button-group">
             <button type="button" :class="{ active: userInfo.activityLevel === 1 }" @click="userInfo.activityLevel = 1" class="shading">비활동적</button>
             <button type="button" :class="{ active: userInfo.activityLevel === 2 }" @click="userInfo.activityLevel = 2" class="shading">저활동적</button>
             <button type="button" :class="{ active: userInfo.activityLevel === 3 }" @click="userInfo.activityLevel = 3" class="shading" > 활동적 </button>
@@ -59,7 +59,7 @@
           </div>
         </div>
             
-        <button type="submit" class="submit-bttn">입력완료</button>
+        <button type="submit" class="submit-bttn">저장하기</button>
         
       </form>
     </div>
@@ -120,7 +120,7 @@ const bringUserInfo = async () => {
 const updateUserInfo = async () => {
   
   const updateData = {};
-  if (userInfo.username !== null) updateData.username = userInfo.username;
+  // if (userInfo.username !== null) updateData.username = userInfo.username;
   if (userInfo.gender !== null) updateData.gender = userInfo.gender;
   if (userInfo.birthYear) updateData.birthYear = userInfo.birthYear;
   if (userInfo.height !== null) updateData.height = userInfo.height;
@@ -130,6 +130,7 @@ const updateUserInfo = async () => {
   try {
     await store.updateUser(updateData);
     alert('수정완료');
+    console.log(updateData)
     router.push('/mypage');
   } catch (error) {
     console.error("업데이트 실패", error);
@@ -215,9 +216,9 @@ const togglePopup = () => {
 }
 .button-group {
   display: flex;
-  flex-direction: row; /* 버튼들을 가로로 배치 */
-  justify-content: flex-start; /* 버튼들을 컨테이너 시작점으로 */
-  align-items: center; /* 버튼들을 수직 중앙으로 */
+  flex-direction: row;
+  justify-content: flex-start; 
+  align-items: center; 
   text-align: center;
 }
 
@@ -231,7 +232,7 @@ const togglePopup = () => {
   margin: 5px 5px;
   width: 90px;
   cursor: pointer;
-  text-align: center;
+  text-align: right;
 }
 
 .shading2 {
@@ -319,9 +320,7 @@ button.active {
 .label-margin{
   margin-right: 10px;
 }
-.align{
-  /* display: inline-block; */
-}
+
 h1 {
   font-size: 2.5em;
 }
@@ -340,8 +339,7 @@ h4 {
 button.active {
   background-color: #B29F91;
   color: #EFEFEF;
-  /* 기타 필요한 스타일 */
-}
+  }
 .popup-mark{
   cursor: pointer;
 }

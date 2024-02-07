@@ -20,32 +20,32 @@
         <hr class="fact-line" />
         <div class="fact-row">
           <label class="fact-label">카페인</label>
-          <h3 class="fact-value">{{ drinkDetail.drinkCaffeine || '-'}}mg</h3>
+          <h3 class="fact-value">{{ drinkDetail.drinkCaffeine || '0'}}mg</h3>
         </div>
       </div>
       <div class="fact">
         <div class="fact-row">
           <label class="fact-label">당</label>
-          <h3 class="fact-value">{{ drinkDetail.drinkSugar || '-'}}g</h3>
+          <h3 class="fact-value">{{ drinkDetail.drinkSugar || '0'}}g</h3>
         </div>
         <hr class="fact-line" />
       </div>
       <div class="fact">
         <div class="fact-row">
           <label class="fact-label">포화지방</label>
-          <h3 class="fact-value">{{ drinkDetail.drinkFat || '-'}}g</h3>
+          <h3 class="fact-value">{{ drinkDetail.drinkFat || '0'}}g</h3>
         </div>
       </div>
       <div class="fact">
         <div class="fact-row">
           <label class="fact-label">나트륨</label>
-          <h3 class="fact-value">{{ drinkDetail.drinkNatrium || '-'}}mg</h3>
+          <h3 class="fact-value">{{ drinkDetail.drinkNatrium || '0'}}mg</h3>
         </div>
       </div>
       <div class="fact">
         <div class="fact-row">
           <label class="fact-label">칼로리</label>
-          <h3 class="fact-value">{{ drinkDetail.drinkCalorie || '-'}}kcal</h3>
+          <h3 class="fact-value">{{ drinkDetail.drinkCalorie || '0'}}kcal</h3>
         </div>
       </div>
       <div class="fact">
@@ -59,7 +59,7 @@
       <div class="fact">
         <div class="fact-row">
           <label class="fact-label">단백질</label>
-          <h3 class="fact-value">{{ drinkDetail.drinkProtein || '-'}}g</h3>
+          <h3 class="fact-value">{{ drinkDetail.drinkProtein || '0'}}g</h3>
         </div>
       </div>
       <div class="fact">

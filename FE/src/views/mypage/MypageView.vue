@@ -9,7 +9,7 @@
       </div>
       <div class="message">{{ message }}</div>
       <div class="user-actions">
-        <button @click="openUpdateModal" class="button-edit-info">추가정보입력</button>        
+        <button @click="openUpdateModal" class="button-edit-info">회원정보수정</button>        
       </div>
       <!-- <div v-if="isInfoFilled" class="shading2"> -->
       <div class="shading2"> 

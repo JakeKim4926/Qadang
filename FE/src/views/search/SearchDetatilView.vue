@@ -131,10 +131,8 @@ const userRDISugar = computed(() => userRDI.value.userRDISugar);
 const userRDICaffeine = computed(() => userRDI.value.userRDICaffeine);
 
 
-
-// 음료 상세보기를 가져오는 함수
 const viewDetailsModal = (drinkId) => {
-  drinkStore.setSelectedDrink(drinkId); // 선택된 음료 설정
+  drinkStore.setSelectedDrink(drinkId); 
   if (drinkStore.selectedDrink) {
     isDetailModal.value = true; 
   } else {
@@ -253,10 +251,23 @@ const goToRanklist = () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0px; 
+  gap: 20px; 
   height: 48px;
-  background-color: #CB8A58;
+  /* background-color: #CB8A58;  */
   color: #f5f5f5;
+  transition: background-color 0.5s ease;
+  /* transform: translateZ(0);  */
+  will-change: transform; 
+}
+
+.button-container:hover {
+  background-image: linear-gradient(
+    to right, 
+    
+    rgba(235, 170, 121, 0.5),
+    rgba(197, 101, 27, 0.8), 
+    rgba(204, 153, 114, 0.5) 
+  );
 }
 
 .sort-menu {
@@ -428,6 +439,7 @@ const goToRanklist = () => {
 
 .drink-name {
   font-weight: bold;
+  font-size: 13px;
 }
 
 .remove-button {
@@ -453,6 +465,7 @@ const goToRanklist = () => {
 /* 상세보기 버튼과 비교함 담기 버튼 스타일 */
 .detail-view-button{
   cursor: pointer;
+  margin: 30px;
 }
 
 
