@@ -26,27 +26,28 @@ public class SearchService {
 
         for (Drinks drink : drinks) {
             list.add(DrinkResponseDTO.builder()
-                            .drinkId(drink.getDrinkId())
+                    .drinkId(drink.getDrinkId())
                     .cafeId(drink.getCafeId())
-                            .cafeName(drink.getCafeName())
-                            .drinkName(drink.getDrinkName())
-                            .drinkCaffeine(drink.getDrinkCaffeine())
-                            .drinkSugar(drink.getDrinkSugar())
-                            .drinkMl(drink.getDrinkMl())
-                            .drinkOz(drink.getDrinkOz())
+                    .cafeName(drink.getCafeName())
+                    .drinkName(drink.getDrinkName())
+                    .drinkCaffeine(drink.getDrinkCaffeine())
+                    .drinkSugar(drink.getDrinkSugar())
+                    .drinkMl(drink.getDrinkMl())
+                    .drinkOz(drink.getDrinkOz())
                     .drinkCalorie(drink.getDrinkCalorie())
                     .drinkNatrium(drink.getDrinkNatrium())
                     .drinkProtein(drink.getDrinkProtein())
+                    .drinkFat(drink.getDrinkFat())
                     .drinkUrl(drink.getDrinkUrl())
                     .drinkAllergy(drink.getDrinkAllergy())
-                            .cafeUrl(drink.getCafeUrl())
+                    .cafeUrl(drink.getCafeUrl())
                     .build());
         }
         return list;
     }
 
     // 음료 키워드 검색
-    public List<DrinkResponseDTO> keywordList(String keyword){
+    public List<DrinkResponseDTO> keywordList(String keyword) {
 
         List<Drinks> list = drinkRepository.findByDrinkFullNameContaining(keyword);
         List<DrinkResponseDTO> result = new ArrayList<>();
@@ -64,6 +65,7 @@ public class SearchService {
                     .drinkCalorie(drink.getDrinkCalorie())
                     .drinkNatrium(drink.getDrinkNatrium())
                     .drinkProtein(drink.getDrinkProtein())
+                    .drinkFat(drink.getDrinkFat())
                     .drinkUrl(drink.getDrinkUrl())
                     .drinkAllergy(drink.getDrinkAllergy())
                     .cafeUrl(drink.getCafeUrl())

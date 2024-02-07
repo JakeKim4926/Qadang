@@ -46,7 +46,7 @@ public class SearchController {
 
     // 음료 검색하기
     @GetMapping("/search")
-    public ResponseEntity<?> searchlist(@RequestHeader("Authorization") String token, @RequestParam String keyword ) {
+    public ResponseEntity<?> searchlist(@RequestHeader("Authorization") String token, @PathVariable String keyword ) {
         // 토큰 유효성 검사
         String passAccess = kakaoService.checkToken(token); // 통과한 access token
         System.out.println(" 유효성검사 시작 "+passAccess);
