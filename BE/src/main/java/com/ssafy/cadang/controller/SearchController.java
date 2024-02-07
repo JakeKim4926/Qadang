@@ -29,8 +29,13 @@ public class SearchController {
     @GetMapping("/drinks")
     public ResponseEntity<?> allDrink(@RequestHeader("Authorization") String token) {
 
-        String jwt = kakaoService.getJwtToken(token);
-        User user = kakaoService.getUser(jwt);
+        // 토큰 유효성 검사
+        String passAccess = kakaoService.checkToken(token); // 통과한 access token
+        System.out.println(" 유효성검사 시작 "+passAccess);
+        if (passAccess == null) {
+            System.out.println("유효성검사 실패");
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
 
         List<DrinkResponseDTO> list = searchService.drinkList();
 
@@ -39,15 +44,20 @@ public class SearchController {
 
     // 음료 검색하기
     @GetMapping("/search/{keyword}")
-    public ResponseEntity<?> searchList(@PathVariable String keyword ) {
-        //user check
-        Long userId = 1L;
-        if(userId == 0)
+    public ResponseEntity<?> searchList(@RequestHeader("Authorization") String token,@PathVariable String keyword ) {
+        // 토큰 유효성 검사
+        String passAccess = kakaoService.checkToken(token); // 통과한 access token
+        System.out.println(" 유효성검사 시작 "+passAccess);
+        if (passAccess == null) {
+            System.out.println("유효성검사 실패");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
 
-        searchLogService.log(userId,keyword);
+        // jwt를 이용해 user 가져오기
+        User user = kakaoService.getUser(passAccess);
+
+        searchLogService.log(user.getUserId(),keyword);
         List<DrinkResponseDTO> list = searchService.keywordList(keyword);
-
         return new ResponseEntity<List<DrinkResponseDTO>>(list, HttpStatus.OK);
     }
 }

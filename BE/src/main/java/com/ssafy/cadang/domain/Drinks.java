@@ -32,5 +32,6 @@ public class Drinks {
     private String drinkAllergy;
     private String drinkFullName;
     private String tag;
+    @Column(length = 1000)
     private String cafeUrl;
 }
