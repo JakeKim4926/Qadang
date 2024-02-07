@@ -12,5 +12,6 @@ import lombok.NoArgsConstructor;
 public class JwtLogin {
 
     private String accesstoken; // jwt access token
+    private int isUser; // 최초 : 0 , 기존 : 1
     private int isLogin; // 로그인 성공 여부 ( 0 : 실패, 1 : 성공 )
 }

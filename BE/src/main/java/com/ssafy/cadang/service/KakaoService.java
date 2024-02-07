@@ -6,6 +6,7 @@ import com.ssafy.cadang.domain.User;
 import com.ssafy.cadang.dto.IdResponse;
 import com.ssafy.cadang.dto.KakaoInfo;
 import com.ssafy.cadang.dto.KakaoToken;
+import com.ssafy.cadang.jwt.JwtLogin;
 import com.ssafy.cadang.repository.UserRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -137,7 +138,7 @@ public class KakaoService {
     // 회원이면 가입된 회원인지 확인 후, 카카오 토큰 만료시키고 user 정보 리턴
     // 미가입 회원이면, 유저 정보를 추가한 후 토큰 만료시키고 user 정보 리턴
     @Transactional
-    public User addUser(KakaoToken token) {
+    public User addUser(KakaoToken token, JwtLogin jwtLogin) {
 
         System.out.println("addUser / 사용자 정보 가져오기");
 
@@ -174,6 +175,8 @@ public class KakaoService {
             System.out.println(" addUser / 회원 추가하기 ");
 
             getJwtRefresh(user);
+        }else {
+            jwtLogin.setIsUser(1);
         }
 
         System.out.println(" addUser / 성공 ");
@@ -231,11 +234,11 @@ public class KakaoService {
 //        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
 //        this.key = Keys.hmacShaKeyFor(keyBytes);
         System.out.println("토큰 추출시작합니다 "+token);
-//        if (token != null && token.startsWith("Bearer ")) { // 헤더에 토큰이 있고 Bearer가 붙어있으면
-        if (token != null) { // 헤더에 토큰이 있고 Bearer가 붙어있으면
+        if (token != null && token.startsWith("Bearer ")) { // 헤더에 토큰이 있고 Bearer가 붙어있으면
+            return token.substring(7); // "Bearer " 다음의 문자열이 토큰이므로 추출
+//        if (token != null) { // 헤더에 토큰이 있고 Bearer가 붙어있으면
 //            System.out.println("추출된 토큰 : "+token.substring(7));
-//            return token.substring(7); // "Bearer " 다음의 문자열이 토큰이므로 추출
-            return token; // "Bearer " 다음의 문자열이 토큰이므로 추출
+//            return token; // "Bearer " 다음의 문자열이 토큰이므로 추출
         }
         return null; // 헤더에 token이 없거나 올바른 형식이 아니면 null 반환
     }
