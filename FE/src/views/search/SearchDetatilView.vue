@@ -6,13 +6,13 @@
 
     <div class="button-row">
       <div class="left-buttons">
-        <h4 @click="goToRanklist" class="rank-button"> < 순위보기</h4>
+        <h4 @click="goToRanklist" class="rank-button">
+          < 순위보기</h4>
       </div>
       <div class="right-buttons">
         <button
-          :class="{'button_caffeine': comparisonStore.basket.length >= 2, 'button_nonActive_color': comparisonStore.basket.length < 2}"
-          @click="compareDrinksModal"
-          :disabled="comparisonStore.basket.length < 2">
+          :class="{ 'button_caffeine': comparisonStore.basket.length >= 2, 'button_nonActive_color': comparisonStore.basket.length < 2 }"
+          @click="compareDrinksModal" :disabled="comparisonStore.basket.length < 2">
           비교하기
         </button>
         <div class="sort-container">
@@ -31,30 +31,32 @@
 
 
     <div v-if="comparisonStore.basket.length" class="comparison-basket shading">
-    <div v-for="(item, index) in comparisonStore.basket" :key="item.drinkId" class="basket-item">
-      <img :src="item.drinkUrl" alt="음료 이미지" class="drink-image">
-      <div class="drink-info">
-        <span class="drink-name">{{ item.drinkName }}</span>        
+      <div v-for="(item, index) in comparisonStore.basket" :key="item.drinkId" class="basket-item">
+        <img :src="item.drinkUrl" alt="음료 이미지" class="drink-image">
+        <div class="drink-info">
+          <span class="drink-name">{{ item.drinkName }}</span>
+        </div>
+        <button @click="comparisonStore.removeFromBasket(index)" class="remove-button"> <font-awesome-icon
+            :icon="['fas', 'circle-xmark']" style="color: #000000;" /></button>
       </div>
-      <button @click="comparisonStore.removeFromBasket(index)" class="remove-button"> <font-awesome-icon :icon="['fas', 'circle-xmark']" style="color: #000000;" /></button>
     </div>
   </div>
-    </div>
 
 
-    <div class="search-results-container">
-      <table>
-        <thead>
-          <tr>
-            <th>카페</th>
-            <th>음료</th>
-            <th>당(g)</th>
-            <th>카페인(mg)</th>
-          </tr>
-        </thead>
-        <tbody>          
-          <tr v-for="drink in sortedDrinks" :key="drink.drinkId" @mouseover="enableButtons(drink.drinkId)" @mouseleave="disableButtons(drink.drinkId)">
-         
+  <div class="search-results-container">
+    <table>
+      <thead>
+        <tr>
+          <th>카페</th>
+          <th>음료</th>
+          <th>당(g)</th>
+          <th>카페인(mg)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="drink in drinkStore.getAllDrinkList" :key="drink.drinkId" @mouseover="enableButtons(drink.drinkId)"
+          @mouseleave="disableButtons(drink.drinkId)">
+
           <td v-if="!activeButtons[drink.drinkId]">
             <img :src="drink.cafeUrl" alt="Cafe Image" class="cafe-img">
           </td>
@@ -69,7 +71,8 @@
             </template>
           </td>
           <td v-if="!activeButtons[drink.drinkId]">
-            <template v-if="(drink.drinkCaffeine + accumulateStore.getAccumulateDay.accumulateCaffeine) >= userRDICaffeine">
+            <template
+              v-if="(drink.drinkCaffeine + accumulateStore.getAccumulateDay.accumulateCaffeine) >= userRDICaffeine">
               <span class="font_green">{{ drink.drinkCaffeine }} mg</span>
             </template>
             <template v-else>
@@ -88,19 +91,18 @@
             </div>
           </td>
         </tr>
-        </tbody>
-      </table>
-    </div>
-  
+      </tbody>
+    </table>
+  </div>
 </template>
 
   
 
 <script setup>
-import { ref, computed,onMounted,watch,reactive } from 'vue';
+import { ref, computed, onMounted, watch, reactive } from 'vue';
 import { useSearchStore } from '../../stores/search';
 import { useUserStore } from '../../stores/user';
-import { useDrinksStore} from '../../stores/drinks'
+import { useDrinksStore } from '../../stores/drinks'
 import { useComparisonStore } from '../../stores/comparison';
 import { useAccumulateStore } from '../../stores/accumulate';
 import router from '@/router';
@@ -126,15 +128,23 @@ const sortState = reactive({
   sortField: 'drinkId',
   sortOrder: 'asc'
 });
+
+const getSortedDrinks = computed(() => sortedDrinks.value);
 const selectedDrink = ref(null);
 const userRDISugar = computed(() => userRDI.value.userRDISugar);
 const userRDICaffeine = computed(() => userRDI.value.userRDICaffeine);
 
+onMounted(async () => {
+  await comparisonStore.loadBasketFromSession();
+  await drinkStore.researchAllDrink();
+  await setSort('drinkId', 'asc');
+});
 
 const viewDetailsModal = (drinkId) => {
-  drinkStore.setSelectedDrink(drinkId); 
+  drinkStore.setSelectedDrink(drinkId);
   if (drinkStore.selectedDrink) {
-    isDetailModal.value = true; 
+    isDetailModal.value = true;
+    console.log(drinkId)
   } else {
     alert('해당 음료를 찾을 수 없습니다.');
   }
@@ -148,10 +158,10 @@ const compareDrinksModal = () => {
   }
 };
 
-const setSort = (field, order) => {
+const setSort = async (field, order) => {
   sortState.sortField = field;
   sortState.sortOrder = order;
-  showSortMenu.value = false; 
+  showSortMenu.value = false;
 
   const drinksToSort = searchResults.value.length > 0 ? searchResults.value : allDrinkList.value;
   sortedDrinks.value = [...drinksToSort].sort((a, b) => {
@@ -180,14 +190,6 @@ const toggleSortMenu = () => {
 };
 
 
-// 여기에 drink 정보를 가져오기
-// (추후 데이터 불러오는 상황을 봐서 이 코드를 수정해야할 수 있을듯)
-onMounted(() => {
-  if (!searchResults.length) {
-    drinkStore.researchAllDrink();
-  }
-});
-
 const enableButtons = (drinkId) => {
   activeButtons.value[drinkId] = true;
 };
@@ -198,9 +200,6 @@ const disableButtons = (drinkId) => {
 
 
 
-onMounted(() => {
-  comparisonStore.loadBasketFromSession();
-});
 
 watch(comparisonStore.basket, () => {
   comparisonStore.saveBasketToSession();
@@ -209,18 +208,23 @@ watch(comparisonStore.basket, () => {
 const goToRanklist = () => {
   router.push({ name: 'searchRank' });
 };
+
+
+
+
 </script>
 
 <style scoped>
-.cafe-img{
+.cafe-img {
   width: 40px;
   height: 40px;
 }
-.rank-button{
+
+.rank-button {
   cursor: pointer;
 }
 
-.search-frame{
+.search-frame {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -228,46 +232,44 @@ const goToRanklist = () => {
   margin: auto;
   margin-top: 40px;
   background: #FFF;
-  padding: 20px;  
+  padding: 20px;
 }
 
 .rank-list-link {
   align-self: flex-start;
-  margin-bottom: 20px; 
-  margin-left: 55px;  
+  margin-bottom: 20px;
+  margin-left: 55px;
 }
 
 .compare-sort-buttons {
-  display: flex; 
-  align-items: center; 
-  gap: 10px; 
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .sort-container {
-  position: relative; 
+  position: relative;
 }
 
 .button-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 20px; 
+  gap: 20px;
   height: 48px;
   /* background-color: #CB8A58;  */
   color: #f5f5f5;
   transition: background-color 0.5s ease;
   /* transform: translateZ(0);  */
-  will-change: transform; 
+  will-change: transform;
 }
 
 .button-container:hover {
-  background-image: linear-gradient(
-    to right, 
-    
-    rgba(235, 170, 121, 0.5),
-    rgba(197, 101, 27, 0.8), 
-    rgba(204, 153, 114, 0.5) 
-  );
+  background-image: linear-gradient(to right,
+
+      rgba(235, 170, 121, 0.5),
+      rgba(197, 101, 27, 0.8),
+      rgba(204, 153, 114, 0.5));
 }
 
 .sort-menu {
@@ -304,22 +306,25 @@ const goToRanklist = () => {
 }
 
 
-.compare-button {    
-  display: inline-block; /* or 'block' if you want the button to take the full width of its container */
-  padding: 10px 20px; /* 버튼 내부 패딩을 늘려서 텍스트가 들어갈 공간을 확보합니다. */
-  margin: 5 10px; 
-  font-size: 0.9em; 
+.compare-button {
+  display: inline-block;
+  /* or 'block' if you want the button to take the full width of its container */
+  padding: 10px 20px;
+  /* 버튼 내부 패딩을 늘려서 텍스트가 들어갈 공간을 확보합니다. */
+  margin: 5 10px;
+  font-size: 0.9em;
 }
+
 .button-row {
   display: flex;
-  justify-content: space-around; 
+  justify-content: space-around;
   width: 100%;
   align-items: center;
   margin-bottom: 10px;
 }
 
 .left-buttons {
-  
+
   margin-right: 150px;
 }
 
@@ -327,13 +332,14 @@ const goToRanklist = () => {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  cursor: pointer;  
+  cursor: pointer;
 }
+
 /* 활성화 상태에 따른 버튼 스타일 변경 */
 .button_caffeine {
-  background: #CB8A58; 
+  background: #CB8A58;
   color: #fff;
-  cursor: pointer; 
+  cursor: pointer;
 }
 
 .button_nonActive_color {
@@ -351,45 +357,47 @@ const goToRanklist = () => {
 
 .button_select2 {
   border-radius: 90px;
-  background: #846046; 
-  color: #FFF; 
-  padding: 3px; 
-  cursor: pointer; 
-  text-align: center; 
+  background: #846046;
+  color: #FFF;
+  padding: 3px;
+  cursor: pointer;
+  text-align: center;
   font-weight: bold;
   width: 75px;
-  
-  transition: background-color 0.3s; 
+
+  transition: background-color 0.3s;
 }
 
 .button_select2:hover {
-  background-color: #754c24; 
+  background-color: #754c24;
 }
 
 .search-results-container {
   flex: auto;
-  width: 530px; 
-  margin-top: 20px; 
-  overflow-x: auto; 
+  width: 530px;
+  margin-top: 20px;
+  overflow-x: auto;
   margin: auto;
 }
 
-.cafe-image{
+.cafe-image {
   width: 20px;
   height: 20px;
 }
 
 .search-results-container table {
   width: 100%;
-  border-collapse: collapse; 
-  text-align: center; 
+  border-collapse: collapse;
+  text-align: center;
   margin: auto;
 }
 
 .search-results-container th,
 .search-results-container td {
-  border-bottom: 3px solid #846046; /* 각 셀의 하단에 경계선 추가 */
-  padding: 8px; /* 셀 안쪽의 여백 추가 */
+  border-bottom: 3px solid #846046;
+  /* 각 셀의 하단에 경계선 추가 */
+  padding: 8px;
+  /* 셀 안쪽의 여백 추가 */
 }
 
 .comparison-basket {
@@ -398,20 +406,21 @@ const goToRanklist = () => {
   overflow-x: auto;
   padding: 20px;
   border-radius: 10px;
-  background-color: #f5f5f5;  
+  background-color: #f5f5f5;
 }
+
 .shading {
-  display: flex; 
-  flex-direction: row; 
-  flex-wrap: wrap; 
-  align-items: left; 
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: left;
   justify-content: flex-start;
-  border-radius: 45px; 
+  border-radius: 45px;
   border: 1px solid #EFEFEF;
   background: var(--Color, #FFF);
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-  padding: 20px; 
-  margin-bottom: 20px; 
+  padding: 20px;
+  margin-bottom: 20px;
   width: 90%;
   margin: auto;
 }
@@ -423,7 +432,7 @@ const goToRanklist = () => {
   width: 120px;
   text-align: center;
   position: relative;
-  background-color: #fff;  
+  background-color: #fff;
   margin: auto;
 }
 
@@ -463,13 +472,13 @@ const goToRanklist = () => {
 }
 
 /* 상세보기 버튼과 비교함 담기 버튼 스타일 */
-.detail-view-button{
+.detail-view-button {
   cursor: pointer;
   margin: 30px;
 }
 
 
 .search-results-container td {
-  border-bottom: 1px solid #e0e0e0; 
+  border-bottom: 1px solid #e0e0e0;
 }
 </style>
