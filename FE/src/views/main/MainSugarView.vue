@@ -57,6 +57,12 @@
       <p>최근에 마신 당을 한눈에 보아요</p>
       <div class="info-box">
         <canvas id="chartCanvas" width="500"></canvas>
+        <div class="chart_select_box">
+          <select name="selectDate" id="selectDate" v-model="seleteDate" class="button_select selete_date_button">
+            <option value="day">일별</option>
+            <option value="week">주별</option>
+          </select>
+        </div>
       </div>
     </div>
 
@@ -97,6 +103,9 @@ const recordsStore = useRecordsStore()
 const recommendStore = useRecommendStore()
 const drinksStore = useDrinksStore()
 
+// 차트 날별로 선택하기 위한 변수
+const seleteDate = ref('day')
+
 const chartData = {
     type: 'bar',
     data: {
@@ -112,7 +121,7 @@ const chartData = {
         x: {
           type: 'time',
           time: {
-            unit: 'day'
+            unit: seleteDate.value
           }
         },
         y: {
@@ -148,10 +157,16 @@ onMounted(async () => {
   // chart.js
   const chartElement = document.querySelector('#chartCanvas').getContext('2d');
   const chartCanvas = new Chart(chartElement, chartData)
+
+  // 날짜가 바뀌면 데이터 변경
+  watch(() => seleteDate.value, (chartDate) => {
+    chartData.options.scales.x.time.unit = chartDate
+    chartCanvas.update()
+  })
   
   // 차트 데이터에 넣을 데이터가 생긴 뒤 데이터 삽입
   watch(() => accumulateStore.getAccumulateList, (newData) => {
-    if (newData.length >= 1) {
+    if (newData.length > 0) {
       console.log('!!!', newData)
 
       const tmpDayData = []
@@ -162,6 +177,11 @@ onMounted(async () => {
         tmpDayData.push(data.accumulateDate)
         tmpDataData.push(data.accumulateSugar)
       })
+
+      // 오늘 날짜까지 갱신하기 위해 현재 날짜가 없으면 날짜 삽입
+      if (!tmpDayData.includes(`${year}-${month}-${day}`)) {        
+        tmpDayData.push(date.value)
+      }
 
       // 다 끝난 뒤 차트에 대입
       chartData.data.labels = tmpDayData
@@ -293,6 +313,24 @@ p {
 
 #chartCanvas {
   margin: auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.chart_select_box {
+  height: 230px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.button_select {
+  border: 2px solid #374B59;
+}
+
+.selete_date_button {
+  display: flex;
+  align-items: start;
+  margin-right: 30px
 }
 
 .photo {
@@ -316,6 +354,7 @@ p {
 .chat {
   width: 700px;
   right: 20px;
+  margin-top: 15px;
   margin-left: 1300px;
 }
 </style>
