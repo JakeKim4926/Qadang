@@ -26,9 +26,7 @@ const calendarKey = ref(0);
 watch(isCalendarModal, (newValue, oldValue) => {
   if (!newValue) {
     console.log("iscal")
-
     calendarKey.value += 1;
-    window.location.reload();
   }
 });
 
@@ -36,32 +34,26 @@ watch(isUpdateInputModal, (newValue, oldValue) => {
   if (!newValue) {
     console.log("iscal2")
     calendarKey.value += 1;
-    window.location.reload();
   }
 });
 
 watch(isUpdateNothingModal, (newValue, oldValue) => {
   if (!newValue) {
     console.log("iscal3")
-
     calendarKey.value += 1;
-    window.location.reload();
   }
 });
 
 watch(isInputModal, (newValue, oldValue) => {
   if (!newValue) {
     console.log("iscal4")
-
     calendarKey.value += 1;
-    window.location.reload();
   }
 });
 
 watch(isInputNothingModal, (newValue, oldValue) => {
   if (!newValue) {
     console.log("iscal5")
-
     calendarKey.value += 1;
     window.location.reload();
   }
