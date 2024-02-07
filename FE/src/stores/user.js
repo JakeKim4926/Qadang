@@ -144,39 +144,16 @@ export const useUserStore = defineStore(
       axios({
         url: import.meta.env.VITE_REST_USER_API,
         method: "POST",
-      });      
-      localStorage.removeItem('userAccessToken');      
-      userAccessToken.value = null;
-      
-      router.push('/login');
-    } catch (err) {
-      console.error('에러',err);
-    }
-  };
-  
+      }).then((res) => {
+        localStorage.removeItem('userAccessToken');
+        userAccessToken.value = null;
 
-  const sendKakaoToken = function (token) {
-    axios({
-      url: `${import.meta.env.VITE_REST_KAKAO_API}`,
-      method: "GET",
-      params: { code : token },
-    })
-      .then((res) => {
-        // 카카오 에서 받아온 토큰을 백으로 전달
-        console.log('결과', res.data);
-        
-        // 헤더 설정
-        axios.defaults.headers.common['Authorization'] = res.data.accessToken; 
-        const result = ref({});
-        result.value = res.data;
-
-        userAccessToken.value = res.data;
+        router.push('/login');
+      }).catch ((err) => {
+        console.error('에러', err);
       })
-        .then(() => {})
-        .catch((err) => {
-          console.log(err);
-        });
     };
+
 
     const researchUser = function () {
       axios({
@@ -245,7 +222,7 @@ export const useUserStore = defineStore(
         url: import.meta.env.VITE_REST_USER_API,
         method: "DELETE",
       })
-        .then(() => {})
+        .then(() => { })
         .catch((err) => {
           console.log(err);
         });
@@ -333,6 +310,4 @@ export const useUserStore = defineStore(
       researchRecommendCaffeine,
       infoFilled,
     };
-  },
-  { persist: true }
-);
+  }, { persist: true });
