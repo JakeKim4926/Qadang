@@ -1,13 +1,13 @@
 <template>
   <div class="board-create-container">
-    <div class="input-box">
-      <div class="close" @click="closeInputModal">
+    <div class="update-box">
+      <div class="close" @click="closeUpdateModal">
         <font-awesome-icon :icon="['fas', 'circle-xmark']" style="color: #000000;" size="xl"/>
       </div>
 
-      <div class="input-container">
+      <div class="update-container">
         <div>
-          <h2>오늘 마신 카페 음료를 선택해주세요</h2>
+          <h2>수정할 카페 음료를 선택해주세요</h2>
         </div>
 
         <div>
@@ -21,9 +21,8 @@
             </option>
           </select>
         </div>
-        
 
-        <div v-if="cafeId">
+        <div>
           <label for="drinkSelect" class="big-font">음료명</label>
           <select name="drinkSelect" id="drinkSelect"
           v-model="drinkInfo" @change="changeDrinkInfo" class="button_select select">
@@ -33,13 +32,6 @@
             {{ drink.drinkName }}
           </option>
         </select>
-        </div>
-
-        <div v-else>
-          <label for="drinkSelect" class="big-font">음료명</label>
-          <select name="drinkSelect" id="drinkSelect" class="button_select select">
-            <option value="" disabled selected>카페를 먼저 선택해주세요</option>
-          </select>
         </div>
         
         <div class="item-container">
@@ -80,16 +72,7 @@
         {{ plusSyrup }} -->
 
         <div class="item-container">
-          <button @click="goInputNothingModal" class="button_input_color buttons">여기없어용</button>
-          <span @mouseover="showToolTip = true" @mouseleave="showToolTip = false">
-            <font-awesome-icon :icon="['fas', 'circle-question']" size="xl"/>
-          </span>
-          <div v-if="showToolTip" class="tip-container">
-            <div class="tip">
-              <p>여기에 여기없어용에 대한 자세한 설명을 작성합니다</p>
-            </div>
-          </div>
-          <button @click="drinkSubmit" class="button_caffeine buttons">입력완료</button>
+          <button @click="drinkUpdateSubmit" class="button_caffeine buttons">수정완료</button>
         </div>
       </div>
     </div>
@@ -97,57 +80,71 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { onMounted } from 'vue';
 
 import { useDrinksStore } from "@/stores/drinks";
 import { useRecordsStore } from "@/stores/records"
-import { isInputModal, isInputNothingModal } from '@/stores/util';
+import { isUpdateInputModal, tempRecord } from '@/stores/util';
 
 const drinkStore = useDrinksStore()
 const recordsStore = useRecordsStore()
-
-// 음료 전체 정보
-const drinkInfo = ref({})
-
-// 음료 생성을 위해 보내줄 데이터
-const cafeName = ref(null)
-const drinkName = ref(null)
-const plusShot = ref(0)
-const plusSyrup = ref(0)
-
-// 카페 id, 음료 id, 각 음료의 카페인 함량, 당 함량
-const cafeId = ref(0)
-const drinkId = ref(0)
-const drinkCaffeine = ref(0)
-const drinkSugar = ref(0)
-
-const minusCaffeineButton = ref(false)
-const minusSugarButton = ref(false)
-const plusCaffeineButton = ref(false)
-const plusSugarButton = ref(false)
-
-// 도움말
-const showToolTip = ref(false)
 
 // 데이터를 가져오기 위한 함수
 onMounted(() => {
   drinkStore.researchCafe()
 })
 
-// 모달창을 열고 닫기 위한 함수
-const closeInputModal = () => {
-  isInputModal.value = false
-}
+console.log('가져온 데이터', tempRecord.value);
 
-const openInputNothingModal = () => {
-  isInputNothingModal.value = true
-}
+// 음료 업데이트를 위해 보내줄 데이터
+// 초기값은 캘린더에서 받아오는 값으로 설정
+const recordId = tempRecord.value.recordId
+const cafeName = ref(tempRecord.value.cafeName)
+const drinkName = ref(tempRecord.value.drinkName)
+const plusShot = ref(tempRecord.value.plusShot)
+const plusSyrup = ref(tempRecord.value.plusSyrup)
 
-// 여기없어용으로 이동하기 위한 함수
-const goInputNothingModal = () => {
-  closeInputModal()
-  openInputNothingModal()
+// 카페 id, 음료 id, 각 음료의 카페인 함량, 당 함량
+// 초기값은 캘린더에서 받아오는 값으로 설정
+const cafeId = ref(0)
+watch(() => drinkStore.getCafeList, (cafeList) => {
+  if (cafeList.length > 0) {
+    let findCafeId = cafeList.find(cafeList => cafeList.cafeName === tempRecord.value.cafeName)
+
+    cafeId.value = findCafeId.cafeId
+    drinkStore.researchCafeDrinks(cafeId.value)
+  }
+})
+
+// 음료 전체 정보
+// 초기값은 캘린더에서 받아오는 값으로 설정
+const drinkInfo = ref({})
+watch(() => drinkStore.getCafeDrinkList, (drinkList) => {
+  if (drinkList.length > 0) {
+    let findDrinkId = drinkList.find(drinkList => drinkList.cafeName === tempRecord.value.cafeName)
+    drinkInfo.value = findDrinkId
+
+    // 샷, 시럽 버튼 활성화
+    activeminusCaffeineButton()
+    activminusSugarButton()
+    activeplusCaffeineButton()
+    activeplusSugarButton()
+  }
+})
+
+const drinkId = ref(tempRecord.value.drinkId)
+const drinkCaffeine = ref(tempRecord.value.drinkCaffeine)
+const drinkSugar = ref(tempRecord.value.drinkSugar)
+
+const minusCaffeineButton = ref(false)
+const minusSugarButton = ref(false)
+const plusCaffeineButton = ref(false)
+const plusSugarButton = ref(false)
+
+// 모달창을 닫기 위한 함수
+const closeUpdateModal = () => {
+  isUpdateInputModal.value = false
 }
 
 // 이전 선택값 초기화해주는 함수
@@ -235,10 +232,15 @@ const changeDrinkInfo = () => {
     drinkCaffeine.value = drinkInfo.value.drinkCaffeine
     drinkSugar.value = drinkInfo.value.drinkSugar
 
+    // 샷, 시럽 버튼 활성화
     activeminusCaffeineButton()
     activminusSugarButton()
     activeplusCaffeineButton()
     activeplusSugarButton()
+
+    // 기존 입력한 샷, 시럽 추가 초기화
+    plusShot.value = 0
+    plusSyrup.value = 0
   }
 }
 
@@ -271,13 +273,14 @@ const plusSugar = () => {
   activeplusSugarButton()
 }
 
-// 생성된 음료 데이터 전송
-const drinkSubmit = () => {
+// 업데이트된 음료 데이터 전송
+const drinkUpdateSubmit = () => {
   if (cafeName.value && drinkName.value) {
     console.log('입력값이 올바릅니다. 데이터를 전송합니다.')
 
-    // 음료 생성을 위해 보내줄 데이터
+    // 음료 업데이트를 위해 보내줄 데이터
     const drink = {
+      recordId: recordId,
       drinkId: drinkId.value,
       cafeName: cafeName.value,
       drinkName: drinkName.value,
@@ -288,9 +291,9 @@ const drinkSubmit = () => {
     console.log(drink)
 
     // 데이터 전송 및 창 닫기
-    recordsStore.createCafeDrink(drink)
+    recordsStore.updateCafeDrink(drink)
     alert('입력값이 올바릅니다. 데이터를 전송합니다.')
-    closeInputModal()
+    closeUpdateModal()
 
     } else {
       console.log('입력값이 올바르지 않습니다')
@@ -329,7 +332,7 @@ div {
   align-items: center;
 }
 
-.input-box {
+.update-box {
   background: #ffffff;
   border-radius: 30px;
   border-style: solid;
@@ -337,11 +340,11 @@ div {
   border-width: 1px;
   position: absolute;
   width: 500px;
-  height: 480px;
+  height: 470px;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 
-.input-container {
+.update-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -390,7 +393,7 @@ div {
 }
 
 .button_caffeine {
-  margin-left: 80px;
+  margin: auto;
   color: white;
   font-size: 20px;
   font-weight: bold;
@@ -400,21 +403,4 @@ div {
   height: 60px;
   border: none;
 }
-
-.tip-container {
-  position: relative;
-}
-
-.tip {
-  position: fixed;
-  top: 63%;
-  left: 63%;
-  transform: translate(-50%, -50%);
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  z-index: 100;
-}
-
 </style>

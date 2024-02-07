@@ -77,7 +77,7 @@ export const useRecordsStore = defineStore("records", () => {
   const updateCafeDrink = function (drink) {
     axios({
       url: `${import.meta.env.VITE_REST_RECORDS_API}/drink`,
-      method: "",
+      method: "PUT",
       data: drink,
     })
       .then((res) => {})
@@ -100,9 +100,8 @@ export const useRecordsStore = defineStore("records", () => {
 
   const deleteDrink = function (recordId) {
     axios({
-      url: `${import.meta.env.VITE_REST_RECORDS_API}`,
+      url: `${import.meta.env.VITE_REST_RECORDS_API}/${recordId}`,
       method: "DELETE",
-      params: { recordId: recordId },
     })
       .then((res) => {})
       .catch((err) => {
@@ -113,9 +112,8 @@ export const useRecordsStore = defineStore("records", () => {
   // date example) 20240124
   const researchDayDrink = function (date) {
     axios({
-      url: `${import.meta.env.VITE_REST_RECORDS_API}/day`,
+      url: `${import.meta.env.VITE_REST_RECORDS_API}/${date.value}/day`,
       method: "GET",
-      params: { date: date.value },
     })
       .then((res) => {
         if(res.status == responseState.SUCCESS) {

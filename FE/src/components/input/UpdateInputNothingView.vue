@@ -1,27 +1,25 @@
 <template>
   <div class="board-create-container">
-    <div class="input-box">
-      <div class="close" @click="closeInputNothingModal">
+    <div class="update-box">
+      <div class="close" @click="closeUpdateNothingModal">
         <font-awesome-icon :icon="['fas', 'circle-xmark']" style="color: #000000;" size="xl"/>
       </div>
 
-      <div class="input-container">
+      <div class="update-container">
         <div>
-          <h2>오늘 마신 카페 음료를 직접 입력해주세요</h2>
+          <h2>카페 음료를 입력하여 수정해주세요</h2>
         </div>
 
         <div>
           <label for="cafeName" class="big-font">카페명</label>
           <input type="text" name="cafeName" id="cafeName"
-          v-model="cafeName" placeholder="카페명을 입력해주세요"
-          class="button_select select"/>
+          v-model="cafeName" class="button_select select"/>
         </div>
 
         <div>
           <label for="drinkName" class="big-font">음료명</label>
           <input type="text" name="drinkName" id="drinkName"
-          v-model="drinkName" placeholder="음료명을 입력해주세요"
-          class="button_select select"/>
+          v-model="drinkName" class="button_select select"/>
         </div>
 
         <div>
@@ -37,70 +35,52 @@
         </div>
 
         <div class="item-container">
-          <button @click="goInputModal" class="button_input_color buttons">음료 선택</button>
-          <span @mouseover="showToolTip = true" @mouseleave="showToolTip = false">
-            <font-awesome-icon :icon="['fas', 'circle-question']" size="xl"/>
-          </span>
-          <div v-if="showToolTip" class="tip-container">
-            <div class="tip">
-              <p>여기에 음료 선택에 대한 자세한 설명을 작성합니다</p>
-            </div>
-          </div>
-          <button @click="makeSubmit" class="button_caffeine buttons">입력완료</button>
+          <button @click="drinkUpdateSubmit" class="button_caffeine buttons">수정완료</button>
         </div>
       </div>
     </div>
   </div>
-
-
 </template>
 
 <script setup>
 import { ref } from 'vue';
 import { useRecordsStore } from "@/stores/records";
-import { isInputModal, isInputNothingModal } from '@/stores/util';
+import { isUpdateNothingModal, tempRecord } from '@/stores/util';
 
 const store = useRecordsStore()
 
-const cafeName = ref(null)
-const drinkName = ref(null)
-const drinkCaffeine = ref(0)
-const drinkSugar = ref(0)
+// console.log('!!!', tempRecord.value)
 
-const showToolTip = ref(false)
+const recordId = tempRecord.value.recordId
+const cafeName = ref(tempRecord.value.cafeName)
+const drinkName = ref(tempRecord.value.drinkName)
+const drinkCaffeine = ref(tempRecord.value.drinkCaffeine)
+const drinkSugar = ref(tempRecord.value.drinkSugar)
 
-// 모달창을 열고 닫기 위한 함수
-const closeInputNothingModal = () => {
-  isInputNothingModal.value = false
+// 모달창을 닫기 위한 함수
+const closeUpdateNothingModal = () => {
+  isUpdateNothingModal.value = false
 }
 
-const openInputModal = () => {
-  isInputModal.value = true
-}
-
-// 음료선택으로 이동하기 위한 함수
-const goInputModal = () => {
-  closeInputNothingModal()
-  openInputModal()
-}
-
-const makeSubmit = () => {
+// 음료 업데이트를 위한 함수
+const drinkUpdateSubmit = () => {
   if (isValid()) {
     console.log('입력값이 올바릅니다. 데이터를 전송합니다.')
 
     const drink = {
+      recordId: recordId,
       cafeName: cafeName.value,
       drinkName: drinkName.value,
-      drinkCaffeine: drinkCaffeine.value.toFixed(1),
-      drinkSugar: drinkSugar.value.toFixed(1)
+      drinkCaffeine: drinkCaffeine.value.toFixed(2),
+      drinkSugar: drinkSugar.value.toFixed(2)
     }
 
     console.log(drink)
 
     // 유효한 데이터를 백엔드로 전송 및 창 닫기
-    store.createMyDrink(drink)
+    store.updateMyDrink(drink)
     alert('입력값이 올바릅니다. 데이터를 전송합니다.')
-    closeInputNothingModal()
+    closeUpdateNothingModal()
 
     } else {
       console.log('입력값이 올바르지 않습니다')
@@ -108,8 +88,7 @@ const makeSubmit = () => {
     }
   }
 
-const isValid = () => {
-  
+const isValid = () => {  
   // 모든 정보를 입력한 상태에서 카페인과 당이 0을 포함한 양수일 경우
   // 유의미한 정보를 입력했다고 간주하고 유효성 검사 통과
   if (
@@ -122,7 +101,6 @@ const isValid = () => {
     return false
   }
 }
-
 </script>
 
 <style scoped>
@@ -155,7 +133,7 @@ div {
   align-items: center;
 }
 
-.input-box {
+.update-box {
   background: #ffffff;
   border-radius: 30px;
   border-style: solid;
@@ -163,11 +141,11 @@ div {
   border-width: 1px;
   position: absolute;
   width: 500px;
-  height: 480px;
+  height: 450px;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 
-.input-container {
+.update-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -177,7 +155,7 @@ div {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 30px;
+  margin-top: 20px;
 }
 
 .close {
@@ -208,7 +186,6 @@ div {
 }
 
 .button_caffeine {
-  margin-left: 80px;
   color: white;
   font-size: 20px;
   font-weight: bold;

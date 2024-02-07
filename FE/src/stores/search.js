@@ -30,21 +30,21 @@ export const useSearchStore = defineStore("search", () => {
   // actions
   const researchKeywordRank = function (word) {
     axios({
-      url: `${import.meta.env.VITE_REST_SEARCH_API}`,
+      url: `${import.meta.env.VITE_REST_SEARCH_API}/${word}`, 
       method: "GET",
-      params: { keyword: word },
     })
-      .then((res) => {
-        searchDrinkList.value = res.data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    .then((res) => {
+      searchDrinkList.value = res.data;
+      console.log(res.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
   };
 
   const bringKeywordRanking = function () {
     axios({
-      url: `${import.meta.env.VITE_REST_RANKING_API}/keywordranking`,
+      url: `${import.meta.env.VITE_REST_RANK_API}/keywordranking`,
       method: "GET"
     })
     .then((res) => {
