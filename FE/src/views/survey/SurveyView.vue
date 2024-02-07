@@ -12,12 +12,33 @@
                     </option>
                 </select>
                 <div class="div5">음료명</div>
-                <select id="drinkSelect" v-model="drinkTemp" class="rectangle-4272 select-font" @change="selectDrink"
+                <!-- <input type="text" v-model="userInput" @input="updateOptions" :disabled="!cafeId"> -->
+                <!-- <select id="drinkSelect" v-model="drinkTemp" class="rectangle-4272 select-font" @change="selectDrink"
                     style="text-align: center;" :disabled="!cafeId">
                     <option v-for="drink in drinkStore.getCafeDrinkList" :key="drink.drinkId" :value="drink">
                         {{ drink.drinkName }}
                     </option>
+                </select> -->
+                <input type="text" v-model="searchText" class="rectangle-4272 select-font" style="text-align: center; margin-bottom: 10px;"
+                    placeholder="Search for drinks" :disabled="!cafeId">
+
+                <select id="drinkSelect" v-model="drinkTemp" class="rectangle-4272 select-font" @change="selectDrink"
+                    style="text-align: center;" :disabled="!cafeId">
+                    <option v-for="drink in filteredDrinks" :key="drink.drinkId" :value="drink">
+                        {{ drink.drinkName }}
+                    </option>
                 </select>
+                <!-- <div class="rectangle-4272">
+                    <input type="text" v-model="searchText" class="rectangle-42 select-font"
+                        style="text-align: center; position: absolute; left: 0; right: 0; top: 0; bottom: 0; margin: auto 0;">
+                    <select id="drinkSelect" v-model="selectedDrink" class="rectangle-42 select-font" @change="selectDrink"
+                        style="text-align: center; position: absolute; right: 10px; top: 0; bottom: 0; margin: auto;">
+                        <option v-for="drink in filteredDrinks" :key="drink.drinkId" :value="drink">
+                            {{ drink.drinkName }}
+                        </option>
+                    </select>
+                </div> -->
+
 
             </div>
 
@@ -99,6 +120,20 @@ const drinkCount = ref(1);
 let drinkTemp = ref({})
 const caffeine = ref(0);
 const sugar = ref(0);
+
+const searchText = ref('');
+const filteredDrinks = ref([]);
+
+function filterDrinks() {
+    filteredDrinks.value = drinkStore.getCafeDrinkList.filter(drink =>
+        drink.drinkName.toLowerCase().includes(searchText.value.toLowerCase())
+    );
+}
+
+// Call filterDrinks function whenever searchText changes
+watch(searchText, () => {
+        filterDrinks();
+});
 
 function selectCafe() {
     if (cafeId.value > 0) {
@@ -397,6 +432,14 @@ onMounted(() => {
     height: 12.66%;
 }
 
+.rectangle-42 {
+    position: absolute;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+}
+
 .div6 {
     color: #c4c4c4;
     text-align: left;
@@ -591,7 +634,7 @@ onMounted(() => {
     font-size: 20px;
     line-height: 18px;
     font-weight: 700;
-    text-align: center; 
+    text-align: center;
 }
 </style>
   
