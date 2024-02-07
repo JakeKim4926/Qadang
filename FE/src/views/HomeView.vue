@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <img src="@/components/icons/logo.png" alt="logo" class="logo" style="color" />
-    <a id="custom-login-btn" @click="userStore.loginKakao()">
+    <a id="custom-login-btn" @click="userStore.loginKakao">
       <img src="https://k.kakaocdn.net/14/dn/btroDszwNrM/I6efHub1SN5KCJqLm1Ovx1/o.jpg" width="222" alt="카카오 로그인 버튼" />
     </a>
     <div class="content">
@@ -23,17 +23,15 @@ const accumulateStore = useAccumulateStore();
 
 
 onMounted(async () => {
-  console.log("are you here");
 
-  
-  const date = new Date();
-  const year = date.getFullYear();
-  let month = date.getMonth() + 1; // Adding 1 to adjust for zero-based months
-  month = month < 10 ? "0" + month.toString() : month.toString();
-  const now = ref(year.toString() + month.toString());
+  // const date = new Date();
+  // const year = date.getFullYear();
+  // let month = date.getMonth() + 1; // Adding 1 to adjust for zero-based months
+  // month = month < 10 ? "0" + month.toString() : month.toString();
+  // const now = ref(year.toString() + month.toString());
 
 
-  await accumulateStore.month(now);
+  // await accumulateStore.month(now);
 })
 
 

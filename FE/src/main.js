@@ -34,16 +34,17 @@ const responseState = {
     NOT_IMPLEMENT: 501,
   };
 
-axios.interceptors.request.use((config)=> {
-    // console.log("[요청 발신]: ", config);
-    return config;
-}, (error) => {
-    // console.log('[요청 실패]: ', error);
-    return Promise.reject(error);
-})
+// axios.interceptors.request.use((config)=> {
+//     console.log("[요청 발신]: ", config);
+    
+//     return config;
+// }, (error) => {
+//     console.log('[요청 실패]: ', error);
+//     return Promise.reject(error);
+// })
 
 axios.interceptors.response.use((config)=> {
-    // console.log("[응답 수신] : ", config);
+    console.log("[응답 수신] : ", config);
     // console.log("[응답 헤더] : ", config.headers);
     // console.log("[응답 상태] : ", config.status);
 
@@ -81,6 +82,7 @@ axios.interceptors.response.use((config)=> {
         window.alert("클라이언트 인증 오류입니다.");
     } else if(config.status == responseState.FORBIDDEN) {
         window.alert("권한이 없습니다");
+        router.push('/');
     } else if(config.status == responseState.NOT_FOUND) {
         window.alert("NOT_FOUND");
     } else if(config.status == responseState.INTERENAL_SERVER_ERROR) {

@@ -85,6 +85,7 @@
 import { ref, watch } from 'vue';
 import { onMounted } from 'vue';
 import router from '@/router';
+import axios from 'axios';
 
 import { Chart } from "chart.js/auto";
 import 'chartjs-adapter-date-fns';
@@ -95,7 +96,7 @@ import { useRecordsStore } from '@/stores/records';
 import { useRecommendStore } from '@/stores/recommend';
 import { useDrinksStore } from '@/stores/drinks';
 
-import { isDetailModal } from '../../stores/util'
+import { isDetailModal, userAccessToken } from '../../stores/util'
 
 const userStore = useUserStore()
 const accumulateStore = useAccumulateStore()
@@ -140,11 +141,14 @@ onMounted(async () => {
   const kakaoCode = urlParams.get('code');
 
   if(kakaoCode != null && kakaoCode.length > 0) {
-    userStore.sendKakaoToken(kakaoCode);
+    await userStore.sendKakaoToken(kakaoCode);
     console.log(kakaoCode);
+
+    localStorage.setItem("userAccessToken", kakaoCode);
 
     // URL에서 'code' 파라미터 제거
     const newUrl = window.location.origin + window.location.pathname;
+    
     history.replaceState({}, document.title, newUrl);
   }
 
