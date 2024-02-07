@@ -23,11 +23,19 @@ public class RecommendController {
         Drinks drink = drinkService.getCaffeineRecommend();
         return new ResponseEntity<>(
                 DrinkResponseDTO.builder()
+                .drinkId(drink.getDrinkId())
                 .drinkCaffeine(drink.getDrinkCaffeine())
                 .drinkSugar(drink.getDrinkSugar())
                 .drinkName(drink.getDrinkName())
                 .cafeName(drink.getCafeName())
                 .drinkUrl(drink.getDrinkUrl())
+                        .drinkMl(drink.getDrinkMl())
+                        .drinkOz(drink.getDrinkOz())
+                        .drinkCalorie(drink.getDrinkCalorie())
+                        .drinkNatrium(drink.getDrinkNatrium())
+                        .drinkProtein(drink.getDrinkProtein())
+                        .drinkFat(drink.getDrinkFat())
+                        .drinkAllergy(drink.getDrinkAllergy())
                 .build()
                 , HttpStatus.OK
         );
@@ -38,11 +46,19 @@ public class RecommendController {
         Drinks drink = drinkService.getSugarRecommend();
         return new ResponseEntity<>(
                 DrinkResponseDTO.builder()
+                        .drinkId(drink.getDrinkId())
                         .drinkCaffeine(drink.getDrinkCaffeine())
                         .drinkSugar(drink.getDrinkSugar())
                         .drinkName(drink.getDrinkName())
                         .cafeName(drink.getCafeName())
                         .drinkUrl(drink.getDrinkUrl())
+                        .drinkMl(drink.getDrinkMl())
+                        .drinkOz(drink.getDrinkOz())
+                        .drinkCalorie(drink.getDrinkCalorie())
+                        .drinkNatrium(drink.getDrinkNatrium())
+                        .drinkProtein(drink.getDrinkProtein())
+                        .drinkFat(drink.getDrinkFat())
+                        .drinkAllergy(drink.getDrinkAllergy())
                         .build()
                 , HttpStatus.OK
         );

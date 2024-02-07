@@ -29,8 +29,8 @@ public class ChatController {
         return new ResponseEntity<List<ChatRoomResponseDTO>>(cafeService.getList(), HttpStatus.OK);
     }
 
-    @GetMapping("/chatcontent")
-    public ResponseEntity<List<ChatMessageResponseDTO>> chatRoom(@RequestParam Long chatId){
+    @GetMapping("/{chatId}")
+    public ResponseEntity<List<ChatMessageResponseDTO>> chatRoom(@PathVariable Long chatId){
         //user check
 
         return new ResponseEntity<List<ChatMessageResponseDTO>>(messageService.messageList(chatId), HttpStatus.OK);

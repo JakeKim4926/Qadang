@@ -20,4 +20,5 @@ public class DrinkResponseDTO {
     private double drinkFat;
     private String drinkUrl;
     private String drinkAllergy;
+    private String cafeUrl;
 }

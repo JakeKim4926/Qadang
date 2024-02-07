@@ -27,4 +27,8 @@ public class DrinkService {
     public Drinks getSugarRecommend() {
         return drinkRepository.findByDrinkId(1L);
     }
+
+    public List<Drinks> drinkCafeKeyword(Long cafeId, String keyword) {
+         return drinkRepository.findByCafeIdAndDrinkNameContaining(cafeId,keyword);
+    }
 }
