@@ -18,7 +18,22 @@ import {fas} from '@fortawesome/free-solid-svg-icons'
 import {far} from '@fortawesome/free-regular-svg-icons'
 import {fab} from '@fortawesome/free-brands-svg-icons'
 
+import { userAccessToken } from "@/stores/util"
+
 import axios from 'axios';
+
+// axios의 헤더에 토큰을 설정하는 함수
+const setTokenInAxiosHeader = () => {
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      axios.defaults.headers.common['Authorization'] = token;
+      userAccessToken.value = token;
+    }
+  };
+  
+  // 애플리케이션을 생성하고
+  // axios의 헤더에 토큰을 설정합니다.
+  setTokenInAxiosHeader();
 
 const responseState = {
     CONTINUE: 100,
