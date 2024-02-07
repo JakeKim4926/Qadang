@@ -10,6 +10,7 @@ export const useDrinksStore = defineStore("drinks", () => {
   const cafeList = ref([]);
   const cafeDrinkList = ref([]);
   const allDrinkList = ref([]);
+  const selectDrinkList = ref([]);
   const selectedDrink = ref(null);
   // =========== GETTER ===============
 
@@ -23,6 +24,10 @@ export const useDrinksStore = defineStore("drinks", () => {
 
   const getAllDrinkList = computed(() => {
     return allDrinkList.value;
+  });
+
+  const getSelectDrinkList = computed(() => {
+    return selectDrinkList.value;
   });
 
   // =========== ACTION ===============
@@ -42,11 +47,26 @@ export const useDrinksStore = defineStore("drinks", () => {
       });
   };
 
-  const researchCafeDrinks = function (id) {
+  const researchSelectDrink = function (cafeId,keyword) {
     axios({
-      url: `${import.meta.env.VITE_REST_DRINKS_API}/drink`,
+      url: `${import.meta.env.VITE_REST_DRINKS_API}/${cafeId}/${keyword}`,
       method: "GET",
-      params: { cafeId: id },
+    })
+      .then((res) => {
+        if (res.status == responseState.SUCCESS) {
+          selectDrinkList.value = res.data;
+        }
+      })
+      .catch((err) => {
+        
+        console.log(err);
+      });
+  };
+
+  const researchCafeDrinks = function (cafeId) {
+    axios({
+      url: `${import.meta.env.VITE_REST_DRINKS_API}/${cafeId}`,
+      method: "GET",
     })
       .then((res) => {
         if (res.status == responseState.SUCCESS) {
@@ -80,12 +100,15 @@ export const useDrinksStore = defineStore("drinks", () => {
     cafeList,
     cafeDrinkList,
     allDrinkList,
+    selectDrinkList,
     getCafeList,
     getCafeDrinkList,
     getAllDrinkList,
+    getSelectDrinkList,
     selectedDrink,
     setSelectedDrink,
     researchCafe,
+    researchSelectDrink,
     researchCafeDrinks,
     researchAllDrink,
   };
