@@ -12,13 +12,13 @@
         <h2 class="ranking-title search">많이 <span class="highlight">검색</span>한 순위</h2>
         <div class="ranking-rows">
           <div class="ranking-column rank-text">     
-            <div v-for="(keyword, index) in firstThreeKeywords" :key="`first-${index}`" class="ranking-item">
+            <div v-for="(keyword, index) in firstFourKeywords" :key="`first-${index}`" class="ranking-item">
               {{ index + 1 }}. {{ keyword }} 
             </div>
           </div>
           <div class="ranking-column rank-text">          
-            <div v-for="(keyword, index) in nextThreeKeywords" :key="`next-${index}`" class="ranking-item">
-              {{ index + 4 }}. {{ keyword }}
+            <div v-for="(keyword, index) in nextFourKeywords" :key="`next-${index}`" class="ranking-item">
+              {{ index + 5 }}. {{ keyword }}
             </div>
           </div>
         </div>
@@ -28,15 +28,19 @@
         <h2 class="ranking-title search">많이 <span class="highlight">기록</span>한 음료 순위</h2>
         <div class="ranking-rows">
           <div class="ranking-column rank-text">     
-            <div v-for="(drink, index) in firstThreeRecords" :key="`record-first-${index}`" class="ranking-item">
+            <div v-for="(drink, index) in firstFiveRecords" :key="`record-first-${index}`" class="ranking-item2">
               {{ index + 1 }}. {{ drink.cafeName }} {{ drink.drinkName }} 
+              <p>2. 스타벅스 ICE 돌체 머시기 아메리카노</p>
+              <p>3. 메가커피 손흥민 잇지 권근열이 좋아하는 할메리카노</p>
+
             </div>
           </div>
-          <div class="ranking-column rank-text">          
+       
+          <!-- <div class="ranking-column rank-text">          
             <div v-for="(drink, index) in nextThreeRecords" :key="`record-next-${index}`" class="ranking-item">
               {{ index + 4 }}. {{ drink.cafeName }} {{ drink.drinkName }}
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
   </div>
@@ -75,23 +79,23 @@ const goToFullList = () => {
 };
 
 
-const firstThreeKeywords = computed(() => {
-  return keywordRanking.value.slice(0, 3);
+const firstFourKeywords = computed(() => {
+  return keywordRanking.value.slice(0, 4);
 });
 
 
-const nextThreeKeywords = computed(() => {
-  return keywordRanking.value.slice(3, 6);
+const nextFourKeywords = computed(() => {
+  return keywordRanking.value.slice(4, 8);
 });
 
 
-const firstThreeRecords = computed(() => {
-  return recordRanking.value.slice(0, 3);
+const firstFiveRecords = computed(() => {
+  return recordRanking.value.slice(0, 5);
 });
 
-const nextThreeRecords = computed(() => {
-  return recordRanking.value.slice(3, 6);
-});
+// const nextThreeRecords = computed(() => {
+//   return recordRanking.value.slice(3, 6);
+// });
 
 onMounted(() => {
   searchStore.bringKeywordRanking();
@@ -131,6 +135,8 @@ onMounted(() => {
 
 .ranking-title {
   color: #000; 
+  text-align: left;
+  margin-left: 10px;
 }
 
 
@@ -141,9 +147,14 @@ onMounted(() => {
 .ranking-column {
   display: flex;
   flex-direction: column; 
-  width: 48%;
+  width: 100%;
+  margin: auto;
 }
 .ranking-item {
+  margin-bottom: 5px; 
+  text-align: left; 
+}
+.ranking-item2 {
   margin-bottom: 5px; 
   text-align: left; 
 }

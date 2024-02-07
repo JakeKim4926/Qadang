@@ -27,31 +27,31 @@
         <tr>
           <th>카페인</th>
           <td v-for="drink in basket" :key="`${drink.drinkId}`">
-            {{ drink.drinkCaffeine || '-'}} mg
+            {{ drink.drinkCaffeine || '0'}} mg
           </td>
         </tr>
         <tr>
           <th>당류</th>
           <td v-for="drink in basket" :key="`sugar-${drink.drinkId}`">
-            {{ drink.drinkSugar || '-'}} g
+            {{ drink.drinkSugar || '0'}} g
           </td>
         </tr>
         <tr>
           <th>포화지방</th>
           <td v-for="drink in basket" :key="`sodium-${drink.drinkId}`">
-            {{ drink.drinkFat || '-'}} g
+            {{ drink.drinkFat || '0'}} g
           </td>
         </tr>
         <tr>
           <th>나트륨</th>
           <td v-for="drink in basket" :key="`sodium-${drink.drinkId}`">
-            {{ drink.drinkNatrium || '-'}} mg
+            {{ drink.drinkNatrium || '0'}} mg
           </td>
         </tr>
         <tr>
           <th>칼로리</th>
           <td v-for="drink in basket" :key="`calories-${drink.drinkId}`">
-            {{ drink.drinkCalorie || '-'}} kcal
+            {{ drink.drinkCalorie || '0'}} kcal
           </td>
         </tr>
         <tr>
@@ -63,7 +63,7 @@
         <tr>
           <th>단백질</th>
           <td v-for="drink in basket" :key="`protein-${drink.id}`">
-            {{ drink.drinkProtein || '-'}} g
+            {{ drink.drinkProtein || '0'}} g
           </td>
         </tr>
         <tr>

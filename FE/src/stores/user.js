@@ -92,14 +92,16 @@ export const useUserStore = defineStore("user", () => {
       await axios({
         url: `${import.meta.env.REST_USER_API}/logout`,
         method: "POST",
-      });
-
-      // 로그아웃 미완성
+      });      
+      localStorage.removeItem('userAccessToken');      
+      userAccessToken.value = null;
+      
       router.push('/login');
     } catch (err) {
-      console.error(err);
+      console.error('에러',err);
     }
   };
+  
 
   const sendKakaoToken = function (token) {
     axios({
@@ -191,8 +193,7 @@ export const useUserStore = defineStore("user", () => {
     })
     .then(() => {
       alert('사용자 정보가 성공적으로 업데이트되었습니다.');
-      router.push('/mypage'); 
-      console.log(updateData)
+      router.push('/mypage');       
     })
     .catch((err) => {
       console.error("Error updating user:", err);
