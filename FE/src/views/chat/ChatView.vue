@@ -11,8 +11,8 @@
     <template v-if="cafe.id > 0">
       <div class="chat-container">
         <div v-if="showMessages" class="chat-messages" ref="chatContainer">
-          <div v-for="chat in chatStore.getChatList" :key="chat.index">
-            <template v-if="chat.userId == userId">
+          <div v-for="(chat,index) in chatStore.getChatList" :key="chat.index">
+            <template v-if="chat.userName == userStore.getUserName">
               <!-- <p class="time">{{ extractTimeFromDate(chat.time) }}</p> -->
               <div class="my-chat">
                 <p class="time">{{ extractTimeFromDate(chat.time) }}</p>
@@ -21,7 +21,7 @@
             </template>
             <div v-else class="their-chat">
               <!-- <p>{{ extractTimeFromDate(chat.time) }}</p> -->
-              <div class="nickname" :class="'nickname-' + ((chat.userId % 7) + 1)">{{ chat.userName }}</div>
+              <div class="nickname" :class="'nickname-' + ((index % 7) + 1)">{{ chat.userName }}</div>
               <p class="message">{{ chat.message }}</p>
               <p class="time">{{ extractTimeFromDate(chat.time) }}</p>
             </div>
@@ -52,12 +52,14 @@
 import { nextTick, ref, watchEffect, onMounted, computed } from "vue";
 import { useSocketStore, messageType, testCafeList } from "@/stores/socket";
 import { useChatStore } from "@/stores/chat";
+import { useUserStore } from "@/stores/user";
 
 import Stomp from "webstomp-client";
 import SockJS from "sockjs-client";
 
 const socketStore = useSocketStore();
 const chatStore = useChatStore();
+const userStore = useUserStore();
 
 const message = ref("");
 const chatContainer = ref(null);
@@ -71,6 +73,12 @@ const userId = ref(1);
 onMounted(async () => {
   // console.log(import.meta.env.VITE_SOCKET_API)
   // socketStore.socket = new SockJS(import.meta.env.VITE_SOCKET_API); // 웹소켓 서버 URL
+  
+  // await userStore.researchName();
+  // naming for test
+  userStore.userName = "Jake";
+  await chatStore.researchChatList(3);
+
   socketStore.socket = new SockJS("http://localhost:8080/ws/chat"); // 웹소켓 서버 URL
   socketStore.stompClient = Stomp.over(socketStore.socket);
   showMessages.value = true;
@@ -110,69 +118,67 @@ onMounted(async () => {
     },
     (error) => {
       console.log("Connection error: " + error);
-      chatStore.getChatList.push({
-        index: 1,
-        userId: 1,
-        userName: 'user01',
-        message: 'I love drink',
-        time: '2024-02-07 12:13:00' 
-      });
+      // chatStore.getChatList.push({
+      //   userId: 1,
+      //   userName: 'user01',
+      //   message: 'I love drink',
+      //   time: '2024-02-07 12:13:00' 
+      // });
 
-      chatStore.getChatList.push({
-        index: 1,
-        userId: 2,
-        userName: 'user02',
-        message: 'me tooddddddddddddddddddddddddddddddddddddd',
-        time: '2024-02-07 12:16:03' 
-      });
+      // chatStore.getChatList.push({
+      //   userId: 2,
+      //   userName: 'user02',
+      //   message: 'me tooddddddddddddddddddddddddddddddddddddd',
+      //   time: '2024-02-07 12:16:03' 
+      // });
 
-      chatStore.getChatList.push({
-        index: 1,
-        userId: 3,
-        userName: 'user03',
-        message: 'I love drinkasdsadsadsad',
-        time: '2024-02-07 13:23:05' 
-      });
+      // chatStore.getChatList.push({
+      //   index: 1,
+      //   userId: 3,
+      //   userName: 'user03',
+      //   message: 'I love drinkasdsadsadsad',
+      //   time: '2024-02-07 13:23:05' 
+      // });
  
-      chatStore.getChatList.push({
-        index: 1,
-        userId: 4,
-        userName: 'user04',
-        message: '안녕하세요~ aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-        time: '2024-02-07 14:33:07'
-      });
+      // chatStore.getChatList.push({
+      //   index: 1,
+      //   userId: 4,
+      //   userName: 'user04',
+      //   message: '안녕하세요~ aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+      //   time: '2024-02-07 14:33:07'
+      // });
 
-      chatStore.getChatList.push({
-        index: 1,
-        userId: 1,
-        userName: 'user01',
-        message: '도배하지마',
-        time: '2024-02-07 15:34' 
-      });
+      // chatStore.getChatList.push({
+      //   index: 1,
+      //   userId: 1,
+      //   userName: 'user01',
+      //   message: '도배하지마',
+      //   time: '2024-02-07 15:34' 
+      // });
 
-      chatStore.getChatList.push({
-        index: 1,
-        userId: 5,
-        userName: 'user05',
-        message: 'There was no other way',
-        time: '2024-02-07 16:53:07'
-      });
+      // chatStore.getChatList.push({
+      //   index: 1,
+      //   userId: 5,
+      //   userName: 'user05',
+      //   message: 'There was no other way',
+      //   time: '2024-02-07 16:53:07'
+      // });
 
-      chatStore.getChatList.push({
-        index: 1,
-        userId: 6,
-        userName: 'user06',
-        message: '하이요',
-        time: '2024-02-07 17:12:07'
-      });
+      // chatStore.getChatList.push({
+      //   index: 1,
+      //   userId: 6,
+      //   userName: 'user06',
+      //   message: '하이요',
+      //   time: '2024-02-07 17:12:07'
+      // });
 
-      chatStore.getChatList.push({
-        index: 1,
-        userId: 7,
-        userName: 'user07',
-        message: '재밌넹',
-        time: '2024-02-07 17:17:07'
-      });
+      // chatStore.getChatList.push({
+      //   index: 1,
+      //   userId: 7,
+      //   userName: 'user07',
+      //   message: '재밌넹',
+      //   time: '2024-02-07 17:17:07'
+      // });
     }
 
   );
@@ -198,8 +204,12 @@ onMounted(async () => {
 function extractTimeFromDate(dateTimeString) {
   // dateTimeString에서 공백을 기준으로 분할하여 시간 부분만 추출
   if (dateTimeString == undefined || dateTimeString.length < 5) return "";
-  const time = dateTimeString.split(" ")[1];
-  const minute = time.split(":")[0] + ":" + time.split(":")[1]
+  // const time = dateTimeString.split(" ")[1];
+  // const minute = time.split(":")[0] + ":" + time.split(":")[1]
+
+  console.log('date : ', dateTimeString);
+  const minute = dateTimeString.split(":")[0].slice(-2) + ":" + dateTimeString.split(":")[1]
+
   return minute;
 }
 

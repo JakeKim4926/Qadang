@@ -168,6 +168,20 @@ export const useUserStore = defineStore(
         });
     };
 
+    const researchName = function () {
+      axios({
+        url: `${import.meta.env.VITE_REST_USER_API}/amount`,
+        method: "GET",
+      })
+        .then((res) => {
+          userName.value = res.data;
+          console.log('name', res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
     const researchAmount = function () {
       axios({
         url: `${import.meta.env.VITE_REST_USER_API}/amount`,
@@ -301,6 +315,7 @@ export const useUserStore = defineStore(
       sendKakaoToken,
       logout,
       createUser,
+      researchName,
       researchUser,
       researchAmount,
       researchMax,
