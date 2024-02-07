@@ -5,12 +5,7 @@
       <RouterView />
     </div>
   </div>
-  <div>
-    <template v-if="userAccessToken != null">
-      <TheFooter class="TheFooter" />
-    </template>
-    <!-- <TheFooter class="TheFooter" /> -->
-  </div>
+  <TheFooter class="TheFooter" />
 </template>
 
 <script setup>
@@ -28,7 +23,7 @@ import { userAccessToken } from "@/stores/util"
   min-height: 100vh;
   position: relative;
 
-  z-index: 2;
+  z-index: 1;
   padding-bottom: 5%;
   margin-bottom: 5%;
 }
