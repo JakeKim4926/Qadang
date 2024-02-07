@@ -1,5 +1,5 @@
 <template >
-  <footer class="footer" v-if="userAccessToken != null">
+  <footer class="footer" ">
     <div class="footer-content">
 
       <InputView v-if="isInputModal" />
