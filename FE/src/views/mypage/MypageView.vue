@@ -11,18 +11,18 @@
       <div class="user-actions">
         <button @click="openUpdateModal" class="button-edit-info">회원정보수정</button>        
       </div>
-      <!-- <div v-if="isInfoFilled" class="shading2"> -->
-      <div class="shading2"> 
+      <div v-if="isInfoFilled" class="shading2">
+      <!-- <div class="shading2">  -->
         <div class="nutrition-info">
           <div class="nutrition-item">
             <h1> 
-              100.0 {{ rdiCaffeine }} mg
+              {{ rdiCaffeine }} mg
             </h1>      
             <h3>하루 권장 카페인 섭취량</h3>
           </div>
           <div class="nutrition-item">
             <h1> 
-              200.0 {{ rdiSugar }} g
+              {{ rdiSugar }} g
             </h1>      
             <h3>하루 권장 설탕 섭취량</h3>
           </div>        
@@ -32,12 +32,12 @@
     
     <div class="intake-section">
       <div class="intake-card shading">
-        <h1>300.0{{ maxCaffeine }} mg</h1>
+        <h1>{{ maxCaffeine }} mg</h1>
         <h3>하루 최고 카페인 섭취량</h3>
         <h4>{{ maxCaffeineDate }}2024-01-25</h4>
       </div>
       <div class="intake-card shading">
-        <h1>500.0{{ maxSugar }} g</h1>
+        <h1>{{ maxSugar }} g</h1>
         <h3>하루 최고 당 섭취량</h3>
         <h4>{{ maxSugarDate }}2024-01-21</h4>
       </div>
