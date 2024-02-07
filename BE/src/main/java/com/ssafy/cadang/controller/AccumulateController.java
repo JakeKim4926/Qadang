@@ -66,8 +66,8 @@ public class AccumulateController {
         return accumulateService.readDuration(userId);
     }
 
-    @GetMapping("/month") //202303
-    public List<DurationAccumulateResponseDTO> readDurationAccumulate(@RequestParam String ym){
+    @GetMapping("/{ym}/month") //202303
+    public List<DurationAccumulateResponseDTO> readDurationAccumulate(@PathVariable String ym){
         //user check
         Long userId = 1L;
         if(userId == 0)
@@ -78,8 +78,8 @@ public class AccumulateController {
 
         return accumulateService.readMonth(userId,yearMonth);
     }
-    @GetMapping("/day")
-    public DayAccumulateResponseDTO readDayAccumulate(@RequestParam String date){
+    @GetMapping("/{date}/day")
+    public DayAccumulateResponseDTO readDayAccumulate(@PathVariable String date){
         //user check
         Long userId = 1L;
         if(userId == 0)

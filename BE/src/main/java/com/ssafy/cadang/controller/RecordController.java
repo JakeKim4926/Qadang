@@ -191,8 +191,8 @@ public class RecordController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/drink")
-    public ResponseEntity<HttpStatus> drinkRecordDelete(@RequestParam Long recordId){
+    @DeleteMapping("/{recordId}")
+    public ResponseEntity<HttpStatus> drinkRecordDelete(@PathVariable Long recordId){
         //user check
         Long userId = 1L;
         if(userId == 0)
@@ -205,8 +205,16 @@ public class RecordController {
         if(!userId.equals(record.getUserId()))
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
-        double caffeine = (record.getDrinkCaffeine() + record.getPlusShot() * 75.0) * -1.0;
-        double sugar = (record.getDrinkSugar() + record.getPlusSyrup() * 6.0) * -1.0;
+        double caffeine = 0.0;
+        double sugar = 0.0;
+        if(record.getDrinkId()!=null){ //cafe drink
+            caffeine = (record.getDrinkCaffeine() + record.getPlusShot() * 75.0) * -1.0;
+            sugar = (record.getDrinkSugar() + record.getPlusSyrup() * 6.0) * -1.0;
+        }else {     //make drink
+            caffeine = record.getDrinkCaffeine() * -1.0;
+            sugar = record.getDrinkSugar() * -1.0;
+        }
+
         Facts facts = Facts.builder()
                 //.calorie(drink.getDrinkCalorie())
                 .caffeine(caffeine)
@@ -219,36 +227,8 @@ public class RecordController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/make")
-    public ResponseEntity<HttpStatus> makeRecordDelete(@RequestParam Long recordId){
-        //user check
-        Long userId = 1L;
-        if(userId == 0)
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-
-        //record delete auth check
-        Records record = recordService.readRecord(recordId);
-        if(record == null)
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        if(!userId.equals(record.getUserId()))
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-
-        double caffeine = record.getDrinkCaffeine() * -1.0;
-        double sugar = record.getDrinkSugar() * -1.0;
-        Facts facts = Facts.builder()
-                //.calorie(drink.getDrinkCalorie())
-                .caffeine(caffeine)
-                .sugar(sugar)
-                .build();
-
-        recordService.delete(recordId);
-        accumulateService.addRecord(userId,facts);
-
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @GetMapping("day")
-    public ResponseEntity<List<DayRecordListResponseDTO>> drinkListRead(@RequestParam String date){
+    @GetMapping("/{date}/day")
+    public ResponseEntity<List<DayRecordListResponseDTO>> drinkListRead(@PathVariable String date){
         //user check
         Long userId = 1L;
         if(userId == 0)
