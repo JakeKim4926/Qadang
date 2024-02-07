@@ -2,17 +2,15 @@
   <UserUpdateView v-if="isUpdateModal" />
   <div class="mypage-container">    
     <div class="profile-section">
-      <div class="profile-image">
-        
-        <h2 v-if="userInfo && userInfo.userName">{{ userInfo.userName }}</h2>
+      <div class="profile-image">        
+        <h2>{{ store.getUser.userName }}</h2>
         <p>jake</p>
       </div>
       <div class="message">{{ message }}</div>
       <div class="user-actions">
         <button @click="openUpdateModal" class="button-edit-info">회원정보수정</button>        
       </div>
-      <div v-if="isInfoFilled" class="shading2">
-      <!-- <div class="shading2">  -->
+      <div v-if="isInfoFilled" class="shading2">      
         <div class="nutrition-info">
           <div class="nutrition-item">
             <h1> 
