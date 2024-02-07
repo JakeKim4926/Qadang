@@ -114,8 +114,8 @@ onMounted(async () => {
         index: 1,
         userId: 1,
         userName: 'user01',
-        message: 'I love drinkdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd',
-        time: '2024-02-07 12:13:00' // 형식을 맞추어서 날짜 및 시간을 적절히 설정하세요
+        message: 'I love drink',
+        time: '2024-02-07 12:13:00' 
       });
 
       chatStore.getChatList.push({
@@ -123,7 +123,7 @@ onMounted(async () => {
         userId: 2,
         userName: 'user02',
         message: 'me tooddddddddddddddddddddddddddddddddddddd',
-        time: '2024-02-07 12:16:03' // 형식을 맞추어서 날짜 및 시간을 적절히 설정하세요
+        time: '2024-02-07 12:16:03' 
       });
 
       chatStore.getChatList.push({
@@ -131,7 +131,7 @@ onMounted(async () => {
         userId: 3,
         userName: 'user03',
         message: 'I love drinkasdsadsadsad',
-        time: '2024-02-07 02:23:05' // 형식을 맞추어서 날짜 및 시간을 적절히 설정하세요
+        time: '2024-02-07 13:23:05' 
       });
  
       chatStore.getChatList.push({
@@ -139,7 +139,15 @@ onMounted(async () => {
         userId: 4,
         userName: 'user04',
         message: '안녕하세요~ aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-        time: '2024-02-07 02:33:07' // 형식을 맞추어서 날짜 및 시간을 적절히 설정하세요
+        time: '2024-02-07 14:33:07'
+      });
+
+      chatStore.getChatList.push({
+        index: 1,
+        userId: 1,
+        userName: 'user01',
+        message: '도배하지마',
+        time: '2024-02-07 15:34' 
       });
 
       chatStore.getChatList.push({
@@ -147,7 +155,7 @@ onMounted(async () => {
         userId: 5,
         userName: 'user05',
         message: 'There was no other way',
-        time: '2024-02-07 02:53:07' // 형식을 맞추어서 날짜 및 시간을 적절히 설정하세요
+        time: '2024-02-07 16:53:07'
       });
 
       chatStore.getChatList.push({
@@ -155,7 +163,7 @@ onMounted(async () => {
         userId: 6,
         userName: 'user06',
         message: '하이요',
-        time: '2024-02-07 03:12:07' // 형식을 맞추어서 날짜 및 시간을 적절히 설정하세요
+        time: '2024-02-07 17:12:07'
       });
 
       chatStore.getChatList.push({
@@ -163,7 +171,7 @@ onMounted(async () => {
         userId: 7,
         userName: 'user07',
         message: '재밌넹',
-        time: '2024-02-07 03:17:07' // 형식을 맞추어서 날짜 및 시간을 적절히 설정하세요
+        time: '2024-02-07 17:17:07'
       });
     }
 
@@ -429,12 +437,13 @@ watchEffect(() => {
   line-height: 18px;
   font-weight: 400;
   text-align: right;
+  justify-content: flex-end; 
 }
 
 .chat-messages {
   flex: 1;
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   overflow: auto;
   margin-bottom: 70px;
   /* 최초에 채팅 메시지 아래에 간격을 둡니다. */
@@ -457,7 +466,7 @@ watchEffect(() => {
   border-radius: 20px;
   color: black;
   padding: 10px 15px;
-  margin: 4px 10px 4px 90%;
+  margin: 0px -41% 0px auto;
   width: fit-content; /* 메시지 내용에 맞게 최대 너비 설정 */
   max-width: 50%;
   right : 43%;
@@ -470,8 +479,8 @@ watchEffect(() => {
 }
 
 .my-chat .time {
-  left: -50px; /* 왼쪽으로 시간 텍스트를 이동 */
-  top: 50%; /* 상단을 기준으로 정렬 */
+  left: -40px; /* 왼쪽으로 시간 텍스트를 이동 */
+  top: 10%; /* 상단을 기준으로 정렬 */
   transform: translateY(50%); /* 수직으로 중앙으로 이동 */
 }
 
