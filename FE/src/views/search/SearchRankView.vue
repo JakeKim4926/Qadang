@@ -30,9 +30,7 @@
           <div class="ranking-column rank-text">     
             <div v-for="(drink, index) in firstFiveRecords" :key="`record-first-${index}`" class="ranking-item2">
               {{ index + 1 }}. {{ drink.cafeName }} {{ drink.drinkName }} 
-              <p>2. 스타벅스 ICE 돌체 머시기 아메리카노</p>
-              <p>3. 메가커피 손흥민 잇지 권근열이 좋아하는 할메리카노</p>
-
+             
             </div>
           </div>
        
