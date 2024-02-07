@@ -18,7 +18,22 @@ import {fas} from '@fortawesome/free-solid-svg-icons'
 import {far} from '@fortawesome/free-regular-svg-icons'
 import {fab} from '@fortawesome/free-brands-svg-icons'
 
+import { userAccessToken } from "@/stores/util"
+
 import axios from 'axios';
+
+// axios의 헤더에 토큰을 설정하는 함수
+const setTokenInAxiosHeader = () => {
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      axios.defaults.headers.common['Authorization'] = token;
+      userAccessToken.value = token;
+    }
+  };
+  
+  // 애플리케이션을 생성하고
+  // axios의 헤더에 토큰을 설정합니다.
+  setTokenInAxiosHeader();
 
 const responseState = {
     CONTINUE: 100,
@@ -45,7 +60,7 @@ axios.interceptors.request.use((config)=> {
 })
 
 axios.interceptors.response.use((config)=> {
-    // console.log("[응답 수신] : ", config);
+    console.log("[응답 수신] : ", config);
     // console.log("[응답 헤더] : ", config.headers);
     // console.log("[응답 상태] : ", config.status);
 
@@ -83,6 +98,7 @@ axios.interceptors.response.use((config)=> {
         window.alert("클라이언트 인증 오류입니다.");
     } else if(config.status == responseState.FORBIDDEN) {
         window.alert("권한이 없습니다");
+        router.push('/');
     } else if(config.status == responseState.NOT_FOUND) {
         window.alert("NOT_FOUND");
     } else if(config.status == responseState.INTERENAL_SERVER_ERROR) {
