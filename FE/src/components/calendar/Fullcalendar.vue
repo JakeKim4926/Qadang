@@ -3,12 +3,14 @@ import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from '@fullcalendar/interaction'
 
-import { onMounted, ref } from "vue";
+import { onMounted, ref, onUpdated } from "vue";
 import axios from "axios";
 import router from "@/router";
 import { useRecordsStore } from "@/stores/records";
 import { useAccumulateStore } from "@/stores/accumulate";
-import { isCalendarModal } from "@/stores/util"
+import { isCalendarModal, isUpdateInputModal, isUpdateNothingModal, } from "@/stores/util"
+
+export const callendarMonth = ref([]);
 
 export default {
     components: {
@@ -24,6 +26,7 @@ export default {
             weekends: true,
             selectable: true,
             navLinks: true,
+            showNonCurrentDates: false,
             navLinkDayClick: function (date, jsEvent) {
                 // 캘린더에서 날짜를 클릭했을 때
 
@@ -34,13 +37,13 @@ export default {
                 month = month < 10 ? "0" + month.toString() : month.toString();
                 day = day < 10 ? "0" + day.toString() : day.toString();
                 const result = year + month + day;
-                console.log(result);
                 recordStore.recordDay = result;
-
                 recordStore.recordDate = days;
 
                 isCalendarModal.value = true;
             },
+            dayCellContent: dayCellContentFunction,
+
             events: [
                 {
                     title: "asd",
@@ -49,90 +52,164 @@ export default {
                 },
             ],
             height: "800px",
-            datesSet: function (info) {
-                // 월이 바뀔 때 마다
-                const year = info.view.currentStart.getFullYear();
-                let month = info.view.currentStart.getMonth() + 1; // Adding 1 to adjust for zero-based months
-                month = month < 10 ? "0" + month.toString() : month.toString();
-                const now = ref(year.toString() + month.toString());
-                console.log(now);
-                accumulateStore.month(now);
-            },
-
         });
 
-        const addIamge = function (info) {
-            // 당은 6, 카페인은 75
+        function dayCellContentFunction(date) {
 
-            const date = info.date.getDate();
-            const month = info.date.getMonth() + 1;
-            for (let i = 0; i < accumulateStore.getAcuumulateMonth.length; i++) {
-                if (date == accumulateStore.getAcuumulateMonth[i].recordaccumulateDate.split('-')[2]) {
-                    const imgContainer = document.createElement('div');
-                    // 여기에 src/components/icons/caffeine.png를 출력해야함
-                    let dayCaffeine = accumulateStore.getAcuumulateMonth[i].accumulateCaffeine / 75.0;
-                    let daySugar = accumulateStore.getAcuumulateMonth[i].accumulateCaffeine / 6.0;
-                    console.log(date)
-                    if (dayCaffeine > 0.0) {
-                        const img = document.createElement('img');
-                        img.src = 'src\components\icons\caffeine.png'; // 이미지 URL 설정
-                        info.el.appendChild(img); // 일자 셀에 이미지 추가
-                    }
-                    if (daySugar > 0.0) {
-                        const img = document.createElement('img');
-                        img.src = 'src\components\icons\sugar.png'; // 이미지 URL 설정
-                        info.el.appendChild(img); // 일자 셀에 이미지 추가
-                    }
+            const year = date.date.getFullYear();
+            let month = date.date.getMonth() + 1; // Adding 1 to adjust for zero-based months
+            month = month < 10 ? "0" + month.toString() : month.toString();
+            let day = date.date.getDate();
+            day = day < 10 ? "0" + day.toString() : day.toString();
+            const currentDate = year.toString() + '-' + month.toString() + '-' + day.toString();
 
-                    // Append the container element with images to the day cell
-                    info.el.appendChild(imgContainer);
+            const sample = JSON.parse(sessionStorage.getItem('calendarMonth'));
+            if (sample != undefined) {
+                let dataForDate = sample.find(item => item.accumulateDate === currentDate);
+                if (dataForDate != undefined) {
+                    const caffeine = (dataForDate.accumulateCaffeine / 75.0).toFixed(1);
+                    const sugar = (dataForDate.accumulateSugar / 6.0).toFixed(1);
+
+                    let caffeineHTML = `
+                            <h5>
+                            <img src="src/components/icons/caffeine.png" alt="no" class="icons" /> x ${caffeine}
+                            </h5>
+                    `
+                    let sugarHTML = `
+                            <h5>
+                            <img src="src/components/icons/sugar.png" alt="no" class="icons" />
+                            x ${sugar}
+                            </h5>
+                    `
+
+                    if (caffeine == 0.0)
+                        caffeineHTML = '';
+                    if (sugar == 0.0)
+                        sugarHTML = ''
+
+                    return {
+                        html: `
+                        <div class="circle"></div>
+                        <div class="day-number-exist" style="text-align: right; font-weight:bold; z-index:1; right:2%"">${date.dayNumberText}</div>
+                        <div style="text-align: center;
+                                justify-content: center;">` + caffeineHTML + sugarHTML +
+
+                            `</div>
+                    `,
+                    };
                 }
             }
-
+            return {
+                html: `
+                    <div class="day-number-text">${date.dayNumberText}</div>
+                    `,
+            };
         }
-
         const updateCalendarOptions = async () => {
-            console.log("hello");
-
-            // if (diaryStore.getList.value) {
-            //     calendarOptions.value.events = await diaryStore.getList.value.map(() => ({
-            //         title: "blahblah",
-            //         start: "2024-01-24",
-            //     }));
-
-            // }
-
-
-            // calendarOptions.value.events = await diaryStore.getList.value.map(() => ({
-            //     title: "blahblah",
-            //     start: "2024-01-24",
-            // }));
-
-
         };
 
+        onMounted(() => {
+            updateCalendarOptions();
+            console.log("updated")
+        });
+
+
         updateCalendarOptions();
+
+        // FullCalendar의 dateSet 이벤트 핸들러
+        const handleDateSet = async (arg) => {
+            console.log(arg);
+            const accumulateStore = useAccumulateStore();
+
+            console.log("hello 2", arg.view.currentStart)
+            const year = arg.view.currentStart.getFullYear();
+            let month = arg.view.currentStart.getMonth() + 1; // Adding 1 to adjust for zero-based months
+            month = month < 10 ? "0" + month.toString() : month.toString();
+            const now = ref(year.toString() + month.toString());
+            console.log(now);
+            accumulateStore.month(now);
+            const asd = { date: arg.view.currentStart };
+            dayCellContentFunction(asd);
+        };
+
 
         return {
             calendarOptions,
             updateCalendarOptions,
+            dayCellContentFunction,
+            handleDateSet,
         };
+
     },
 
 };
+
+
+
+
 </script>
 
 <template>
-    <FullCalendar :options="calendarOptions" />
+    <FullCalendar :options="calendarOptions" @dateSet="handleDateSet" />
 </template>
 
 <style>
 /* November 2023 title부분 */
 .fc .fc-toolbar-title {
-    font-size: 15px;
+    font-size: 25px;
 }
 
 .fc .fc-button {
-    font-size: 10px;
+    font-size: 15px;
+}
+
+.fc-daygrid-day {
+    width: 10px;
+    /* 너비 조정 */
+    height: 10px
+        /* 높이 조정 */
+
+}
+
+.fc-daygrid-day-bottom {
+    width: 10px;
+    height: 0px;
+}
+
+.fc-daygrid-day-frame {
+    height: 150px;
+}
+
+.day-number-container {
+    position: relative;
+    display: inline-block;
+    color: white;
+    /* Set the color to white */
+}
+
+.day-number-exist {
+    font-weight: bold;
+    color: white;
+    /* Set the color to white */
+    position: relative;
+    /* Add position relative */
+    z-index: 1;
+    /* Set a higher z-index */
+}
+
+.circle {
+    position: absolute;
+    top: 10;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: rgb(68, 74, 104);
+    z-index: 0;
+}
+
+.icons {
+    width: 20%;
+    height: 10%;
 }
 </style>

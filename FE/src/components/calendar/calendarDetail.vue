@@ -8,13 +8,13 @@
                         총 섭취한 카페인량
                         <br />
                     </span>
-                    <template v-if="userStore.userRDICaffeine / 2.0 <= accumulateStore.getAcuumulateDay.accumulateCaffeine">
+                    <template v-if="userStore.userRDICaffeine / 2.0 <= accumulateStore.getAccumulateDay.accumulateCaffeine">
                         <span class="all_caffeine_value" style="color:red">{{
-                            accumulateStore.getAcuumulateDay.accumulateCaffeine }}</span>
+                            accumulateStore.getAccumulateDay.accumulateCaffeine }}</span>
                     </template>
                     <template v-else>
                         <span class="all_caffeine_value" style="color:green">{{
-                            accumulateStore.getAcuumulateDay.accumulateCaffeine }}</span>
+                            accumulateStore.getAccumulateDay.accumulateCaffeine }}</span>
                     </template>
                     mg
                 </span>
@@ -26,13 +26,13 @@
                         총 섭취한 당량
                         <br />
                     </span>
-                    <template v-if="userStore.userRDISugar / 2.0 <= accumulateStore.getAcuumulateDay.accumulateSugar">
-                        <span class="all_sugar_value" style="color:red">{{ accumulateStore.getAcuumulateDay.accumulateSugar
+                    <template v-if="userStore.userRDISugar / 2.0 <= accumulateStore.getAccumulateDay.accumulateSugar">
+                        <span class="all_sugar_value" style="color:red">{{ accumulateStore.getAccumulateDay.accumulateSugar
                         }} </span>
                     </template>
                     <template v-else>
                         <span class="all_sugar_value" style="color:green">{{
-                            accumulateStore.getAcuumulateDay.accumulateSugar }} </span>
+                            accumulateStore.getAccumulateDay.accumulateSugar }} </span>
                     </template>
                     g
                 </span>
@@ -43,49 +43,67 @@
             <!-- When it has data -->
             <template v-if="recordStore.getDayDrink.length">
                 <template v-for="(drink, index) in recordStore.getDayDrink" :key="index">
+                    <div class="record_box">
+                        <!-- record header -->
+                        <template v-if="drink.drinkId != 0">
+                            <img class="coffee_image" :src="drink.drinkUrl" alt="img 로딩 오류" />
+                        </template>
+                        <template v-else>
+                            <img class="coffee_image" src="@/components/icons/caffeine.png" alt="나만의 음료" />
+                        </template>
 
-                    <div class="record_box"></div>
-                    <!-- record header -->
-                    <img class="coffee_image" :src="drink.drinkUrl" />
-                    <div class="no-001">No.00{{ index + 1 }}</div>
-                    <div class="coffee_name">{{ drink.drinkName }}</div>
-                    <div class="cafe_name">{{ drink.cafeName }}</div>
-                    <a @click="editRecord(drink)" class="update_button">수정</a>
-                    <a @click="deleteRecord(drink.recordId)" class="delete_button">삭제</a>
+                        <div class="no-001">No.00{{ index + 1 }}</div>
+                        <div class="coffee_name">{{ drink.drinkName }}</div>
+                        <div class="cafe_name">{{ drink.cafeName }}
+                            <template v-if="drink.drinkId == 0">(나만의 음료)</template>
+                        </div>
 
-                    <svg class="line-74" width="338" height="1" viewBox="0 0 338 1" fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1 0.5H337" stroke="black" stroke-linecap="round" />
-                    </svg>
-                    <!-- record content -->
+                        <template v-if="now == recordDay">
+                            <a @click="editRecord(drink)" class="update_button">수정</a>
+                            <a @click="deleteRecord(drink)" class="delete_button">삭제</a>
+                        </template>
+                        <temlate v-else-if="index == 0">
+                            <h4 class="cant_access"> 오늘의 기록만 수정이 가능해유~ </h4>
+                        </temlate>
 
-                    <svg class="line-75" width="338" height="1" viewBox="0 0 338 1" fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1 0.5H337" stroke="black" stroke-linecap="round" />
-                    </svg>
+                        <svg class="line-74" width="338" height="1" viewBox="0 0 338 1" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1 0.5H337" stroke="black" stroke-linecap="round" />
+                        </svg>
+                        <!-- record content -->
 
-                    <div class="div5">카페인</div>
-                    <div class="caffeine_value">{{ drink.drinkCaffeine }} mg</div>
+                        <svg class="line-75" width="338" height="1" viewBox="0 0 338 1" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1 0.5H337" stroke="black" stroke-linecap="round" />
+                        </svg>
 
-                    <div class="div3">당</div>
-                    <div class="sugar_value">{{ drink.drinkSugar }} g</div>
+                        <div class="div5">카페인</div>
+                        <div class="caffeine_value">{{ drink.drinkCaffeine }} mg</div>
 
-                    <div class="shot_title">샷</div>
-                    <div class="shot_count">{{ drink.plusShot }} 회</div>
+                        <div class="div3">당</div>
+                        <div class="sugar_value">{{ drink.drinkSugar }} g</div>
 
-                    <div class="div4">시럽</div>
-                    <div class="syrup_count">{{ drink.plusSyrup }} 회</div>
+                        <div v-if="drink.drinkId != 0">
+                            <div class="shot_title">샷</div>
+                            <div class="shot_count">{{ drink.plusShot }} 회</div>
+
+                            <div class="div4">시럽</div>
+                            <div class="syrup_count">{{ drink.plusSyrup }} 회</div>
+                        </div>
+                    </div>
+
                 </template>
             </template>
-            <tempalte v-else>
+            <template v-else>
+                <!-- when it doesn't have a data -->
                 <div class="record_box" style="display: flex; justify-content: center; align-items: center;">
                     <h3 style="text-align: center;">
-                        해당 날짜에 마신 음료가 없습니다. 
+                        해당 날짜에 마신 음료가 없습니다.
                         <br>
                         지난 일의 기록은 추가/삭제 등 수정이 불가능합니다.
                     </h3>
                 </div>
-            </tempalte>
+            </template>
         </div>
     </div>
 </template>
@@ -93,7 +111,7 @@
 import { useRecordsStore } from '@/stores/records';
 import { useAccumulateStore } from '@/stores/accumulate';
 import { ref, onMounted, computed } from 'vue';
-import { isCalendarModal } from "@/stores/util"
+import { isCalendarModal, isUpdateInputModal, isUpdateNothingModal, tempRecord } from "@/stores/util"
 import { useUserStore } from '@/stores/user';
 
 
@@ -108,19 +126,49 @@ const getRecordDate = computed(() => recordDate);
 const recordDay = ref('');
 const getRecordDay = computed(() => recordDay);
 
+const now = ref('')
+
 function close() {
     isCalendarModal.value = false;
 }
 
 function editRecord(recordDrink) {
-    console.log(recordDrink);
+    const confirmed = window.confirm("수정하겠습니까 ?");
+    if (confirmed) {
+        tempRecord.value = recordDrink;
+        console.log("수정 할 꺼 ", tempRecord.value);
 
+        console.log('@@@', tempRecord.value.drinkId)
+
+        // 선택해서 입력했는지 직접 입력했는지에 따라
+        // 뜨는 모달창을 다르게 변경
+        if (tempRecord.value.drinkId) {
+            // drinkId가 있다면 선택입력한 것이므로
+            // 선택 입력을 수정할 수 있는 모달창 띄움
+            close()
+            isUpdateInputModal.value = true
+
+        } else {
+            // drinkId가 없으면 직접 입력한 것이므로
+            // 직접 입력을 수정할 수 있는 모달창 띄움
+            close()
+            isUpdateNothingModal.value = true
+        }
+    }
 }
 
-function deleteRecord(recordId) {
+function deleteRecord(recordDrink) {
     const confirmed = window.confirm("정말 삭제를 원하십니까?");
-    if(confirmed) {
-        recordStore.deleteDrink(recordId);
+    if (confirmed) {
+        console.log("삭제");
+        if (recordDrink.drinkId > 0)
+            recordStore.deleteCafeDrink(recordDrink.recordId);
+        else
+            recordStore.deleteMyDrink(recordDrink.recordId);
+
+        // 데이터를 삭제한 후에 Vue의 반응성을 강제로 트리거하여 UI를 다시 렌더링합니다.
+        recordStore.getDayDrink.splice(recordStore.getDayDrink.indexOf(recordDrink), 1);
+        accumulateStore.day(recordDay);
     }
 }
 
@@ -138,8 +186,16 @@ onMounted(() => {
         }
     }
 
-    recordDay.value = recordStore.getRecordDay;
+    const date = new Date();
+    const year = date.getFullYear();
+    let month = date.getMonth() + 1; // Adding 1 to adjust for zero-based months
+    month = month < 10 ? "0" + month.toString() : month.toString();
+    let day = date.getDate();
+    day = day < 10 ? "0" + day.toString() : day.toString();
+    now.value = year.toString() + month.toString() + day.toString();
 
+
+    recordDay.value = recordStore.getRecordDay;
     recordStore.researchDayDrink(recordDay);
     accumulateStore.day(recordDay);
 })
@@ -151,8 +207,6 @@ onMounted(() => {
     position: fixed;
     width: 100vw;
     height: 100vh;
-    /* max-width:614px;
-    max-height: 584px; */
     background-color: rgba(128, 128, 128, 0.863) !important;
     top: 0;
     left: 0;
@@ -162,13 +216,33 @@ onMounted(() => {
     align-items: center;
 }
 
-.record_box {
+
+.detail_background {
     background: #ffffff;
     border-radius: 30px;
     border-style: solid;
     border-color: #d9d9d9;
     border-width: 1px;
     position: absolute;
+    width: 57.05%;
+    height: 60.89%;
+    max-width: 870px;
+    max-height: 780px;
+    min-width: 685px;
+    min-height: 480px;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    overflow-y: auto;
+    /* 세로 스크롤이 내용이 넘칠 때만 생성되도록 설정 */
+}
+
+.record_box {
+    background: #ffffff;
+    border-radius: 30px;
+    border-style: solid;
+    border-color: #d9d9d9;
+    border-width: 1px;
+    position: relative;
+    margin-bottom: 20px;
     right: 6.39%;
     left: 6.56%;
     width: 87.05%;
@@ -178,219 +252,6 @@ onMounted(() => {
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 
-.shot_title {
-    color: #000000;
-    text-align: left;
-    font-family: "DmSans-Bold", sans-serif;
-    font-size: 15px;
-    line-height: 18px;
-    font-weight: 700;
-    position: absolute;
-    right: 58.89%;
-    left: 29.53%;
-    width: 11.57%;
-    bottom: 52.53%;
-    top: 44.54%;
-    height: 2.94%;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-.cafe_name {
-    color: #000000;
-    text-align: left;
-    font-family: "DmSans-Bold", sans-serif;
-    font-size: 11px;
-    line-height: 18px;
-    font-weight: 700;
-    position: absolute;
-    right: 58.55%;
-    left: 29.71%;
-    width: 11.74%;
-    bottom: 65.42%;
-    top: 31.97%;
-    height: 2.61%;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-.no-001 {
-    color: #000000;
-    text-align: left;
-    font-family: "DmSans-Regular", sans-serif;
-    font-size: 11px;
-    line-height: 18px;
-    font-weight: 400;
-    position: absolute;
-    right: 58.55%;
-    left: 29.71%;
-    width: 11.74%;
-    bottom: 72.27%;
-    top: 25.12%;
-    height: 2.61%;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-.line-74 {
-    height: auto;
-    position: absolute;
-    right: 12.44%;
-    left: 29.53%;
-    width: 58.03%;
-    bottom: 64.19%;
-    top: 35.81%;
-    height: 1%;
-    overflow: visible;
-}
-
-.line-75 {
-    height: auto;
-    position: absolute;
-    right: 12.44%;
-    left: 29.53%;
-    width: 58.03%;
-    bottom: 50.65%;
-    top: 49.35%;
-    height: 1%;
-    overflow: visible;
-}
-
-.div3 {
-    color: #000000;
-    text-align: left;
-    font-family: "DmSans-Bold", sans-serif;
-    font-size: 15px;
-    line-height: 18px;
-    font-weight: 700;
-    position: absolute;
-    right: 27.81%;
-    left: 64.08%;
-    width: 8.12%;
-    bottom: 59.22%;
-    top: 38.17%;
-    height: 2.61%;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-.div4 {
-    color: #000000;
-    text-align: left;
-    font-family: "DmSans-Bold", sans-serif;
-    font-size: 15px;
-    line-height: 18px;
-    font-weight: 700;
-    position: absolute;
-    right: 26.08%;
-    left: 63.04%;
-    width: 10.88%;
-    bottom: 52.53%;
-    top: 44.86%;
-    height: 2.61%;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-.div5 {
-    color: #000000;
-    text-align: left;
-    font-family: "DmSans-Bold", sans-serif;
-    font-size: 15px;
-    line-height: 18px;
-    font-weight: 700;
-    position: absolute;
-    right: 58.89%;
-    left: 29.53%;
-    width: 11.57%;
-    bottom: 59.05%;
-    top: 38.34%;
-    height: 2.61%;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-.caffeine_value {
-    color: #000000;
-    text-align: left;
-    font-family: "DmSans-Regular", sans-serif;
-    font-size: 15px;
-    line-height: 18px;
-    font-weight: 400;
-    position: absolute;
-    right: 42.49%;
-    left: 45.94%;
-    width: 11.57%;
-    bottom: 59.38%;
-    top: 38.01%;
-    height: 2.61%;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-.shot_count {
-    color: #000000;
-    text-align: left;
-    font-family: "DmSans-Regular", sans-serif;
-    font-size: 15px;
-    line-height: 18px;
-    font-weight: 400;
-    position: absolute;
-    right: 44.73%;
-    left: 49.57%;
-    width: 5.7%;
-    bottom: 52.69%;
-    top: 44.7%;
-    height: 2.61%;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-.sugar_value {
-    color: #000000;
-    text-align: left;
-    font-family: "DmSans-Regular", sans-serif;
-    font-size: 15px;
-    line-height: 18px;
-    font-weight: 400;
-    position: absolute;
-    right: 15.54%;
-    left: 78.41%;
-    width: 6.04%;
-    bottom: 59.38%;
-    top: 38.01%;
-    height: 2.61%;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-.syrup_count {
-    color: #000000;
-    text-align: left;
-    font-family: "DmSans-Regular", sans-serif;
-    font-size: 15px;
-    line-height: 18px;
-    font-weight: 400;
-    position: absolute;
-    right: 15.37%;
-    left: 78.41%;
-    width: 6.22%;
-    bottom: 52.53%;
-    top: 44.86%;
-    height: 2.61%;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-}
 
 .all_caffeine {
     text-align: center;
@@ -494,6 +355,221 @@ onMounted(() => {
     transform: rotate(-0.114deg) scale(1, 1);
 }
 
+
+.shot_title {
+    color: #000000;
+    text-align: left;
+    font-family: "DmSans-Bold", sans-serif;
+    font-size: 15px;
+    line-height: 18px;
+    font-weight: 700;
+    position: absolute;
+    right: 60.89%;
+    left: 31.0%;
+    width: 11.57%;
+    bottom: 20.53%;
+    top: 74.54%;
+    height: 2.94%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.cafe_name {
+    color: #000000;
+    text-align: left;
+    font-family: "DmSans-Bold", sans-serif;
+    font-size: 11px;
+    line-height: 18px;
+    font-weight: 700;
+    position: absolute;
+    right: 58.55%;
+    left: 29.71%;
+    width: 50.95%;
+    bottom: 65.42%;
+    top: 28.97%;
+    height: 16.61%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.no-001 {
+    color: #000000;
+    text-align: left;
+    font-family: "DmSans-Regular", sans-serif;
+    font-size: 11px;
+    line-height: 18px;
+    font-weight: 400;
+    position: absolute;
+    right: 58.55%;
+    left: 29.71%;
+    width: 11.74%;
+    bottom: 72.27%;
+    top: 14.12%;
+    height: 2.61%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.line-74 {
+    height: auto;
+    position: absolute;
+    right: 12.44%;
+    left: 29.53%;
+    width: 63.03%;
+    bottom: 64.19%;
+    top: 44.81%;
+    height: 1%;
+    overflow: visible;
+}
+
+.line-75 {
+    height: auto;
+    position: absolute;
+    right: 12.44%;
+    left: 29.53%;
+    width: 63.03%;
+    bottom: 50.65%;
+    top: 88.2%;
+    height: 1%;
+    overflow: visible;
+}
+
+.div3 {
+    color: #000000;
+    text-align: left;
+    font-family: "DmSans-Bold", sans-serif;
+    font-size: 15px;
+    line-height: 18px;
+    font-weight: 700;
+    position: absolute;
+    right: 20.81%;
+    left: 66.12%;
+    width: 8.12%;
+    bottom: 59.22%;
+    top: 56.01%;
+    height: 2.61%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.div4 {
+    color: #000000;
+    text-align: left;
+    font-family: "DmSans-Bold", sans-serif;
+    font-size: 15px;
+    line-height: 18px;
+    font-weight: 700;
+    position: absolute;
+    right: 26.08%;
+    left: 65.04%;
+    width: 10.88%;
+    bottom: 52.53%;
+    top: 74.54%;
+    height: 2.61%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.div5 {
+    color: #000000;
+    text-align: left;
+    font-family: "DmSans-Bold", sans-serif;
+    font-size: 15px;
+    line-height: 18px;
+    font-weight: 700;
+    position: absolute;
+    right: 58.89%;
+    left: 29.53%;
+    width: 11.57%;
+    bottom: 59.05%;
+    top: 56.01%;
+    height: 2.61%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.caffeine_value {
+    color: #000000;
+    text-align: left;
+    font-family: "DmSans-Regular", sans-serif;
+    font-size: 15px;
+    line-height: 18px;
+    font-weight: 400;
+    position: absolute;
+    right: 42.49%;
+    left: 45.94%;
+    width: 11.57%;
+    bottom: 59.38%;
+    top: 55.01%;
+    height: 2.61%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.shot_count {
+    color: #000000;
+    text-align: left;
+    font-family: "DmSans-Regular", sans-serif;
+    font-size: 15px;
+    line-height: 18px;
+    font-weight: 400;
+    position: absolute;
+    right: 44.73%;
+    left: 49.57%;
+    width: 5.7%;
+    bottom: 52.69%;
+    top: 74.54%;
+    height: 2.61%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.sugar_value {
+    color: #000000;
+    text-align: left;
+    font-family: "DmSans-Regular", sans-serif;
+    font-size: 15px;
+    line-height: 18px;
+    font-weight: 400;
+    position: absolute;
+    right: 15.54%;
+    left: 84.41%;
+    width: 6.04%;
+    bottom: 59.38%;
+    top: 55.01%;
+    height: 2.61%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.syrup_count {
+    color: #000000;
+    text-align: left;
+    font-family: "DmSans-Regular", sans-serif;
+    font-size: 15px;
+    line-height: 18px;
+    font-weight: 400;
+    position: absolute;
+    right: 15.37%;
+    left: 84.41%;
+    width: 6.22%;
+    bottom: 52.53%;
+    top: 74.54%;
+    height: 2.61%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
 .coffee_name {
     color: #000000;
     text-align: left;
@@ -502,25 +578,25 @@ onMounted(() => {
     line-height: 18px;
     font-weight: 700;
     position: absolute;
-    right: 38.51%;
+    right: 20.51%;
     left: 29.53%;
-    width: 31.95%;
+    width: 50.95%;
     bottom: 66.72%;
-    top: 26.75%;
-    height: 6.53%;
+    top: 21.75%;
+    height: 10.53%;
     display: flex;
     align-items: center;
     justify-content: flex-start;
 }
 
 .coffee_image {
-    position: absolute;
-    right: 71.16%;
-    left: 8.43%;
+    position: relative;
+    right: 21.16%;
+    left: 5.43%;
     width: 18.42%;
     bottom: 49.1%;
-    top: 26.26%;
-    height: 24.63%;
+    top: 15.26%;
+    height: 70.63%;
     object-fit: cover;
 }
 
@@ -533,12 +609,15 @@ onMounted(() => {
     border-radius: 90px;
     position: absolute;
     right: 21.24%;
-    left: 71.85%;
+    left: 77.85%;
     width: 6.91%;
     bottom: 70.64%;
-    top: 25.12%;
-    height: 4.24%;
+    top: 12.12%;
+    height: 12.24%;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .delete_button {
@@ -550,30 +629,30 @@ onMounted(() => {
     border-radius: 90px;
     position: absolute;
     right: 12.78%;
-    left: 80.31%;
+    left: 85.31%;
     width: 6.91%;
     bottom: 70.64%;
-    top: 25.12%;
-    height: 4.24%;
+    top: 12.12%;
+    height: 12.24%;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.detail_background {
-    background: #ffffff;
-    border-radius: 30px;
-    border-style: solid;
-    border-color: #d9d9d9;
-    border-width: 1px;
+.cant_access {
+    color: gray;
+    font-size: 13px;
+    text-align: center;
+    font-family: "DmSans-Bold", sans-serif;
+    border-radius: 90px;
     position: absolute;
-    width: 57.05%;
-    height: 60.89%;
-    max-width: 870px;
-    max-height: 780px;
-    min-width: 685px;
-    min-height: 480px;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-    overflow-y: auto;
-    /* 세로 스크롤이 내용이 넘칠 때만 생성되도록 설정 */
+    right: 21.24%;
+    left: 63.85%;
+    width: 32.91%;
+    bottom: 70.64%;
+    top: 0.12%;
+    height: 12.24%;
 }
 
 .image-174 {
@@ -586,5 +665,6 @@ onMounted(() => {
     height: 7.18%;
     object-fit: cover;
     cursor: pointer;
-}</style>
+}
+</style>
   

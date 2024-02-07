@@ -1,131 +1,110 @@
 <template>
-  <div class="search-frame">
-    <div class="search-bar">
-      <input v-model="searchQuery" placeholder="Search for...">
-      <button @click="keywordSearch">검색</button>
+  <div class="search-frame">    
+    <searchTopView />
+    
+    <div class="full-list-link">
+      <h4 @click="goToFullList"> < 전체보기 </h4>
     </div>
-    <a @click="goToFullList">전체보기</a>
 
-    <div v-if="!searchResults.length">
-      <div class="rankings">
-        <h3>많이 검색한 순위</h3>
-        <div class="ranking-row">          
-          <div v-for="(drink, index) in keywordRanking" :key="drink.drinkId" v-if="index < 3">
-            {{ drink.rank }}. {{ drink.name }}
+    
+    <div class="rankings">
+      <div class="shading">
+        <h2 class="ranking-title search">많이 <span class="highlight">검색</span>한 순위</h2>
+        <div class="ranking-rows">
+          <div class="ranking-column rank-text">     
+            <div v-for="(keyword, index) in firstFourKeywords" :key="`first-${index}`" class="ranking-item">
+              {{ index + 1 }}. {{ keyword }} 
+            </div>
           </div>
-        </div>
-        <div class="ranking-row">          
-          <div v-for="(drink, index) in keywordRanking" :key="drink.drinkId" v-if="index >= 3 && index < 6">
-            {{ drink.rank }}. {{ drink.name }}
-          </div>
-        </div>
-
-        <h3>많이 기록한 음료 순위</h3>
-        <div class="ranking-row">          
-          <div v-for="(drink, index) in recordRanking" :key="drink.drinkId" v-if="index < 3">
-            {{ drink.rank }}. {{ drink.name }}
-          </div>
-        </div>
-        <div class="ranking-row">          
-          <div v-for="(drink, index) in recordRanking" :key="drink.drinkId" v-if="index >= 3 && index < 6">
-            {{ drink.rank }}. {{ drink.name }}
+          <div class="ranking-column rank-text">          
+            <div v-for="(keyword, index) in nextFourKeywords" :key="`next-${index}`" class="ranking-item">
+              {{ index + 5 }}. {{ keyword }}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+
+      <div class="shading">
+        <h2 class="ranking-title search">많이 <span class="highlight">기록</span>한 음료 순위</h2>
+        <div class="ranking-rows">
+          <div class="ranking-column rank-text">     
+            <div v-for="(drink, index) in firstFiveRecords" :key="`record-first-${index}`" class="ranking-item2">
+              {{ index + 1 }}. {{ drink.cafeName }} {{ drink.drinkName }} 
+             
+            </div>
+          </div>
+       
+          <!-- <div class="ranking-column rank-text">          
+            <div v-for="(drink, index) in nextThreeRecords" :key="`record-next-${index}`" class="ranking-item">
+              {{ index + 4 }}. {{ drink.cafeName }} {{ drink.drinkName }}
+            </div>
+          </div> -->
+        </div>
+      </div>
   </div>
-
+</div>
   
-
-
-    
 </template>
 
-<script setup>
-import { ref, computed,onMounted,watch } from 'vue';
-import { useSearchStore } from '../../stores/search';
-import { useUserStore } from '../../stores/user';
-import { useComparisonStore } from '../../stores/comparison';
-import router from '@/router';
-import '../../components/color/color.css'
 
+<script setup>
+import { ref, computed,onMounted } from 'vue';
+import { useSearchStore } from '../../stores/search';
+import { useDrinksStore} from '../../stores/drinks'
+import router from '@/router';
+import '../../components/color/color.css';
+import searchTopView from './SearchTopView.vue';
+import drinkDetailView from '@/views/search/drinkDetailView.vue'
+import { isCompareModal, isDetailModal } from '../../stores/util'
 const searchStore = useSearchStore();
-const userStore = useUserStore();
-const comparisonStore = useComparisonStore();
-const searchQuery = ref('');
+const drinkStore = useDrinksStore();
 const searchResults = computed(() => searchStore.getSearchDrinkList);
 const keywordRanking = computed(() => searchStore.getKeywordRanking);
 const recordRanking = computed(() => searchStore.getRecordRanking);
-const activeButtons = ref({});
-const showSortMenu = ref(false);
 
-const keywordSearch = () => {
-  searchStore.researchKeywordRank(searchQuery.value);
+
+const viewDetailsModal = (drinkId) => {
+  drinkStore.setSelectedDrink(drinkId); 
+  if (drinkStore.selectedDrink) {
+    isDetailModal.value = true; 
+  } else {
+    alert('해당 음료를 찾을 수 없습니다.');
+  }
 };
 
 const goToFullList = () => {
   router.push({ name: 'searchDetail' });
 };
 
-const enableButtons = (id) => {
-  activeButtons.value[id] = true;
-};
 
-const disableButtons = (id) => {
-  activeButtons.value[id] = false;
-};
-
-const toggleSortMenu = () => {
-  showSortMenu.value = !showSortMenu.value;
-};
-
-const sortResults = (key, order) => {
-  searchResults.value.sort((a, b) => {    
-    const keyMap = {
-      'sugar': 'drinkSugar',
-      'caffeine': 'drinkCaffeine'
-    };
-    
-    const actualKey = keyMap[key];
-    
-    if (order === 'asc') {
-      return a[actualKey] - b[actualKey];
-    } else {
-      return b[actualKey] - a[actualKey];
-    }
-  });
-};
-
-// 비교하기 버튼 클릭 시 호출될 함수
-const compareDrinks = () => {
-  if (comparisonStore.basket.length > 1) {
-    router.push({ name: 'searchDetail', params: { drinks: comparisonStore.basket } });
-  }
-};
-
-// 상세보기 버튼 클릭 시 호출될 함수
-const viewDetails = (drink) => {
-  router.push({ name: 'compareDrink', params: { drink } });
-};
-
-watch(comparisonStore.basket, (newVal) => {
-  // 세션 스토리지에 비교함 데이터 저장
-  comparisonStore.saveBasketToSession();
-}, { deep: true });
-
-// 컴포넌트가 마운트될 때 세션 스토리지에서 비교함 데이터를 불러옴
-onMounted(() => {
-  comparisonStore.loadBasketFromSession();
+const firstFourKeywords = computed(() => {
+  return keywordRanking.value.slice(0, 4);
 });
 
-watch(() => comparisonStore.basket, (newVal) => {
-  comparisonStore.saveBasketToSession();
-}, { deep: true });
 
+const nextFourKeywords = computed(() => {
+  return keywordRanking.value.slice(4, 8);
+});
+
+
+const firstFiveRecords = computed(() => {
+  return recordRanking.value.slice(0, 5);
+});
+
+// const nextThreeRecords = computed(() => {
+//   return recordRanking.value.slice(3, 6);
+// });
+
+onMounted(() => {
+  searchStore.bringKeywordRanking();
+  searchStore.bringRecordRanking();
+});
 </script>
 
+
+
 <style>
-.search-frame{
+.search-frame {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -134,61 +113,69 @@ watch(() => comparisonStore.basket, (newVal) => {
   margin-top: 40px;
   background: #FFF;
   padding: 20px;
-  
-  
-}
-.ranking-row {
-  display: flex;
-  justify-content: space-between;
-}
-.high-sugar {
-  color: red;
 }
 
-.low-sugar {
-  color: blue;
+.full-list-link {
+  align-self: flex-start;
+  margin-bottom: 20px; 
+  margin-left: 55px; 
+  cursor: pointer; 
 }
-
-.high-caffeine {
-  color: red;
+.highlight {
+  color: #846046; 
 }
-
-.low-caffeine {
-  color: blue;
-}
-
-.detail-view-button, .compare-button {
-  display: none;
-}
-
-.search-results-container tr:hover .detail-view-button,
-.search-results-container tr:hover .compare-button {
-  display: block;
-}
-
-.sort-buttons {
-  position: relative;
-}
-
-.sort-menu {
-  position: absolute;
-  background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 10px;
+.rankings {
   display: flex;
   flex-direction: column;
-  top: 100%;
-  left: 0;
-  z-index: 10;
+  align-items: center;
+  width: 97%;
 }
 
-.sort-menu button {
-  margin-bottom: 5px;
-  cursor: pointer;
+.ranking-title {
+  color: #000; 
+  text-align: left;
+  margin-left: 10px;
 }
 
-.sort-menu button:last-child {
-  margin-bottom: 0;
+
+.ranking-rows {
+  display: flex;
+  justify-content: space-between; 
 }
+.ranking-column {
+  display: flex;
+  flex-direction: column; 
+  width: 100%;
+  margin: auto;
+}
+.ranking-item {
+  margin-bottom: 5px; 
+  text-align: left; 
+}
+.ranking-item2 {
+  margin-bottom: 5px; 
+  text-align: left; 
+}
+.shading {
+  display: flex; 
+  flex-direction: column; 
+  flex-wrap: wrap; 
+  align-items: left; 
+  justify-content: flex-start;
+  border-radius: 45px; 
+  border: 1px solid #EFEFEF;
+  background: var(--Color, #FFF);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  padding: 15px; 
+  margin-bottom: 20px; 
+  width: 90%;  
+}
+
+.rank-text{
+  font-size: 20px;
+  margin-top: 15x;
+  margin-left: 10px;
+}
+
 </style>
+

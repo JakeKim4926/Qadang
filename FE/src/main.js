@@ -18,23 +18,105 @@ import {fas} from '@fortawesome/free-solid-svg-icons'
 import {far} from '@fortawesome/free-regular-svg-icons'
 import {fab} from '@fortawesome/free-brands-svg-icons'
 
+import { userAccessToken } from "@/stores/util"
+
+import axios from 'axios';
+
+// axios의 헤더에 토큰을 설정하는 함수
+const setTokenInAxiosHeader = () => {
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      axios.defaults.headers.common['Authorization'] = token;
+      userAccessToken.value = token;
+    }
+  };
+  
+  // 애플리케이션을 생성하고
+  // axios의 헤더에 토큰을 설정합니다.
+  setTokenInAxiosHeader();
+
+const responseState = {
+    CONTINUE: 100,
+    PROCESSING: 102,
+    SUCCESS: 200,
+    CREATED: 201,
+    ACCEPT: 202,
+    BAD_REQUEST: 400,
+    UNAUTORIZED: 401,
+    FORBIDDEN: 402,
+    NOT_FOUND: 404,
+    INTERENAL_SERVER_ERROR: 500,
+    NOT_IMPLEMENT: 501,
+  };
+
+axios.interceptors.request.use((config)=> {
+    // console.log("[요청 발신]: ", config);
+    return config;
+}, (error) => {
+    // console.log('[요청 실패]: ', error);
+    console.log("[요청 헤더] : ", config.headers)
+    console.log("[요청 상태] : ", config.status)
+    return Promise.reject(error);
+})
+
+axios.interceptors.response.use((config)=> {
+    console.log("[응답 수신] : ", config);
+    // console.log("[응답 헤더] : ", config.headers);
+    // console.log("[응답 상태] : ", config.status);
+
+    if(config.status == responseState.CONTINUE) {
+
+    } else if(config.status == responseState.PROCESSING) {
+
+    } else if(config.status == responseState.SUCCESS) {
+
+    } else if(config.status == responseState.CREATED) {
+
+    } else if(config.status == responseState.ACCEPT) {
+
+    } else if(config.status == responseState.BAD_REQUEST) {
+        window.alert("잘못된 요청입니다.");
+    } else if(config.status == responseState.UNAUTORIZED) {
+        window.alert("클라이언트 인증 오류입니다.");
+    } else if(config.status == responseState.FORBIDDEN) {
+        window.alert("권한이 없습니다");
+    } else if(config.status == responseState.NOT_FOUND) {
+        window.alert("NOT_FOUND");
+    } else if(config.status == responseState.INTERENAL_SERVER_ERROR) {
+        window.alert("서버 에러");
+    } else if(config.status == responseState.NOT_IMPLEMENT) {
+        console.log("NOT_IMPLEMENT");
+    }
+
+    return config;
+}, (error) => {
+    console.log('[오류 수신]: ', error);
+
+    if(config.status == responseState.BAD_REQUEST) {
+        window.alert("잘못된 요청입니다.");
+    } else if(config.status == responseState.UNAUTORIZED) {
+        window.alert("클라이언트 인증 오류입니다.");
+    } else if(config.status == responseState.FORBIDDEN) {
+        window.alert("권한이 없습니다");
+        router.push('/');
+    } else if(config.status == responseState.NOT_FOUND) {
+        window.alert("NOT_FOUND");
+    } else if(config.status == responseState.INTERENAL_SERVER_ERROR) {
+        window.alert("서버 에러");
+    } else if(config.status == responseState.NOT_IMPLEMENT) {
+        console.log("NOT_IMPLEMENT");
+    }
+
+    return Promise.reject(error);
+})
+
 /* add icons to the library */
 library.add(faUserSecret)
 library.add(fas, far, fab)
 
 const app = createApp(App)
 
-// // Vuetify
-// import "vuetify/styles";
-// import { createVuetify } from "vuetify";
-// import * as components from "vuetify/components";
-// import * as directives from "vuetify/directives";
-
-// const vuetify = createVuetify({
-//   components,
-//   directives,
-// });
-
+window.Kakao.init(import.meta.env.VITE_KAKAO_API_KEY)
 
 app.component('font-awesome-icon', FontAwesomeIcon)
 app.use(createPinia())
