@@ -114,7 +114,7 @@ export const useUserStore = defineStore("user", () => {
         console.log('결과', res.data);
         
         // 헤더 설정
-        // axios.defaults.headers.common['Authorization'] = res.data.accessToken; 
+        axios.defaults.headers.common['Authorization'] = res.data.accessToken; 
         const result = ref({});
         result.value = res.data;
 
