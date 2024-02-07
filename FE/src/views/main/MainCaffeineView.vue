@@ -32,11 +32,15 @@
           </div>
 
           <p class="today-title">하루 총합 섭취량 / 권장량</p>
-          <p class="today-info"
-          :class="{ 'font_red': accumulateStore.getAccumulateToday.accumulateCaffeine >= userStore.getUserRDI.userCaffeine,
-          'font_green': accumulateStore.getAccumulateToday.accumulateCaffeine < userStore.getUserRDI.userCaffeine }">
-            {{ accumulateStore.getAccumulateToday.accumulateCaffeine }} / 
-            {{ userStore.getUserRDI.userCaffeine }}mg</p>
+            <p v-if="accumulateStore.getAccumulateToday.accumulateCaffeine >= userStore.getUserRDI.userCaffeine" class="today-info font_red">
+              {{ accumulateStore.getAccumulateToday.accumulateCaffeine }} / 
+              {{ userStore.getUserRDI.userCaffeine }}g
+            </p>
+            <p v-else class="today-info font_green">
+              {{ accumulateStore.getAccumulateToday.accumulateCaffeine }} / 
+              {{ userStore.getUserRDI.userCaffeine }}g
+            </p>
+
         </div>
 
         <div class="right-info superbig-font">
@@ -54,15 +58,15 @@
     </div>
 
     <div>
-      <p>최근에 마신 카페인을 한눈에 보아요</p>
+      <div class="chart-container">
+        <p>최근에 마신 카페인을 한눈에 보아요</p>
+        <select name="selectDate" id="selectDate" v-model="seleteDate" class="button_select chart-date-button">
+          <option value="day" class="date-text">일</option>
+          <option value="week" class="date-text">주</option>
+        </select>
+      </div>
       <div class="info-box">
         <canvas id="chartCanvas" width="500"></canvas>
-        <div class="chart_select_box">
-          <select name="selectDate" id="selectDate" v-model="seleteDate" class="button_select selete_date_button">
-            <option value="day">일별</option>
-            <option value="week">주별</option>
-          </select>
-        </div>
       </div>
     </div>
 
@@ -316,22 +320,25 @@ p {
   margin-top: 0;
 }
 
+.chart-date-button {
+  width: 50px;
+  height: 20px;
+  margin-top: 10px;
+}
+
+.date-text {
+  text-align: center;
+}
+
 #chartCanvas {
   margin: auto;
   margin-top: 20px;
   margin-bottom: 20px;
 }
 
-.chart_select_box {
-  height: 230px;
+.chart-container {
   display: flex;
-  align-items: flex-start;
-}
-
-.selete_date_button {
-  display: flex;
-  align-items: start;
-  margin-right: 30px
+  justify-content: space-between;
 }
 
 .photo {
