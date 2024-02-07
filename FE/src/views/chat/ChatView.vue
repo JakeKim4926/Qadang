@@ -15,14 +15,15 @@
             <template v-if="chat.userId == userId">
               <!-- <p class="time">{{ extractTimeFromDate(chat.time) }}</p> -->
               <div class="my-chat">
+                <p class="time">{{ extractTimeFromDate(chat.time) }}</p>
                 <div class="message">{{ chat.message }}</div>
               </div>
             </template>
             <div v-else class="their-chat">
               <!-- <p>{{ extractTimeFromDate(chat.time) }}</p> -->
-              <div class="nickname">{{ chat.userName }}</div>
+              <div class="nickname" :class="'nickname-' + ((chat.userId % 7) + 1)">{{ chat.userName }}</div>
               <p class="message">{{ chat.message }}</p>
-
+              <p class="time">{{ extractTimeFromDate(chat.time) }}</p>
             </div>
           </div>
         </div>
@@ -113,33 +114,57 @@ onMounted(async () => {
         index: 1,
         userId: 1,
         userName: 'user01',
-        message: 'I love drink',
-        time: '2024-02-07 12:00:00' // 형식을 맞추어서 날짜 및 시간을 적절히 설정하세요
+        message: 'I love drinkdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd',
+        time: '2024-02-07 12:13:00' // 형식을 맞추어서 날짜 및 시간을 적절히 설정하세요
       });
 
       chatStore.getChatList.push({
         index: 1,
         userId: 2,
         userName: 'user02',
-        message: 'me too',
-        time: '2024-02-07 12:00:03' // 형식을 맞추어서 날짜 및 시간을 적절히 설정하세요
+        message: 'me tooddddddddddddddddddddddddddddddddddddd',
+        time: '2024-02-07 12:16:03' // 형식을 맞추어서 날짜 및 시간을 적절히 설정하세요
       });
 
-      // chatStore.getChatList.push({
-      //   index: 1,
-      //   userId: 3,
-      //   userName: 'user03',
-      //   message: 'I love drink',
-      //   time: '2024-02-07 12:00:05' // 형식을 맞추어서 날짜 및 시간을 적절히 설정하세요
-      // });
+      chatStore.getChatList.push({
+        index: 1,
+        userId: 3,
+        userName: 'user03',
+        message: 'I love drinkasdsadsadsad',
+        time: '2024-02-07 02:23:05' // 형식을 맞추어서 날짜 및 시간을 적절히 설정하세요
+      });
+ 
+      chatStore.getChatList.push({
+        index: 1,
+        userId: 4,
+        userName: 'user04',
+        message: '안녕하세요~ aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+        time: '2024-02-07 02:33:07' // 형식을 맞추어서 날짜 및 시간을 적절히 설정하세요
+      });
 
-      // chatStore.getChatList.push({
-      //   index: 1,
-      //   userId: 4,
-      //   userName: 'user04',
-      //   message: '안녕하세요~ ',
-      //   time: '2024-02-07 12:00:07' // 형식을 맞추어서 날짜 및 시간을 적절히 설정하세요
-      // });
+      chatStore.getChatList.push({
+        index: 1,
+        userId: 5,
+        userName: 'user05',
+        message: 'There was no other way',
+        time: '2024-02-07 02:53:07' // 형식을 맞추어서 날짜 및 시간을 적절히 설정하세요
+      });
+
+      chatStore.getChatList.push({
+        index: 1,
+        userId: 6,
+        userName: 'user06',
+        message: '하이요',
+        time: '2024-02-07 03:12:07' // 형식을 맞추어서 날짜 및 시간을 적절히 설정하세요
+      });
+
+      chatStore.getChatList.push({
+        index: 1,
+        userId: 7,
+        userName: 'user07',
+        message: '재밌넹',
+        time: '2024-02-07 03:17:07' // 형식을 맞추어서 날짜 및 시간을 적절히 설정하세요
+      });
     }
 
   );
@@ -166,7 +191,8 @@ function extractTimeFromDate(dateTimeString) {
   // dateTimeString에서 공백을 기준으로 분할하여 시간 부분만 추출
   if (dateTimeString == undefined || dateTimeString.length < 5) return "";
   const time = dateTimeString.split(" ")[1];
-  return time;
+  const minute = time.split(":")[0] + ":" + time.split(":")[1]
+  return minute;
 }
 
 async function sendOpen() {
@@ -379,11 +405,6 @@ watchEffect(() => {
 
 }
 
-.time {
-  font-size: 12px;
-  color: #999;
-  margin-left: px;
-}
 
 .chat-icon {
   position: absolute;
@@ -419,6 +440,15 @@ watchEffect(() => {
   /* 최초에 채팅 메시지 아래에 간격을 둡니다. */
 }
 
+.time {
+  font-size: 12px;
+  color: #999;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+
 .my-chat {
   align-self: flex-end;
   text-align: left;
@@ -427,20 +457,33 @@ watchEffect(() => {
   border-radius: 20px;
   color: black;
   padding: 10px 15px;
-  margin: 4px 10px 4px 80%;
-  max-width: fit-content; /* 메시지 내용에 맞게 최대 너비 설정 */
+  margin: 4px 10px 4px 90%;
+  width: fit-content; /* 메시지 내용에 맞게 최대 너비 설정 */
+  max-width: 50%;
+  right : 43%;
   /* 메시지 최대 너비 설정 */
   position: relative;
   word-wrap: break-word;
-
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
+
+.my-chat .time {
+  left: -50px; /* 왼쪽으로 시간 텍스트를 이동 */
+  top: 50%; /* 상단을 기준으로 정렬 */
+  transform: translateY(50%); /* 수직으로 중앙으로 이동 */
+}
+
 
 .their-chat {
   position: relative;
   padding: 5px 15px; /* 닉네임을 위한 여백 추가 */
   margin: 4px 15px;
-  max-width: fit-content;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  width: fit-content; /* 메시지 내용에 맞게 최대 너비 설정 */
+  max-width: 50%;
   background-color: #f5f5f5;
   border-radius: 20px;
   color: black;
@@ -448,24 +491,30 @@ watchEffect(() => {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.their-chat .time {
+  right: -45px; /* 오른쪽으로 시간 텍스트를 이동 */
+  top: 50%; /* 상단을 기준으로 정렬 */
+  transform: translateY(35%); /* 수직으로 중앙으로 이동 */
+}
+
 .nickname {
   position: absolute;
-  top: -35%; /* 닉네임의 상단 여백 조절 */
-  left: 10%;
-  font-size: 15px;
+  top: -25px; /* 닉네임의 상단 여백 조절 */
+  left: 10px;
+  font-size: 17px;
   line-height: 18px;
   font-weight: 700;
   background-color: transparent; /* 배경색 투명하게 설정 */
 }
 
 .nickname-1 {
-  color:red;
+  color:pink;
 }
 .nickname-2 {
   color:orange;
 }
 .nickname-3 {
-  color:yellow;
+  color:#846046;
 }
 .nickname-4 {
   color:green;
