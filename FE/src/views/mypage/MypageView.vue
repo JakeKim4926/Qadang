@@ -4,8 +4,7 @@
     <div class="profile-section">
       <div class="profile-image">
         
-        <h2 v-if="userInfo && userInfo.userName">{{ userInfo.userName }}</h2>
-        <p>jake</p>
+        <h2>{{ userInfo.userName }}</h2>
       </div>
       <div class="message">{{ message }}</div>
       <div class="user-actions">

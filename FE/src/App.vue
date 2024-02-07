@@ -4,15 +4,13 @@
     <div class="main-content">
       <RouterView />
     </div>
-    <!-- <template v-if="userAccessToken != null">
-      <TheFooter />
-    </template> -->
 
   </div>
   <div>
-    <TheFooter class="TheFooter" />
+    <template v-if="userAccessToken != null">
+      <TheFooter />
+    </template>
   </div>
-  <TheFooter />
 
 </template>
 
