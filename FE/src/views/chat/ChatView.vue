@@ -10,16 +10,17 @@
 
     <template v-if="cafe.id > 0">
       <div class="chat-container">
-        <div class="chat-messages" ref="chatContainer">
+        <div v-if="showMessages" class="chat-messages" ref="chatContainer">
           <div v-for="chat in chatStore.getChatList" :key="chat.index">
             <template v-if="chat.userId == userId">
+              <!-- <p class="time">{{ extractTimeFromDate(chat.time) }}</p> -->
               <div class="my-chat">
-                <span class="time">{{ extractTimeFromDate(chat.time) }}</span>
                 <div class="message">{{ chat.message }}</div>
               </div>
             </template>
             <div v-else class="their-chat">
-              <p>{{ extractTimeFromDate(chat.time) }}</p>
+              <!-- <p>{{ extractTimeFromDate(chat.time) }}</p> -->
+              <div class="nickname">{{ chat.userName }}</div>
               <p class="message">{{ chat.message }}</p>
 
             </div>
@@ -62,6 +63,7 @@ const chatContainer = ref(null);
 const cafe = ref({});
 const receivedMessages = ref([]);
 const Msgcnt = ref(0);
+const showMessages = ref(false);
 // for test
 const userId = ref(1);
 
@@ -70,6 +72,7 @@ onMounted(async () => {
   // socketStore.socket = new SockJS(import.meta.env.VITE_SOCKET_API); // 웹소켓 서버 URL
   socketStore.socket = new SockJS("http://localhost:8080/ws/chat"); // 웹소켓 서버 URL
   socketStore.stompClient = Stomp.over(socketStore.socket);
+  showMessages.value = true;
 
   const chat = {
     messageType: messageType.ENTER,
@@ -121,6 +124,22 @@ onMounted(async () => {
         message: 'me too',
         time: '2024-02-07 12:00:03' // 형식을 맞추어서 날짜 및 시간을 적절히 설정하세요
       });
+
+      // chatStore.getChatList.push({
+      //   index: 1,
+      //   userId: 3,
+      //   userName: 'user03',
+      //   message: 'I love drink',
+      //   time: '2024-02-07 12:00:05' // 형식을 맞추어서 날짜 및 시간을 적절히 설정하세요
+      // });
+
+      // chatStore.getChatList.push({
+      //   index: 1,
+      //   userId: 4,
+      //   userName: 'user04',
+      //   message: '안녕하세요~ ',
+      //   time: '2024-02-07 12:00:07' // 형식을 맞추어서 날짜 및 시간을 적절히 설정하세요
+      // });
     }
 
   );
@@ -307,9 +326,11 @@ watchEffect(() => {
   height: 76.2%;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   display: flex;
-  flex-direction: column; /* 채팅 컨테이너를 열 방향으로 배치합니다. */
-  align-items: flex-end; /* 채팅 메시지를 오른쪽으로 정렬합니다. */
-  bottom: 10%; /* 채팅 입력란과 겹치지 않게 조정합니다. */
+  flex-direction: column;
+  /* 채팅 컨테이너를 열 방향으로 배치합니다. */
+  /* align-items: flex-end; */
+  bottom: 10%;
+  /* 채팅 입력란과 겹치지 않게 조정합니다. */
 }
 
 .chat-container-disable {
@@ -361,7 +382,7 @@ watchEffect(() => {
 .time {
   font-size: 12px;
   color: #999;
-  margin-right: 5px;
+  margin-left: px;
 }
 
 .chat-icon {
@@ -394,40 +415,71 @@ watchEffect(() => {
   display: flex;
   flex-direction: column-reverse;
   overflow: auto;
+  margin-bottom: 70px;
+  /* 최초에 채팅 메시지 아래에 간격을 둡니다. */
 }
 
 .my-chat {
-  
   align-self: flex-end;
+  text-align: left;
   /* background: linear-gradient(135deg, #4CAF50, #2E7D32); */
   background-color: #f5f5f5;
   border-radius: 20px;
   color: black;
-  max-width: 80%;
-  padding: 12px 16px;
-  margin: 8px 0;
-  border-radius: 20px;
-  text-align: right;
+  padding: 10px 15px;
+  margin: 4px 10px 4px 80%;
+  max-width: fit-content; /* 메시지 내용에 맞게 최대 너비 설정 */
+  /* 메시지 최대 너비 설정 */
   position: relative;
+  word-wrap: break-word;
+
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .their-chat {
-  align-self: flex-start;
-  background-color: #f5f5f5;
-  max-width: 70%;
-  padding: 8px;
-  margin: 8px 0;
-  border-radius: 6px;
-  text-align: left;
-  color: #282828;
   position: relative;
-  right: 0;
-  /* 말풍선을 화면 오른쪽에 위치시킵니다. */
-  left: auto;
-  /* 말풍선을 왼쪽에 붙이는 스타일을 초기화합니다. */
-
+  padding: 5px 15px; /* 닉네임을 위한 여백 추가 */
+  margin: 4px 15px;
+  max-width: fit-content;
+  background-color: #f5f5f5;
+  border-radius: 20px;
+  color: black;
+  word-wrap: break-word;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
+.nickname {
+  position: absolute;
+  top: -35%; /* 닉네임의 상단 여백 조절 */
+  left: 10%;
+  font-size: 15px;
+  line-height: 18px;
+  font-weight: 700;
+  background-color: transparent; /* 배경색 투명하게 설정 */
+}
+
+.nickname-1 {
+  color:red;
+}
+.nickname-2 {
+  color:orange;
+}
+.nickname-3 {
+  color:yellow;
+}
+.nickname-4 {
+  color:green;
+}
+.nickname-5 {
+  color:blue;
+}
+.nickname-6 {
+  color:navy;
+}
+.nickname-7 {
+  color:purple;
+}
+
 
 .chat-input {
   color: black;
@@ -449,7 +501,6 @@ watchEffect(() => {
   justify-content: flex-start;
   resize: none;
   overflow: hidden;
-  resize: none;
 }
 
 .chat-input:focus {
@@ -477,5 +528,4 @@ button {
   padding: 8px 16px;
   border-radius: 5px;
   cursor: pointer;
-} */
-</style>
+} */</style>

@@ -116,7 +116,6 @@ export const useUserStore = defineStore("user", () => {
         const result = ref({});
         result.value = res.data;
 
-
         userAccessToken.value = res.data;
       })
       .catch((err) => {

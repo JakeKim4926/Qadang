@@ -112,7 +112,7 @@ export const useRecordsStore = defineStore("records", () => {
   // date example) 20240124
   const researchDayDrink = function (date) {
     axios({
-      url: `${import.meta.env.VITE_REST_RECORDS_API}/${date}/day`,
+      url: `${import.meta.env.VITE_REST_RECORDS_API}/${date.value}/day`,
       method: "GET",
     })
       .then((res) => {

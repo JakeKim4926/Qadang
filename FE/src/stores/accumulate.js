@@ -68,7 +68,7 @@ export const useAccumulateStore = defineStore("accumulate", () => {
   // date example) 202401 (연도+월)
   const month = async function (ym) {
     await axios({
-      url: `${import.meta.env.VITE_REST_ACCUMULATE_API}/${ym}/month`,
+      url: `${import.meta.env.VITE_REST_ACCUMULATE_API}/${ym.value}/month`,
       method: "GET",
     })
       .then((res) => {
@@ -87,7 +87,7 @@ export const useAccumulateStore = defineStore("accumulate", () => {
   // date example) 20240123 (연도+월일)
   const day = function (date) {
     axios({
-      url: `${import.meta.env.VITE_REST_ACCUMULATE_API}/${date}/day`,
+      url: `${import.meta.env.VITE_REST_ACCUMULATE_API}/${date.valeu}/day`,
       method: "GET",
     })
       .then((res) => {
