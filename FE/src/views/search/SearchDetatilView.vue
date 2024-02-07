@@ -6,7 +6,7 @@
 
     <div class="button-row">
       <div class="left-buttons">
-        <h4 @click="goToRanklist" class="rank-button"> 순위보기</h4>
+        <h4 @click="goToRanklist" class="rank-button"> < 순위보기</h4>
       </div>
       <div class="right-buttons">
         <button
