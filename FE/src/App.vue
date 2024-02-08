@@ -6,10 +6,7 @@
     </div>
   </div>
   <div>
-    <template v-if="userAccessToken != null">
-      <TheFooter class="TheFooter" />
-    </template>
-    <!-- <TheFooter class="TheFooter" /> -->
+   <TheFooter class="TheFooter" />
   </div>
 </template>
 

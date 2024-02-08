@@ -30,3 +30,5 @@ export const isCompareModal = ref(false)
 export const tempRecord = ref({})
 
 export const userAccessToken = ref(null);
+
+export const isRankModal = ref(false)
