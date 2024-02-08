@@ -307,62 +307,41 @@ public class KakaoService {
 
     // JWT 토큰 유효성 검사 함수
     public String checkToken(String token) {
-
-        System.out.println(" ------- JWT 토큰 유효성 검사 함수 ------ ");
-
         String accesstoken = getJwtToken(token); // JWT 토큰이 헤더에 있는지 없는지 확인하고 추출
-        System.out.println("[유효성검사1] 토큰 추출 결과 " + accesstoken);
         if (accesstoken == null) { // 토큰이 헤더에 없거나 잘못된 형태
-            System.out.println("헤더에 토큰이 없음");
             return null;
         }
 
         boolean isExpire = validToken(accesstoken); // JWT 만료 여부 검사 ( true이면 실패 )
-        System.out.println("[유효성검사3] 만료여부 검사 결과 : " + isExpire);
         if (isExpire == true) { // access 토큰이 만료되었으면
             boolean isRefresh = refreshcheck(accesstoken); // refresh token 이 존재하는지 확인
-            System.out.println("[유효3] refresh 존재여부 : " + isRefresh);
             if (isRefresh == false) { // refresh token이 없으면 실패
-                System.out.println("[유효3] refresh 존재하지 않습니다. ");
                 return null;
             } else {
-                System.out.println("[유효성3] 토큰 갱신 시작 ");
                 // 엑세스 토큰 갱신 => refresh 회원번호랑 토큰의 회원번호가 일치하면
                 Long accessUser = getUserId(accesstoken);
                 Long refreshUser = getUserId(userRepository.findByUserId(accessUser).getJwtRefreshToken());
                 if (accessUser == refreshUser) { // refresh 토큰 안의 회원번호와 access 토큰 안의 회원번호가 일치하면
                     //refresh 토큰이 유효한지 검사하고 유효하면 갱신
                     boolean refreshExpire = validToken(userRepository.findByUserId(refreshUser).getJwtRefreshToken());
-                    System.out.println("[유효3] refresh 유효성 검사 : "+refreshExpire);
                     if (refreshExpire == true) {
-                        System.out.println("[유효3] access 갱신 ");
                         // 갱신
                         String access = getJwtAccess(userRepository.findByUserId(refreshUser));
-                        System.out.println("[유효3] access 갱신 : "+access);
                         token = access;
-                        System.out.println("[유효3] 토큰 갱신 확인 : "+token);
-
                         return token;
                     } else {
-                        System.out.println("[유효3] refresh 존재하지 않음");
                         return null;
                     }
                 } else {
-                    System.out.println("[유효3] 회원 정보 다름");
                     return null;
                 }
             }
         }
 
         boolean isVaildation = vaildation(accesstoken); // JWT 토큰 유효성 검사 ( false이면 실패 )
-        System.out.println("[유효성검사3] 토큰 유효성 검사 결과 : " + isVaildation);
         if (isVaildation == false) { // 토큰이 유효하지 않음
-            System.out.println("2번실패");
             return null;
         }
-
-
-        System.out.println("[유효성검사 마지막] "+token);
         return token;
     }
 
@@ -389,7 +368,6 @@ public class KakaoService {
                 .get("userId", Long.class);
 
         User user = userRepository.findByUserId(getId);
-
         return user;
 
     }
