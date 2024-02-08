@@ -292,6 +292,19 @@ public class KakaoService {
         return true; // 성공
     }
 
+    // 리프레시 토큰 유효성 검사
+    public boolean refreshcheck(String accesstoken) { // false이면 실패
+        System.out.println("refresh 유효성 검사");
+        Long id = getUser(accesstoken).getUserId();
+        User user = userRepository.findByUserId(id);
+        if (user.getJwtRefreshToken().isEmpty()) { // refresh token 없음 => 새로운 유저 or logout
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
     // JWT 토큰 유효성 검사 함수
     public String checkToken(String token) {
 
@@ -301,13 +314,6 @@ public class KakaoService {
         System.out.println("[유효성검사1] 토큰 추출 결과 " + accesstoken);
         if (accesstoken == null) { // 토큰이 헤더에 없거나 잘못된 형태
             System.out.println("헤더에 토큰이 없음");
-            return null;
-        }
-
-        boolean isVaildation = vaildation(accesstoken); // JWT 토큰 유효성 검사 ( false이면 실패 )
-        System.out.println("[유효성검사2] 토큰 유효성 검사 결과 : " + isVaildation);
-        if (isVaildation == false) { // 토큰이 유효하지 않음
-            System.out.println("2번실패");
             return null;
         }
 
@@ -347,6 +353,15 @@ public class KakaoService {
                 }
             }
         }
+
+        boolean isVaildation = vaildation(accesstoken); // JWT 토큰 유효성 검사 ( false이면 실패 )
+        System.out.println("[유효성검사3] 토큰 유효성 검사 결과 : " + isVaildation);
+        if (isVaildation == false) { // 토큰이 유효하지 않음
+            System.out.println("2번실패");
+            return null;
+        }
+
+
         System.out.println("[유효성검사 마지막] "+token);
         return token;
     }
@@ -379,18 +394,7 @@ public class KakaoService {
 
     }
 
-    // 리프레시 토큰 유효성 검사
-    public boolean refreshcheck(String accesstoken) { // false이면 실패
-        System.out.println("refresh 유효성 검사");
-        Long id = getUser(accesstoken).getUserId();
-        User user = userRepository.findByUserId(id);
-        if (user.getJwtRefreshToken().isEmpty()) { // refresh token 없음 => 새로운 유저 or logout
-            return false;
-        } else {
-            return true;
-        }
 
-    }
 
     // 카카오 엑세스 토큰 만료
     public IdResponse kakaoLogout(String code) {

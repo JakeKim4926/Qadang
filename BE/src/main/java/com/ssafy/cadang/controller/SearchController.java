@@ -29,6 +29,8 @@ public class SearchController {
     @GetMapping("/drinks")
     public ResponseEntity<?> allDrink(@RequestHeader("Authorization") String token) {
 
+        System.out.println("음료전체보기" + token);
+
         // 토큰 유효성 검사
         String passAccess = kakaoService.checkToken(token); // 통과한 access token
         System.out.println(" 유효성검사 시작 "+passAccess);
