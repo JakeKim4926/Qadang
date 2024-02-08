@@ -5,40 +5,22 @@
                 <div class="title01">카페에서 마시는 최애 음료는?</div>
 
                 <div class="cafe_name">카페명</div>
-                <select id="cafeSelect" v-model="cafeId" class="rectangle-4271 select-font" @change="selectCafe"
+                <select id="cafeSelect" v-model="cafeId" class="rectangle-4271 select-font"
                     style="text-align: center; ">
                     <option v-for="cafe in drinkStore.getCafeList" :key="cafe.cafeId" :value="cafe.cafeId">
                         {{ cafe.cafeName }}
                     </option>
                 </select>
                 <div class="div5">음료명</div>
-                <!-- <input type="text" v-model="userInput" @input="updateOptions" :disabled="!cafeId"> -->
-                <!-- <select id="drinkSelect" v-model="drinkTemp" class="rectangle-4272 select-font" @change="selectDrink"
-                    style="text-align: center;" :disabled="!cafeId">
-                    <option v-for="drink in drinkStore.getCafeDrinkList" :key="drink.drinkId" :value="drink">
-                        {{ drink.drinkName }}
-                    </option>
-                </select> -->
                 <input type="text" v-model="searchText" class="rectangle-4272 select-font" style="text-align: center; margin-bottom: 10px;"
                     placeholder="Search for drinks" :disabled="!cafeId">
 
                 <select id="drinkSelect" v-model="drinkTemp" class="rectangle-4272 select-font" @change="selectDrink"
-                    style="text-align: center;" :disabled="!cafeId">
+                    style="text-align: center; " :disabled="!cafeId">
                     <option v-for="drink in filteredDrinks" :key="drink.drinkId" :value="drink">
                         {{ drink.drinkName }}
                     </option>
                 </select>
-                <!-- <div class="rectangle-4272">
-                    <input type="text" v-model="searchText" class="rectangle-42 select-font"
-                        style="text-align: center; position: absolute; left: 0; right: 0; top: 0; bottom: 0; margin: auto 0;">
-                    <select id="drinkSelect" v-model="selectedDrink" class="rectangle-42 select-font" @change="selectDrink"
-                        style="text-align: center; position: absolute; right: 10px; top: 0; bottom: 0; margin: auto;">
-                        <option v-for="drink in filteredDrinks" :key="drink.drinkId" :value="drink">
-                            {{ drink.drinkName }}
-                        </option>
-                    </select>
-                </div> -->
-
 
             </div>
 
@@ -466,15 +448,14 @@ onMounted(() => {
     border-color: #846046;
     border-width: 2px;
     position: relative;
-    height: auto;
-    position: relative;
     right: 14.92%;
     left: 31.05%;
     width: 56.03%;
     bottom: 81.13%;
     top: 50.21%;
     height: 12.66%;
-    overflow: visible;
+    max-height: 13.66%;
+    overflow-y: auto;
 }
 
 .div7 {
@@ -635,6 +616,10 @@ onMounted(() => {
     line-height: 18px;
     font-weight: 700;
     text-align: center;
+}
+
+.select-cafe option {
+  padding: 10px; /* Adjust padding as needed */
 }
 </style>
   
