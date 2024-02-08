@@ -124,28 +124,28 @@ const router = createRouter({
       path: "/api/kakao-login",
       name: "kakaoLogin",
       component: MainCaffeineView,
+      props: (route) => ({ code: route.query.code }), // Pass code as a prop
     },
   ],
 });
 
 // == navigationguard
 router.beforeEach((to, from, next) => {
-  if (userAccessToken.value === null) {
-    if (to.name !== "home" ) {
-      next({ name: "home" });
-    } else if (to.name == "kakaoLogin" ) {
-      next({ name: "kakaoLogin" });
-    } else {
-      next();
-    }
-
-
-  } else {
-    if (to.name === "home") {
+  if (localStorage.getItem('userAccessToken') == "" || localStorage.getItem('userAccessToken') == null ) {
+    if(to.path == '/api/kakao-login') {
+      next(); // Redirect to home if not logged in
+    } else if (to.name !== "home") {
       window.alert("로그인이 필요합니다");
-      next(false); // 접근 금지
+      next({ name: "home" }); // Redirect to home if not logged in
     } else {
-      next(); // 허용
+      next(); // Allow access to kakaoLogin route
+    }
+  } else if(localStorage.getItem('userAccessToken') != null){
+    if (to.name == "home") {
+      window.alert("접근 불가");
+      next({ name: "mainCaffeine" }); // Redirect to home if not logged in
+    } else {
+      next(); // Allow access to other routes
     }
   }
 });

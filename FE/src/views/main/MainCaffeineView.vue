@@ -103,7 +103,7 @@ onMounted(async () => {
   const kakaoCode = urlParams.get('code');
 
   if(kakaoCode != null && kakaoCode.length > 0) {
-    userStore.sendKakaoToken(kakaoCode);
+    await userStore.sendKakaoToken(kakaoCode);
     console.log(kakaoCode);
 
     // URL에서 'code' 파라미터 제거
