@@ -70,6 +70,9 @@ public class UserService {
         double health = 0; // 활동량 점수
         LocalDate now = LocalDate.now();
         int age = now.getYear() - user.getUserBirth() +1; // 나이계산
+        System.out.println("현재연도 : "+now.getYear());
+        System.out.println("getUserBirth : "+user.getUserBirth());
+        System.out.println(age);
 
         // 당
         if (user.getUserBirth() < 20) {

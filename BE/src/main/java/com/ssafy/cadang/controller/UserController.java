@@ -169,7 +169,8 @@ public class UserController {
         }
 
         User user = kakaoService.getUser(passAccess);
-
+        System.out.println("정보 들어왔는지 확인 : "+userInfo);
+        System.out.println("1userBirth : "+user.getUserBirth());
 
         user.setUserBirth(userInfo.userBirth);
         user.setUserHeight(userInfo.userHeight);
@@ -177,8 +178,14 @@ public class UserController {
         user.setUserGender(userInfo.userGender);
         user.setUserHealth(userInfo.userHealth);
         userService.update(user);
+        System.out.println("2userBirth : "+user.getUserBirth());
+
 
         userService.detailInfo(user);
+
+
+        System.out.println("회원정보 확인 완료 "+user);
+
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
