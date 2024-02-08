@@ -75,7 +75,7 @@
       <div class="info-box">
         <img :src="recommendStore.getRecommendedSugar.drinkUrl" alt="Recommended Drink" class="photo"/>
         <p>{{ recommendStore.getRecommendedSugar.cafeName }} {{ recommendStore.getRecommendedSugar.drinkName }}</p>
-        <button @click="viewDetailsModal(recommendStore.getRecommendedSugar.drinkId)" class="button_sugar">상세보기</button>
+        <button @click="goRecommedModal(recommendStore.getRecommendedSugar)" class="button_sugar">상세보기</button>
       </div>
     </div>
 
@@ -97,15 +97,13 @@ import { useUserStore } from '@/stores/user';
 import { useAccumulateStore } from '@/stores/accumulate';
 import { useRecordsStore } from '@/stores/records';
 import { useRecommendStore } from '@/stores/recommend';
-import { useDrinksStore } from '@/stores/drinks';
 
-import { isDetailModal } from '../../stores/util'
+import { isRecommedModal, recommedDrinkInfo } from '../../stores/util'
 
 const userStore = useUserStore()
 const accumulateStore = useAccumulateStore()
 const recordsStore = useRecordsStore()
 const recommendStore = useRecommendStore()
-const drinksStore = useDrinksStore()
 
 // 차트 날별로 선택하기 위한 변수
 const seleteDate = ref('day')
@@ -205,15 +203,14 @@ const goCaffeine = () => {
 }
 
 // 추천 음료 상세페이지로 이동
-const selectedDrink = ref(null)
+const goRecommedModal = (recommendDrinkInfo) => {
+  recommedDrinkInfo.value = recommendDrinkInfo
 
-const viewDetailsModal = (drinkId) => {
-  const drink = drinksStore.getAllDrinkList.find(d => d.id === drinkId);
-  if (drink) {
-    selectedDrink.value = drink;
-    isDetailModal.value = true;
+  if (recommedDrinkInfo.value) {
+    isRecommedModal.value = true
+    console.log('!!! 열었다!', isRecommedModal.value)
   } else {
-    alert('해당 음료를 찾을 수 없습니다.');
+    alert('해당 음료를 찾을 수 없습니다.')
   }
 }
 
