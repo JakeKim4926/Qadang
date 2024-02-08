@@ -24,7 +24,7 @@ import axios from 'axios';
 
 // axios의 헤더에 토큰을 설정하는 함수
 const setTokenInAxiosHeader = () => {
-    const token = localStorage.getItem('accessToken');
+    const token = localStorage.getItem('userAccessToken');
     if (token) {
       axios.defaults.headers.common['Authorization'] = token;
       userAccessToken.value = token;

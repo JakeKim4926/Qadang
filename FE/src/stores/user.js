@@ -92,7 +92,7 @@ export const useUserStore = defineStore(
     const logout = async () => {
       try {
         await axios({
-          url: `${import.meta.env.REST_USER_API}/logout`,
+          url: `${import.meta.env.REST_API}/logout`,
           method: "POST",
         });
         localStorage.removeItem("userAccessToken");
