@@ -54,57 +54,15 @@
 import { ref, onMounted,computed } from 'vue';
 import { useUserStore } from '../../stores/user'; 
 import router from '@/router';
-import { RouterLink, RouterView } from 'vue-router';
 import { isUpdateModal } from '../../stores/util'
 import UserUpdateView from '@/components/user/UserUpdateView.vue'
 
 const store = useUserStore();
 const isInfoFilled = store.isInfoFilled;
-
-const maxCaffeine = ref(0);
-const maxCaffeineDate = ref('');
-const maxSugar = ref(0);
-const maxSugarDate = ref('');
-const userInfo = ref({});
-const rdiCaffeine = ref(0);
-const rdiSugar = ref(0);
-
 const openUpdateModal = () => {
   isUpdateModal.value = true
-  console.log('!',isUpdateModal.value)
-}
+  console.log('!',isUpdateModal.value)}
 
-const bringMaxintake = async () => {
-  try {
-    await store.researchMax();
-    maxCaffeine.value = store.userMaxCaffeine.value;
-    maxCaffeineDate.value = store.userMaxCaffeineDate.value;
-    maxSugar.value = store.userMaxSugar.value;
-    maxSugarDate.value = store.userMaxSugarDate.value;
-  } catch (error) {
-    console.error("데이터를 가져오지 못했습니다.", error);
-  }
-};
-
-
-const bringRDI = async () => {
-  try {
-    await store.researchAmount();    
-    rdiCaffeine.value = store.userRDICaffeine.value
-    rdiSugar.value = store.userRDISugar.value 
-  } catch (error) {
-    console.error("데이터를 가져오지 못했습니다.", error);
-  }
-};
-
-const bringUserInfo = async () => {
-  try { 
-    await store.researchUser();    
-    userInfo.value = store.user.value;
-  } catch (error) {    
-    console.error("데이터를 가져오지 못했습니다.", error);
-  }
-};
 
 const message = computed(() => {
   return store.infoFilled.value
@@ -128,10 +86,11 @@ const handleLogout = () => {
   store.logout();
 };
 
-onMounted(() => {
-  bringMaxintake();
-  bringUserInfo();
-  bringRDI();
+onMounted(() => {  
+  store.researchMax();
+  store.researchUser();
+  store.researchName();
+  store.researchAmount();
 });
 
 
