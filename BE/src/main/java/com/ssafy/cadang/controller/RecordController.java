@@ -2,6 +2,7 @@ package com.ssafy.cadang.controller;
 
 import com.ssafy.cadang.domain.Drinks;
 import com.ssafy.cadang.domain.Records;
+import com.ssafy.cadang.domain.User;
 import com.ssafy.cadang.dto.Facts;
 import com.ssafy.cadang.request.DrinkRecordRequestDTO;
 import com.ssafy.cadang.request.DrinkRecordUpdateRequestDTO;
@@ -10,6 +11,7 @@ import com.ssafy.cadang.request.MakeRecordUpdateRequestDTO;
 import com.ssafy.cadang.response.DayRecordListResponseDTO;
 import com.ssafy.cadang.service.AccumulateService;
 import com.ssafy.cadang.service.DrinkService;
+import com.ssafy.cadang.service.KakaoService;
 import com.ssafy.cadang.service.RecordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Objects;
 
 @CrossOrigin
 @RestController
@@ -30,14 +31,18 @@ public class RecordController {
     private final RecordService recordService;
     private final DrinkService drinkService;
     private final AccumulateService accumulateService;
+    private final KakaoService kakaoService;
 
     //카페 기록 생성 drink
     @PostMapping("/drink")
-    public ResponseEntity<HttpStatus> drinkRecordCreate(@RequestBody DrinkRecordRequestDTO drinkRecordDTO){
+    public ResponseEntity<HttpStatus> drinkRecordCreate(@RequestHeader("Authorization") String token,@RequestBody DrinkRecordRequestDTO drinkRecordDTO){
         //user check
-        Long userId = 1L;
-        if(userId == 0)
+        String passAccess = kakaoService.checkToken(token); // 통과한 access token
+        if (passAccess == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        User user = kakaoService.getUser(passAccess);
+        Long userId = user.getUserId();
 
         //drink exist check
         Drinks drink = drinkService.readDrink(drinkRecordDTO.getDrinkId());
@@ -72,11 +77,14 @@ public class RecordController {
 
     //나만의 음료 기록 생성 make
     @PostMapping("/make")
-    public ResponseEntity<HttpStatus> makeRecordCreate(@RequestBody MakeRecordRequestDTO makeRecordRequestDTO){
+    public ResponseEntity<HttpStatus> makeRecordCreate(@RequestHeader("Authorization") String token,@RequestBody MakeRecordRequestDTO makeRecordRequestDTO){
         //user check
-        Long userId = 1L;
-        if(userId == 0)
+        String passAccess = kakaoService.checkToken(token); // 통과한 access token
+        if (passAccess == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        User user = kakaoService.getUser(passAccess);
+        Long userId = user.getUserId();
 
         Records record = Records.builder()
                 .userId(userId)
@@ -99,11 +107,14 @@ public class RecordController {
     }
 
     @PutMapping("/drink")
-    public ResponseEntity<HttpStatus> drinkRecordUpdate(@RequestBody DrinkRecordUpdateRequestDTO drinkRecordUpdateRequestDTO){
+    public ResponseEntity<HttpStatus> drinkRecordUpdate(@RequestHeader("Authorization") String token,@RequestBody DrinkRecordUpdateRequestDTO drinkRecordUpdateRequestDTO){
         //user check
-        Long userId = 1L;
-        if(userId == 0)
+        String passAccess = kakaoService.checkToken(token); // 통과한 access token
+        if (passAccess == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        User user = kakaoService.getUser(passAccess);
+        Long userId = user.getUserId();
 
         //record update auth check
         Records record = recordService.readRecord(drinkRecordUpdateRequestDTO.getRecordId());
@@ -150,11 +161,14 @@ public class RecordController {
     }
 
     @PutMapping("/make")
-    public ResponseEntity<HttpStatus> makeRecordUpdate(@RequestBody MakeRecordUpdateRequestDTO makeRecordUpdateRequestDTO){
+    public ResponseEntity<HttpStatus> makeRecordUpdate(@RequestHeader("Authorization") String token,@RequestBody MakeRecordUpdateRequestDTO makeRecordUpdateRequestDTO){
         //user check
-        Long userId = 1L;
-        if(userId == 0)
+        String passAccess = kakaoService.checkToken(token); // 통과한 access token
+        if (passAccess == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        User user = kakaoService.getUser(passAccess);
+        Long userId = user.getUserId();
 
         //record update auth check
         Records record = recordService.readRecord(makeRecordUpdateRequestDTO.getRecordId());
@@ -192,11 +206,14 @@ public class RecordController {
     }
 
     @DeleteMapping("/{recordId}")
-    public ResponseEntity<HttpStatus> drinkRecordDelete(@PathVariable Long recordId){
+    public ResponseEntity<HttpStatus> drinkRecordDelete(@RequestHeader("Authorization") String token,@PathVariable Long recordId){
         //user check
-        Long userId = 1L;
-        if(userId == 0)
+        String passAccess = kakaoService.checkToken(token); // 통과한 access token
+        if (passAccess == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        User user = kakaoService.getUser(passAccess);
+        Long userId = user.getUserId();
 
         //record delete auth check
         Records record = recordService.readRecord(recordId);
@@ -228,11 +245,14 @@ public class RecordController {
     }
 
     @GetMapping("/{date}/day")
-    public ResponseEntity<List<DayRecordListResponseDTO>> drinkListRead(@PathVariable String date){
+    public ResponseEntity<List<DayRecordListResponseDTO>> drinkListRead(@RequestHeader("Authorization") String token,@PathVariable String date){
         //user check
-        Long userId = 1L;
-        if(userId == 0)
-            return new ResponseEntity<List<DayRecordListResponseDTO>>((List<DayRecordListResponseDTO>) null,HttpStatus.UNAUTHORIZED);
+        String passAccess = kakaoService.checkToken(token); // 통과한 access token
+        if (passAccess == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        User user = kakaoService.getUser(passAccess);
+        Long userId = user.getUserId();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         LocalDate localDate = LocalDate.parse(date, formatter);
