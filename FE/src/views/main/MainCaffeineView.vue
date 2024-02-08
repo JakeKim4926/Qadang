@@ -58,16 +58,7 @@
     </div>
 
     <div>
-      <div class="chart-container">
-        <p>최근에 마신 카페인을 한눈에 보아요</p>
-        <select name="selectDate" id="selectDate" v-model="seleteDate" class="button_select chart-date-button">
-          <option value="day" class="date-text">일</option>
-          <option value="week" class="date-text">주</option>
-        </select>
-      </div>
-      <div class="info-box">
-        <canvas id="chartCanvas" width="500"></canvas>
-      </div>
+      <ChartCaffeine />
     </div>
 
     <div>
@@ -86,12 +77,11 @@
 </template>
 
 <script setup>
+import ChartCaffeine from '@/components/main/ChartCaffeine.vue';
+
 import { ref, watch } from 'vue';
 import { onMounted } from 'vue';
 import router from '@/router';
-
-import { Chart } from "chart.js/auto";
-import 'chartjs-adapter-date-fns';
 
 import { useUserStore } from '@/stores/user';
 import { useAccumulateStore } from '@/stores/accumulate';
@@ -104,35 +94,6 @@ const userStore = useUserStore()
 const accumulateStore = useAccumulateStore()
 const recordsStore = useRecordsStore()
 const recommendStore = useRecommendStore()
-
-// 차트 날별로 선택하기 위한 변수
-const seleteDate = ref('day')
-
-const chartData = {
-    type: 'bar',
-    data: {
-      labels: [], // 날짜
-      datasets: [{
-        label: '일별 카페인 섭취량',
-        data: [], // 날짜에 따른 데이터 기록 합산
-        backgroundColor: ['#846046'],
-      }]
-    },
-    options: {
-      scales: {
-        x: {
-          type: 'time',
-          time: {
-            unit: seleteDate.value
-          }
-        },
-        y: {
-          beginAtZero:true
-        }
-      },
-      responsive: false,
-    }
-  }
 
 // 데이터를 가져오기 위한 함수
 onMounted(async () => {
@@ -165,49 +126,8 @@ onMounted(async () => {
   // await userStore.researchUser()                // 닉네임 <- 404 error
   // await userStore.researchAmount()              // 권장량 <- 404 error
   await accumulateStore.today()                    // 섭취량
-  await accumulateStore.duration()                // chart.js를 위한 기간별 섭취량
   await recommendStore.researchRecommendCaffeine()     // 기록 기반 음료추천 카페인
   await recordsStore.researchDayDrink(date)       // 방금 마신 음료 계산을 위한 일자별 기록
-
-  // chart.js
-  const chartElement = document.querySelector('#chartCanvas').getContext('2d');
-  const chartCanvas = new Chart(chartElement, chartData)
-
-  // 날짜가 바뀌면 데이터 변경
-  watch(() => seleteDate.value, (chartDate) => {
-    chartData.options.scales.x.time.unit = chartDate
-    chartCanvas.update()
-  })
-  
-  // 차트 데이터에 넣을 데이터가 생긴 뒤 데이터 삽입
-  watch(() => accumulateStore.getAccumulateList, (newData) => {
-    if (newData.length > 0) {
-      console.log('!!!', newData)
-
-      const tmpDayData = []
-      const tmpDataData = []
-
-      // 차트 데이터에 넣을 데이터 적절하게 삽입
-      newData.forEach(data => {
-        tmpDayData.push(data.accumulateDate)
-        tmpDataData.push(data.accumulateCaffeine)
-      })
-
-      // 오늘 날짜까지 갱신하기 위해 현재 날짜가 없으면 날짜 삽입
-      if (!tmpDayData.includes(`${year}-${month}-${day}`)) {        
-        tmpDayData.push(date.value)
-      }
-
-      // 다 끝난 뒤 차트에 대입
-      chartData.data.labels = tmpDayData
-      chartData.data.datasets[0].data = tmpDataData
-
-      console.log('@@@', chartData.data.labels, chartData.data.datasets[0].data)
-    }
-
-    // 차트 업데이트
-    chartCanvas.update()
-  })
 })
 
 // 당 섭취량 메인페이지로 이동
@@ -315,27 +235,6 @@ p {
 
 .today-info {
   margin-top: 0;
-}
-
-.chart-date-button {
-  width: 50px;
-  height: 20px;
-  margin-top: 10px;
-}
-
-.date-text {
-  text-align: center;
-}
-
-#chartCanvas {
-  margin: auto;
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-
-.chart-container {
-  display: flex;
-  justify-content: space-between;
 }
 
 .photo {
