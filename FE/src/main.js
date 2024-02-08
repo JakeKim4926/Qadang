@@ -24,7 +24,7 @@ import axios from 'axios';
 
 // axios의 헤더에 토큰을 설정하는 함수
 const setTokenInAxiosHeader = () => {
-    const token = localStorage.getItem('accessToken');
+    const token = localStorage.getItem('userAccessToken');
     if (token) {
       axios.defaults.headers.common['Authorization'] = token;
       userAccessToken.value = token;
@@ -78,6 +78,8 @@ axios.interceptors.response.use((config)=> {
         window.alert("잘못된 요청입니다.");
     } else if(config.status == responseState.UNAUTORIZED) {
         window.alert("클라이언트 인증 오류입니다.");
+        localStorage.removeItem("userAccessToken");
+        userAccessToken.value = null;
     } else if(config.status == responseState.FORBIDDEN) {
         window.alert("권한이 없습니다");
     } else if(config.status == responseState.NOT_FOUND) {
@@ -95,6 +97,8 @@ axios.interceptors.response.use((config)=> {
     if(config.status == responseState.BAD_REQUEST) {
         window.alert("잘못된 요청입니다.");
     } else if(config.status == responseState.UNAUTORIZED) {
+        localStorage.removeItem("userAccessToken");
+        userAccessToken.value = null;
         window.alert("클라이언트 인증 오류입니다.");
     } else if(config.status == responseState.FORBIDDEN) {
         window.alert("권한이 없습니다");
