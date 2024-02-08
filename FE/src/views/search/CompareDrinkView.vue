@@ -115,9 +115,10 @@ const basket = comparisonStore.basket;
   border-color: #d9d9d9;
   border-width: 1px;
   position: absolute;
-  width: 700px;
-  height: 500px;
+  width: 750px;
+  height: 580px;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  top: 40px;
 }
 
 .close {
@@ -133,7 +134,7 @@ const basket = comparisonStore.basket;
 
 .comparison-header h2 {
   margin-top: 5%;
-  margin-bottom: 0;
+  margin-bottom: 10px;
   padding-bottom: 0.5em;
   color: #562B1A;
   border-bottom: 2px solid #562B1A;
@@ -160,13 +161,13 @@ const basket = comparisonStore.basket;
   margin-top: 5px;
   color: #562B1A; 
   font-size: 15px;
-  font-weight: bolder;
+  font-weight: bolder;  
 }
 
 .comparison-table {
   margin-top: 20px;
   border-collapse: collapse;
-  width: 93%; 
+  width: 95%; 
   margin: auto;
   border-bottom: 3px solid #562B1A;
 }
@@ -174,11 +175,13 @@ const basket = comparisonStore.basket;
   background-color: #ddd; 
   color: black;
   border-right: 1px solid #ddd;
+  height: 33px;
 }
 
 .comparison-table td {
   color: #000; 
   border-bottom: 1px solid #ddd;
+  /* height: 20px; */
 }
 
 

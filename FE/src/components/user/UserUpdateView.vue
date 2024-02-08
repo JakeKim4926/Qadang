@@ -57,15 +57,12 @@
               </a>
             </div>
           </div>
-        </div>
-            
-        <button type="submit" class="submit-bttn">저장하기</button>
-        
+        </div>            
+        <button type="submit" class="submit-bttn">저장하기</button>        
       </form>
     </div>
   </div>
 </div>
-
 </template>
 
 <script setup>
@@ -82,7 +79,6 @@ onMounted(() => {
 const store = useUserStore();
 const isLoading = ref(false);
 const userInfo = reactive({
-  username: null,
   gender: null,
   birthYear: null,
   height: null,
@@ -101,13 +97,12 @@ const closeUpdateModal = () => {
 const bringUserInfo = async () => {
   isLoading.value = true;
   try {
-    await store.researchUser();
-    userInfo.username = store.user.value?.userName || null;
+    await store.researchUser();    
     userInfo.gender = store.user.value?.userGender || null;
-    userInfo.birthYear = store.user.value?.userBirthYear || null;
+    userInfo.birthYear = store.user.value?.userBirth || null;
     userInfo.height = store.user.value?.userHeight || null;
     userInfo.weight = store.user.value?.userWeight || null;
-    userInfo.activityLevel = store.user.value?.userActivityLevel || null;
+    userInfo.activityLevel = store.user.value?.userHealth || null;
     
   } catch (error) {
     console.error("데이터를 가져오지 못했습니다.", error);
@@ -119,8 +114,7 @@ const bringUserInfo = async () => {
 
 const updateUserInfo = async () => {
   
-  const updateData = {};
-  // if (userInfo.username !== null) updateData.username = userInfo.username;
+  const updateData = {};  
   if (userInfo.gender !== null) updateData.gender = userInfo.gender;
   if (userInfo.birthYear) updateData.birthYear = userInfo.birthYear;
   if (userInfo.height !== null) updateData.height = userInfo.height;
@@ -130,6 +124,7 @@ const updateUserInfo = async () => {
   try {
     await store.updateUser(updateData);
     alert('수정완료');
+    isUpdateModal.value = false
     console.log(updateData)
     router.push('/mypage');
   } catch (error) {

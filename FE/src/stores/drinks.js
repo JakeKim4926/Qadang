@@ -92,9 +92,11 @@ export const useDrinksStore = defineStore("drinks", () => {
   };
 
   const setSelectedDrink = (drinkId) => {
-    const drink = allDrinkList.value.find((d) => d.drinkId === drinkId);
+    const drink = getAllDrinkList.value.find((d) => d.drinkId === drinkId);
     selectedDrink.value = drink;
   };
+
+  
 
   return {
     cafeList,

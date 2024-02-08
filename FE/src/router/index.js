@@ -129,25 +129,25 @@ const router = createRouter({
 });
 
 // == navigationguard
-// router.beforeEach((to, from, next) => {
-//   if (userAccessToken.value === null) {
-//     if (to.name !== "home" ) {
-//       next({ name: "home" });
-//     } else if (to.name == "kakaoLogin" ) {
-//       next({ name: "kakaoLogin" });
-//     } else {
-//       next();
-//     }
+router.beforeEach((to, from, next) => {
+  if (userAccessToken.value === null) {
+    if (to.name !== "home" ) {
+      next({ name: "home" });
+    } else if (to.name == "kakaoLogin" ) {
+      next({ name: "kakaoLogin" });
+    } else {
+      next();
+    }
 
 
-//   } else {
-//     if (to.name === "home") {
-//       window.alert("로그인이 필요합니다");
-//       next(false); // 접근 금지
-//     } else {
-//       next(); // 허용
-//     }
-//   }
-// });
+  } else {
+    if (to.name === "home") {
+      window.alert("로그인이 필요합니다");
+      next(false); // 접근 금지
+    } else {
+      next(); // 허용
+    }
+  }
+});
 
 export default router;
