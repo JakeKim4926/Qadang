@@ -8,7 +8,7 @@ export const useRankStore = defineStore("rank", () => {
 
   const rankKeywordList = ref([]);
   const rankRecordList = ref([]);
-
+  
   // =========== GETTER ===============
 
   const getRankKeywordList = computed(() => {
@@ -46,11 +46,14 @@ export const useRankStore = defineStore("rank", () => {
       });
   };
 
+ 
   return {
     rankKeywordList,
     rankRecordList,
     getRankKeywordList,
     getRankRecordList,
+    selectedrankDrink,
+    setRankDrink,
     researchKeywordRank,
     researchRecordRank,
   };

@@ -141,42 +141,51 @@ export const useUserStore = defineStore(
     };
 
     const createUser = function (user) {
-      axios({
-        url: import.meta.env.VITE_REST_USER_API,
-        method: "POST",
-      });      
-      localStorage.removeItem('userAccessToken');      
-      userAccessToken.value = null;
-      
-      router.push('/login');
-    } catch (err) {
-      console.error('에러',err);
-    }
-  };
+      try {
+        axios({
+          url: import.meta.env.VITE_REST_USER_API,
+          method: "POST",
+          data: user, // 서버에 전송할 사용자 데이터
+        })
+        .then((response) => {
+          // 성공적으로 사용자 생성 후 로직
+          localStorage.removeItem('userAccessToken');
+          userAccessToken.value = null;
+    
+          router.push('/login');
+        })
+        .catch((err) => {
+          console.error('에러', err);
+        });
+      } catch (err) {
+        console.error('에러 처리', err);
+      }
+    };
+    
   
 
-  const sendKakaoToken = function (token) {
-    axios({
-      url: `${import.meta.env.VITE_REST_KAKAO_API}`,
-      method: "GET",
-      params: { code : token },
-    })
-      .then((res) => {
-        // 카카오 에서 받아온 토큰을 백으로 전달
-        console.log('결과', res.data);
+  // const sendKakaoToken = function (token) {
+  //   axios({
+  //     url: `${import.meta.env.VITE_REST_KAKAO_API}`,
+  //     method: "GET",
+  //     params: { code : token },
+  //   })
+  //     .then((res) => {
+  //       // 카카오 에서 받아온 토큰을 백으로 전달
+  //       console.log('결과', res.data);
         
-        // 헤더 설정
-        axios.defaults.headers.common['Authorization'] = res.data.accessToken; 
-        const result = ref({});
-        result.value = res.data;
+  //       // 헤더 설정
+  //       axios.defaults.headers.common['Authorization'] = res.data.accessToken; 
+  //       const result = ref({});
+  //       result.value = res.data;
 
-        userAccessToken.value = res.data;
-      })
-        .then(() => {})
-        .catch((err) => {
-          console.log(err);
-        });
-    };
+  //       userAccessToken.value = res.data;
+  //     })
+  //       .then(() => {})
+  //       .catch((err) => {
+  //         console.log(err);
+  //       });
+  //   };
 
     const researchUser = function () {
       axios({

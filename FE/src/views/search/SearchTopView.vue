@@ -1,6 +1,6 @@
 <template>
-  <div class="search-container">        
-    <input v-model="searchQuery" placeholder="Search for..." class="search-input">
+  <div class="search-container">       
+    <input v-model="searchQuery" placeholder="Search for..." class="search-input" @keyup.enter="doSearch">
     <button @click="doSearch" class="search-button">
       <font-awesome-icon :icon="['fas', 'search']" />
     </button>
@@ -22,7 +22,7 @@ const doSearch = () => {
     router.push({ name: 'searchDetail', params: { keyword: searchQuery.value.trim() } });
   }else {
     // 검색어가 비어있을 경우 페이지 새로고침
-    // router.push({ name: 'searchDetail'});
+    // router.push({ name: 'searchRank'});
     window.location.reload();
   }
 };

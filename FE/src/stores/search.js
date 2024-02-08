@@ -9,6 +9,7 @@ export const useSearchStore = defineStore("search", () => {
   const recordRanking = ref([]);
   const allDrinks = ref([]);
   const todayAccumulate = ref({});
+  const selectedrankDrink = ref({});
 
   // getters
   const getSearchDrinkList = computed(() => {
@@ -27,6 +28,7 @@ export const useSearchStore = defineStore("search", () => {
     return todayAccumulate.value;
   });
 
+ 
   // actions
   const researchKeywordRank = function (word) {
     axios({
@@ -94,6 +96,11 @@ export const useSearchStore = defineStore("search", () => {
     });
   };
 
+  const setRankDrink = (drinkId) => {
+    const drink = getRecordRanking.value.find((d) => d.drinkId === drinkId);
+    selectedrankDrink.value = drink;
+  };
+
   return {
     keywordRanking,
     recordRanking,
@@ -103,11 +110,13 @@ export const useSearchStore = defineStore("search", () => {
     getKeywordRanking,
     getRecordRanking,
     getAllDrinks,
-    getTodayAccumulate,
+    getTodayAccumulate,    
+    selectedrankDrink,
     researchKeywordRank,
     bringKeywordRanking,
     bringRecordRanking,
     bringAllDrinks,
     bringTodayAccumulate,
+    setRankDrink,
   };
 });
