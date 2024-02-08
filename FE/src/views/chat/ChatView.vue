@@ -70,6 +70,8 @@ const showMessages = ref(false);
 // for test
 const userId = ref(1);
 
+
+
 onMounted(async () => {
   // console.log(import.meta.env.VITE_SOCKET_API)
   // socketStore.socket = new SockJS(import.meta.env.VITE_SOCKET_API); // 웹소켓 서버 URL
@@ -118,67 +120,7 @@ onMounted(async () => {
     },
     (error) => {
       console.log("Connection error: " + error);
-      // chatStore.getChatList.push({
-      //   userId: 1,
-      //   userName: 'user01',
-      //   message: 'I love drink',
-      //   time: '2024-02-07 12:13:00' 
-      // });
-
-      // chatStore.getChatList.push({
-      //   userId: 2,
-      //   userName: 'user02',
-      //   message: 'me tooddddddddddddddddddddddddddddddddddddd',
-      //   time: '2024-02-07 12:16:03' 
-      // });
-
-      // chatStore.getChatList.push({
-      //   index: 1,
-      //   userId: 3,
-      //   userName: 'user03',
-      //   message: 'I love drinkasdsadsadsad',
-      //   time: '2024-02-07 13:23:05' 
-      // });
- 
-      // chatStore.getChatList.push({
-      //   index: 1,
-      //   userId: 4,
-      //   userName: 'user04',
-      //   message: '안녕하세요~ aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-      //   time: '2024-02-07 14:33:07'
-      // });
-
-      // chatStore.getChatList.push({
-      //   index: 1,
-      //   userId: 1,
-      //   userName: 'user01',
-      //   message: '도배하지마',
-      //   time: '2024-02-07 15:34' 
-      // });
-
-      // chatStore.getChatList.push({
-      //   index: 1,
-      //   userId: 5,
-      //   userName: 'user05',
-      //   message: 'There was no other way',
-      //   time: '2024-02-07 16:53:07'
-      // });
-
-      // chatStore.getChatList.push({
-      //   index: 1,
-      //   userId: 6,
-      //   userName: 'user06',
-      //   message: '하이요',
-      //   time: '2024-02-07 17:12:07'
-      // });
-
-      // chatStore.getChatList.push({
-      //   index: 1,
-      //   userId: 7,
-      //   userName: 'user07',
-      //   message: '재밌넹',
-      //   time: '2024-02-07 17:17:07'
-      // });
+      
     }
 
   );
