@@ -198,8 +198,9 @@ public class KakaoService {
                 .setHeaderParam("type", "jwt") //Header 설정부분
                 .setHeaderParam("alg", "HS256") //Header 설정부분
                 .claim("userId", user.getUserId()) // Payload 설정부분
+                .setExpiration(new Date(System.currentTimeMillis() + 1 * (1000 * 60 * 60 * 24))) // 만료시간 : 24시간
 //                .setExpiration(new Date(System.currentTimeMillis() + 1 * (1000 * 60 * 60 * 72))) // 만료시간 : 72시간
-                .setExpiration(new Date(System.currentTimeMillis() + 1 * (1000 * 60 * 2))) // 만료시간 : 2분
+//                .setExpiration(new Date(System.currentTimeMillis() + 1 * (1000 * 60 * 2))) // 만료시간 : 2분
                 .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
                 .compact();
 
@@ -218,6 +219,8 @@ public class KakaoService {
 //                .setExpiration(new Date(System.currentTimeMillis() + 1 * (1000 * 60 * 3))) // 만료시간 : 4분
                 .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
                 .compact();
+
+        System.out.println("시스템 현재 시간 : "+System.currentTimeMillis());
 
         addUser.setJwtRefreshToken(jwtRefreshToken);
 
