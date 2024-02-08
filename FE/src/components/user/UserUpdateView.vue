@@ -20,7 +20,7 @@
             
           </div>
           <div class="form-group half-width">
-            <label for="birthYear" class="label-margin tag-bold">나이</label>
+            <label for="birthYear" class="label-margin tag-bold">연도</label>
             <input type="number" v-model="userInfo.birthYear" class="input-field2" min="0"/>
           </div>
         </div>
