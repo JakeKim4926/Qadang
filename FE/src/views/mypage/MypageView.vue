@@ -2,25 +2,25 @@
   <UserUpdateView v-if="isUpdateModal" />
   <div class="mypage-container">    
     <div class="profile-section">
-      <div class="profile-image">
-        
-        <h2>{{ store.getUser.userName }}</h2>
+      <div class="profile-image">        
+        <h3 class="nickname">{{ store.getUser.userName }}</h3>
       </div>
       <div class="message">{{ message }}</div>
       <div class="user-actions">
         <button @click="openUpdateModal" class="button-edit-info">회원정보수정</button>        
       </div>
-      <div v-if="isInfoFilled" class="shading2">      
+      <div v-if="isInfoFilled" class="shading2">
+        <!-- <div class="shading2">        -->
         <div class="nutrition-info">
           <div class="nutrition-item">
             <h1> 
-              {{ rdiCaffeine }} mg
+              {{ store.getUserRDICaffeine }} mg
             </h1>      
             <h3>하루 권장 카페인 섭취량</h3>
           </div>
           <div class="nutrition-item">
             <h1> 
-              {{ rdiSugar }} g
+              {{ store.getUserRDISugar }} g
             </h1>      
             <h3>하루 권장 설탕 섭취량</h3>
           </div>        
@@ -30,14 +30,14 @@
     
     <div class="intake-section">
       <div class="intake-card shading">
-        <h1>{{ maxCaffeine }} mg</h1>
+        <h1>{{ store.getUserMaxCaffeine }} mg</h1>
         <h3>하루 최고 카페인 섭취량</h3>
-        <h4>{{ maxCaffeineDate }}2024-01-25</h4>
+        <h4>{{ store.getUserMaxCaffeineDate }}</h4>
       </div>
       <div class="intake-card shading">
-        <h1>{{ maxSugar }} g</h1>
+        <h1>{{ store.getUserMaxSugar }} g</h1>
         <h3>하루 최고 당 섭취량</h3>
-        <h4>{{ maxSugarDate }}2024-01-21</h4>
+        <h4>{{ store.getUserMaxSugarDate }}</h4>
       </div>
     </div>
     
@@ -167,24 +167,19 @@ onMounted(() => {
 }
 
 .profile-image {
-  background-color: #CB8A58;
+  /* background-color: #CB8A58; */
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 10px;  
-  width: 100px;
+  width: 150px;
   height: 100px;
-  color: #EFEFEF;
+  color: #CB8A58;
   font-size: x-large;
 }
 
-.profile-image h2 {
-  color: #562B1A;
-}
-.profile-image h2 {
-  margin-top: 0; 
-}
+
 
 .message {
   position: absolute;
@@ -332,6 +327,9 @@ h4 {
 }
 .nutrition-item h1{
   color: #562B1A; 
+}
+.nickname{
+  
 }
 
 </style>
