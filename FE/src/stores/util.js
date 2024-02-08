@@ -24,6 +24,9 @@ export const isUpdateModal = ref(false)
 export const isUpdateInputModal = ref(false)
 export const isUpdateNothingModal = ref(false)
 
+export const isRecommedModal = ref(false)
+export const recommedDrinkInfo = ref({})
+
 export const isDetailModal = ref(false)
 export const isCompareModal = ref(false)
 

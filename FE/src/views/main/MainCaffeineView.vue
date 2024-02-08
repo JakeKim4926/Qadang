@@ -75,7 +75,7 @@
       <div class="info-box">
         <img :src="recommendStore.getRecommendedCaffeine.drinkUrl" alt="Recommended Drink" class="photo"/>
         <p>{{ recommendStore.getRecommendedCaffeine.cafeName }} {{ recommendStore.getRecommendedCaffeine.drinkName }}</p>
-        <button @click="viewDetailsModal(recommendStore.getRecommendedCaffeine)" class="button_caffeine">상세보기</button>
+        <button @click="goRecommedModal(recommendStore.getRecommendedCaffeine)" class="button_caffeine">상세보기</button>
       </div>
     </div>
 
@@ -89,7 +89,6 @@
 import { ref, watch } from 'vue';
 import { onMounted } from 'vue';
 import router from '@/router';
-import axios from 'axios';
 
 import { Chart } from "chart.js/auto";
 import 'chartjs-adapter-date-fns';
@@ -98,15 +97,13 @@ import { useUserStore } from '@/stores/user';
 import { useAccumulateStore } from '@/stores/accumulate';
 import { useRecordsStore } from '@/stores/records';
 import { useRecommendStore } from '@/stores/recommend';
-import { useDrinksStore } from '@/stores/drinks';
 
-import { isDetailModal, userAccessToken } from '../../stores/util'
+import { isRecommedModal, recommedDrinkInfo } from '../../stores/util'
 
 const userStore = useUserStore()
 const accumulateStore = useAccumulateStore()
 const recordsStore = useRecordsStore()
 const recommendStore = useRecommendStore()
-const drinksStore = useDrinksStore()
 
 // 차트 날별로 선택하기 위한 변수
 const seleteDate = ref('day')
@@ -145,14 +142,11 @@ onMounted(async () => {
   const kakaoCode = urlParams.get('code');
 
   if(kakaoCode != null && kakaoCode.length > 0) {
-    await userStore.sendKakaoToken(kakaoCode);
+    userStore.sendKakaoToken(kakaoCode);
     console.log(kakaoCode);
-
-    localStorage.setItem("userAccessToken", kakaoCode);
 
     // URL에서 'code' 파라미터 제거
     const newUrl = window.location.origin + window.location.pathname;
-    
     history.replaceState({}, document.title, newUrl);
   }
 
@@ -222,11 +216,12 @@ const goSugar = () => {
 }
 
 // 추천 음료 상세페이지로 이동
-const viewDetailsModal = (recommendDrinkInfo) => {
-  drinksStore.selectedDrink.value = recommendDrinkInfo
+const goRecommedModal = (recommendDrinkInfo) => {
+  recommedDrinkInfo.value = recommendDrinkInfo
 
-  if (drinksStore.selectedDrink) {
-    isDetailModal.value = true
+  if (recommedDrinkInfo.value) {
+    isRecommedModal.value = true
+    console.log('!!! 열었다!', isRecommedModal.value)
   } else {
     alert('해당 음료를 찾을 수 없습니다.')
   }
