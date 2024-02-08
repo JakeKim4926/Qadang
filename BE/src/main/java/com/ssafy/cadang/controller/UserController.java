@@ -92,20 +92,16 @@ public class UserController {
         }
         KakaoToken oauthToken = kakaoService.getAccessToken(code);
 
-        System.out.println("토큰 : " + oauthToken);
-
         if (oauthToken == null) { // 토큰이 없으면 로그인 실패
             return new ResponseEntity<>(jwtLogin, HttpStatus.UNAUTHORIZED);
         }
         // 유저가 없으면 회원가입 + 사용자 정보 요청
     User user = kakaoService.addUser(oauthToken, jwtLogin);
-        System.out.println("사용자 정보 요청 완료");
 
     // 카카오에서 발급받은 access token을 이용해서 jwt 토큰 발급받기
     String jwtAccessToken = kakaoService.getJwtAccess(user);
     String jwtRefreshToken = kakaoService.getJwtRefresh(user);
 
-        System.out.println("jwt " + jwtAccessToken + " / " + jwtRefreshToken);
         if (jwtAccessToken == null || jwtRefreshToken == null) { // jwt의 토큰들이 없으면 로그인 실패
         return new ResponseEntity<>(jwtLogin, HttpStatus.UNAUTHORIZED);
     }
@@ -127,18 +123,12 @@ public class UserController {
 
         // 토큰 유효성 검사
         String passAccess = kakaoService.checkToken(token); // 통과한 access token
-        System.out.println(" 유효성검사 시작 " + passAccess);
         if (passAccess == null) {
-            System.out.println("유효성검사 실패");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        System.out.println("jwt로 정보가져오기");
-        System.out.println(passAccess);
-
         // jwt를 이용해 user 가져오기
         User user = kakaoService.getUser(passAccess);
-        System.out.println("User: " + user);
 
         return new ResponseEntity<>(UserInfo
                 .builder()
@@ -157,9 +147,7 @@ public class UserController {
 
         // 토큰 유효성 검사
         String passAccess = kakaoService.checkToken(token); // 통과한 access token
-        System.out.println(" 유효성검사 시작 " + passAccess);
         if (passAccess == null) {
-            System.out.println("유효성검사 실패");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         // jwt를 이용해 user 가져오기
@@ -175,9 +163,7 @@ public class UserController {
 
         // 토큰 유효성 검사
         String passAccess = kakaoService.checkToken(token); // 통과한 access token
-        System.out.println(" 유효성검사 시작 " + passAccess);
         if (passAccess == null) {
-            System.out.println("유효성검사 실패");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
@@ -202,9 +188,7 @@ public class UserController {
 
         // 토큰 유효성 검사
         String passAccess = kakaoService.checkToken(token); // 통과한 access token
-        System.out.println(" 유효성검사 시작 " + passAccess);
         if (passAccess == null) {
-            System.out.println("유효성검사 실패");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
@@ -220,9 +204,7 @@ public class UserController {
 
         // 토큰 유효성 검사
         String passAccess = kakaoService.checkToken(token); // 통과한 access token
-        System.out.println(" 유효성검사 시작 " + passAccess);
         if (passAccess == null) {
-            System.out.println("유효성검사 실패");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         User user = kakaoService.getUser(passAccess);
@@ -235,9 +217,7 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@RequestHeader("Authorization") String token) {
         // 토큰 유효성 검사
         String passAccess = kakaoService.checkToken(token); // 통과한 access token
-        System.out.println(" 유효성검사 시작 " + passAccess);
         if (passAccess == null) {
-            System.out.println("유효성검사 실패");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         User user = kakaoService.getUser(passAccess);
@@ -253,14 +233,11 @@ public class UserController {
 
         // 토큰 유효성 검사
         String passAccess = kakaoService.checkToken(token); // 통과한 access token
-        System.out.println(" 유효성검사 시작 " + passAccess);
         if (passAccess == null) {
-            System.out.println("유효성검사 실패");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
         User user = kakaoService.getUser(passAccess);
-
 
         user.setJwtRefreshToken("");
 

@@ -13,7 +13,7 @@ RUN gradle build -x test --parallel
 FROM openjdk:17.0-slim
 WORKDIR /app
 
-ARG JAR_FILE=build/libs/*.jar
+ARG JAR_FILE=build/libs/cadang-0.0.1-SNAPSHOT.jar
 
 COPY ${JAR_FILE} app.jar
 
@@ -27,5 +27,5 @@ ENTRYPOINT [ \
    "-jar", \
    "-Djava.security.egd=file:/dev/./urandom", \
    "-Dsun.net.inetaddr.ttl=0", \
-   "cadang-0.0.1-SNAPSHOT.jar" \
+   "app.jar" \
 ]
