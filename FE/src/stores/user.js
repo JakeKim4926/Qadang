@@ -92,13 +92,13 @@ export const useUserStore = defineStore(
     const logout = async () => {
       try {
         await axios({
-          url: `${import.meta.env.REST_API}/logout`,
-          method: "POST",
+          url: `http://localhost:8080/api/logout`,
+          method: "PUT",
         });
         localStorage.removeItem("userAccessToken");
         userAccessToken.value = null;
 
-        router.push("/login");
+        router.push("/");
       } catch (err) {
         console.error("에러", err);
       }
