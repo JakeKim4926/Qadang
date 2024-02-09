@@ -61,20 +61,20 @@ public class UserService {
     public void detailInfo(User user) {
 
         LocalDate now = LocalDate.now();
-        int age = now.getYear() - user.getUserBirth() +1; // 나이계산
+        int age = now.getYear() - user.getUserBirth() + 1; // 나이계산
         // 카페인
         if (age <= 11) { // 아동 : 0
             user.setUserCaffeine(0);
         } else if (age > 11 && age < 20) { // 청소년 : 몸무게 * 2.5mg
             user.setUserCaffeine(2.5 * user.getUserWeight());
-        }else{
+        } else {
             user.setUserCaffeine(400); // 성인 최대 권장량 : 400
         }
 
         double health = 0; // 활동량 점수
 
-        System.out.println("현재연도 : "+now.getYear());
-        System.out.println("getUserBirth : "+user.getUserBirth());
+        System.out.println("현재연도 : " + now.getYear());
+        System.out.println("getUserBirth : " + user.getUserBirth());
         System.out.println(age);
 
         // 당
@@ -97,9 +97,8 @@ public class UserService {
                 }
 
                 double energy = 88.5 - 61.9 * age + health * (26.7 * user.getUserWeight() + 903 * user.getUserHeight());
-                user.setUserSugar(energy * 0.1);
-
-            }else { // 청소년 & 여자
+                user.setUserSugar(energy * 0.1/4);
+            } else { // 청소년 & 여자
 
                 switch (user.getUserHealth()) {
                     case 1:
@@ -116,11 +115,10 @@ public class UserService {
                         break;
                 }
 
-                double energy = 135.3 - 30.8 * age + health * (10.0 * user.getUserWeight() + 934 * user.getUserHeight());
-                user.setUserSugar(energy * 0.1);
-
+                double energy = 135.3 - 30.8 * age + health * (10.0 * user.getUserWeight() + 934 * user.getUserHeight() / 100);
+                user.setUserSugar(energy * 0.1/4);
             }
-        }else{ // 성인
+        } else { // 성인
             if (user.getUserGender() == 1) { // 성인 & 남자
 
                 switch (user.getUserHealth()) {
@@ -138,10 +136,9 @@ public class UserService {
                         break;
                 }
 
-                double energy = 662 - 9.53 * age + health * (15.91 * user.getUserWeight() + 539.6 * user.getUserHeight());
-                user.setUserSugar(energy * 0.1);
-
-            }else { // 청소년 & 여자
+                double energy = 662 - 9.53 * age + health * (15.91 * user.getUserWeight() + 539.6 * user.getUserHeight() / 100);
+                user.setUserSugar(energy * 0.1/4);
+            } else { // 성인 & 여자
 
                 switch (user.getUserHealth()) {
                     case 1:
@@ -158,8 +155,8 @@ public class UserService {
                         break;
                 }
 
-                double energy = 354 - 6.91 * age + health * (9.36 * user.getUserWeight() + 726 * user.getUserHeight());
-                user.setUserSugar(energy * 0.1);
+                double energy = 354 - 6.91 * age + health * (9.36 * user.getUserWeight() + 726 * user.getUserHeight() / 100);
+                user.setUserSugar(energy * 0.1/4);
             }
         }
 
