@@ -10,17 +10,15 @@
 
     <template v-if="cafe.id > 0">
       <div class="chat-container">
-        <div v-if="showMessages" class="chat-messages" ref="chatContainer">
-          <div v-for="(chat,index) in chatStore.getChatList" :key="chat.index">
+        <div class="chat-messages" ref="chatContainer">
+          <div v-for="(chat, index) in chatStore.getChatList.value" :key="chat.index">
             <template v-if="chat.userName == userStore.getUserName">
-              <!-- <p class="time">{{ extractTimeFromDate(chat.time) }}</p> -->
               <div class="my-chat">
                 <p class="time">{{ extractTimeFromDate(chat.time) }}</p>
                 <div class="message">{{ chat.message }}</div>
               </div>
             </template>
             <div v-else class="their-chat">
-              <!-- <p>{{ extractTimeFromDate(chat.time) }}</p> -->
               <div class="nickname" :class="'nickname-' + ((index % 7) + 1)">{{ chat.userName }}</div>
               <p class="message">{{ chat.message }}</p>
               <p class="time">{{ extractTimeFromDate(chat.time) }}</p>
@@ -49,7 +47,7 @@
 </template>
 
 <script setup>
-import { nextTick, ref, watchEffect, onMounted, computed } from "vue";
+import { nextTick, ref, watchEffect, onMounted, computed, watch } from "vue";
 import { useSocketStore, messageType, testCafeList } from "@/stores/socket";
 import { useChatStore } from "@/stores/chat";
 import { useUserStore } from "@/stores/user";
@@ -69,77 +67,54 @@ const Msgcnt = ref(0);
 const showMessages = ref(false);
 // for test
 const userId = ref(1);
+let socket = null;
 
-
+watch(chatStore.chatList, () => {
+  chatStore.researchChatList(cafe.id.value);
+});
 
 onMounted(async () => {
-  // console.log(import.meta.env.VITE_SOCKET_API)
-  // socketStore.socket = new SockJS(import.meta.env.VITE_SOCKET_API); // 웹소켓 서버 URL
-  
-  // await userStore.researchName();
+
+  await userStore.researchName();
   // naming for test
-  userStore.userName = "Jake";
-  await chatStore.researchChatList(3);
+  // userStore.userName = "Jake";
+  // await chatStore.researchChatList(3);
 
-  socketStore.socket = new SockJS("http://localhost:8080/ws/chat"); // 웹소켓 서버 URL
-  socketStore.stompClient = Stomp.over(socketStore.socket);
-  showMessages.value = true;
-
-  const chat = {
-    messageType: messageType.ENTER,
-    chatRoomId: 1,
-    senderId: 2,
-    message: "a",
+  // WebSocket 연결
+  socket = new WebSocket('ws://localhost:8080/ws/chat');
+  // 메시지 수신 이벤트 핸들링
+  socket.onmessage = (event) => {
+    console.log("listen")
+    console.log("asd", event);
+    const message = JSON.parse(event.data);
+    console.log("수신22 ", event);
+    
+    chatStore.researchChatList(cafe.value.id);
   };
 
-  await socketStore.stompClient.connect(chat,
-    (frame) => {
-      // After successful connection, send the chat DTO
+  // 연결 시 ENTER 메시지 보내기
+  socket.onopen = () => {
+    const enterMessage = {
+      messageType: 'ENTER', // 입장 메시지 타입
+      chatRoomId: 1, // 채팅 방 ID
+      senderId: 1, // 보낸 사람 ID
+      message: userStore.userName // 메시지 내용은 비어 있어도 됩니다.
+    };
+    console.log('name33', userStore.userName);
+    socket.send(JSON.stringify(enterMessage));
+  };
 
-      console.log("frame :" + frame);
-      console.log("hihihihi");
-      console.log("Connection :");
+  socket.onerror = function (event) {
+    console.error('WebSocket connection error:', event);
+    // You can display an error message to the user or take other actions as needed
+  };
 
-      socketStore.stompClient.subscribe("http://localhost:8080/ws/chat", function (message) {
-        if (message.body) {
-          console.log(message.body);
-        } else {
-          console.log("nothing on message");
-        }
-      });
-      const chat = {
-        messageType: messageType.ENTER,
-        chatRoomId: cafe.value.id,
-        senderId: userId.value,
-        message: "a",
-      };
-      let messageToSend = JSON.stringify(chat);
-      messageToSend = JSON.parse(messageToSend)
-      socketStore.stompClient.send("http://localhost:8080/ws/chat", chat);
 
-    },
-    (error) => {
-      console.log("Connection error: " + error);
-      
-    }
 
-  );
-
-  // socketStore.stompClient.debug = function (message) {
-  //   if (message.includes("<<<")) {
-  //     const index = message.indexOf("<<<");
-  //     if (index !== -1) {
-  //       message = message.substring(index + 3).trim();
-  //     } else {
-  //       message = "";
-  //     }
-  //     receivedMessages.value.push(message);
-  //     Msgcnt.value += 1;
-  //     console.log(message);
-  //   }
-
-  // };
-
+  // 연결이 닫힐 때의 핸들링
+  socket.onclose = (event) => {
+    console.log('WebSocket connection closed: ', event);
+  };
 
 });
 
@@ -149,76 +124,47 @@ function extractTimeFromDate(dateTimeString) {
   // const time = dateTimeString.split(" ")[1];
   // const minute = time.split(":")[0] + ":" + time.split(":")[1]
 
-  console.log('date : ', dateTimeString);
   const minute = dateTimeString.split(":")[0].slice(-2) + ":" + dateTimeString.split(":")[1]
 
   return minute;
 }
 
 async function sendOpen() {
-  const chat = {
-    messageType: messageType.ENTER,
-    chatRoomId: cafe.value.id,
-    senderId: userId.value,
-    message: "a",
-  };
-  // let messageToSend = JSON.stringify(chat);
-  // messageToSend = JSON.parse(messageToSend)
-  socketStore.stompClient.send("http://localhost:8080/ws/chat", chat);
-  socketStore.stompClient.subscribe("http://localhost:8080/ws/chat", function (message) {
-    if (message.body) {
-      console.log(message.body);
+  // 연결 시 ENTER 메시지 보내기
+  socket.onopen = () => {
+    const enterMessage = {
+      messageType: 'ENTER', // 입장 메시지 타입
+      chatRoomId: cafe.value.id, // 채팅 방 ID
+      senderId: userId.value++, // 보낸 사람 ID
+      message: userStore.userName // 메시지 내용은 비어 있어도 됩니다.
+    };
+    socket.send(JSON.stringify(enterMessage));
 
-    } else {
-      console.log("nothing on message");
-    }
-  });
-  // Check if the StompClient is connected before sending the message
-  if (socketStore.stompClient && socketStore.stompClient.connected) {
-    // socketStore.stompClient.send(`${import.meta.env.VITE_SOCKET_API}`, {}, JSON.stringify(chat));
-    // const messageToSend = JSON.stringify(chat);
-    //   socketStore.stompClient.send("http://localhost:8080/ws/chat", messageToSend);
-  } else {
-    console.error("StompClient is not connected.");
-  }
-  socketStore.stompClient.send(`${import.meta.env.VITE_SOCKET_API}`, {}, JSON.stringify(chat));
-  console.log(chat);
-  message.value = "";
-  // await chatStore.researchChatList(cafe.value.id);
-  // 스크롤을 새 메시지 아래로 이동시킵니다.
-  nextTick(() => {
+  };
+
+  await chatStore.researchChatList(cafe.value.id);
+
+  await nextTick(() => {
     scrollChatToBottom();
   });
 }
 
 async function sendMessage() {
-  const chat = {
+  const enterMessage = {
     messageType: messageType.TALK,
     chatRoomId: cafe.value.id,
     senderId: userId.value,
     message: message.value,
   }
 
-  // Check if the StompClient is connected before sending the message
-  if (socketStore.stompClient && socketStore.stompClient.connected) {
-    // socketStore.stompClient.send(`${import.meta.env.VITE_SOCKET_API}`, {}, JSON.stringify(chat));
-    socketStore.stompClient.send(`${import.meta.env.VITE_SOCKET_API}`, {}, chat);
-  } else {
-    console.error("StompClient is not connected.");
-  }
+  socket.send(JSON.stringify(enterMessage));
+  message.value = '';
 
-  socketStore.stompClient.subscribe(`${import.meta.env.VITE_SOCKET_API}`, (message) => {
-    // Handle the incoming message
-    console.log("Received message:", JSON.parse(message.body));
-    console.log("Received message:", message.body);
-
-    // Here, you can update your UI or perform any other actions based on the received message
-  });
-
-  console.log(chat);
-  message.value = "";
+  await chatStore.researchChatList(cafe.value.id);
+  console.log(enterMessage);
   // 스크롤을 새 메시지 아래로 이동시킵니다.
-  nextTick(() => {
+
+  await nextTick(() => {
     scrollChatToBottom();
   });
 }
@@ -238,15 +184,17 @@ async function sendMessage() {
 
 function adjustTextarea() { }
 
-function scrollChatToBottom() {
+async function scrollChatToBottom() {
   if (chatContainer.value) {
     chatContainer.value.scrollTop = chatContainer.value.scrollHeight;
+
   }
 }
 
-watchEffect(() => {
+watch(chatStore.getChatList, () => {
+  // chatStore.getChatList의 길이가 변할 때마다 스크롤을 맨 아래로 내리는 함수를 호출합니다.
+  console.log("detected")
   scrollChatToBottom();
-  // console.log(socketStore.chatMessages.value)
 });
 </script>
 
@@ -389,7 +337,7 @@ watchEffect(() => {
   line-height: 18px;
   font-weight: 400;
   text-align: right;
-  justify-content: flex-end; 
+  justify-content: flex-end;
 }
 
 .chat-messages {
@@ -419,9 +367,10 @@ watchEffect(() => {
   color: black;
   padding: 10px 15px;
   margin: 0px -41% 0px auto;
-  width: fit-content; /* 메시지 내용에 맞게 최대 너비 설정 */
+  width: fit-content;
+  /* 메시지 내용에 맞게 최대 너비 설정 */
   max-width: 50%;
-  right : 43%;
+  right: 43%;
   /* 메시지 최대 너비 설정 */
   position: relative;
   word-wrap: break-word;
@@ -431,19 +380,24 @@ watchEffect(() => {
 }
 
 .my-chat .time {
-  left: -40px; /* 왼쪽으로 시간 텍스트를 이동 */
-  top: 10%; /* 상단을 기준으로 정렬 */
-  transform: translateY(50%); /* 수직으로 중앙으로 이동 */
+  left: -40px;
+  /* 왼쪽으로 시간 텍스트를 이동 */
+  top: 10%;
+  /* 상단을 기준으로 정렬 */
+  transform: translateY(50%);
+  /* 수직으로 중앙으로 이동 */
 }
 
 
 .their-chat {
   position: relative;
-  padding: 5px 15px; /* 닉네임을 위한 여백 추가 */
+  padding: 5px 15px;
+  /* 닉네임을 위한 여백 추가 */
   margin: 4px 15px;
   margin-bottom: 20px;
   margin-top: 20px;
-  width: fit-content; /* 메시지 내용에 맞게 최대 너비 설정 */
+  width: fit-content;
+  /* 메시지 내용에 맞게 최대 너비 설정 */
   max-width: 50%;
   background-color: #f5f5f5;
   border-radius: 20px;
@@ -453,41 +407,52 @@ watchEffect(() => {
 }
 
 .their-chat .time {
-  right: -45px; /* 오른쪽으로 시간 텍스트를 이동 */
-  top: 50%; /* 상단을 기준으로 정렬 */
-  transform: translateY(35%); /* 수직으로 중앙으로 이동 */
+  right: -45px;
+  /* 오른쪽으로 시간 텍스트를 이동 */
+  top: 50%;
+  /* 상단을 기준으로 정렬 */
+  transform: translateY(35%);
+  /* 수직으로 중앙으로 이동 */
 }
 
 .nickname {
   position: absolute;
-  top: -25px; /* 닉네임의 상단 여백 조절 */
+  top: -25px;
+  /* 닉네임의 상단 여백 조절 */
   left: 10px;
   font-size: 17px;
   line-height: 18px;
   font-weight: 700;
-  background-color: transparent; /* 배경색 투명하게 설정 */
+  background-color: transparent;
+  /* 배경색 투명하게 설정 */
 }
 
 .nickname-1 {
-  color:pink;
+  color: pink;
 }
+
 .nickname-2 {
-  color:orange;
+  color: orange;
 }
+
 .nickname-3 {
-  color:#846046;
+  color: #846046;
 }
+
 .nickname-4 {
-  color:green;
+  color: green;
 }
+
 .nickname-5 {
-  color:blue;
+  color: blue;
 }
+
 .nickname-6 {
-  color:navy;
+  color: navy;
 }
+
 .nickname-7 {
-  color:purple;
+  color: purple;
 }
 
 
@@ -538,4 +503,5 @@ button {
   padding: 8px 16px;
   border-radius: 5px;
   cursor: pointer;
-} */</style>
+} */
+</style>
