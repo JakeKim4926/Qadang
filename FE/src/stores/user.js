@@ -89,10 +89,11 @@ export const useUserStore = defineStore(
         redirectUri: `${import.meta.env.VITE_REST_KAKAO_LOGIN_API}`,
       });
     };
+  
     const logout = async () => {
       try {
         await axios({
-          url: `${import.meta.env.REST_API}/logout`,
+          url: `${import.meta.env.VITE_REST_API}/logout`,
           method: "PUT",
         });
         localStorage.removeItem("userAccessToken");
@@ -103,6 +104,7 @@ export const useUserStore = defineStore(
         console.error("에러", err);
       }
     };
+
 
     const sendKakaoToken = function (token) {
       axios({
@@ -254,7 +256,7 @@ export const useUserStore = defineStore(
 
     const deleteUser = function () {
       axios({
-        url: import.meta.env.VITE_REST_USER_API,
+        url: import.meta.env.VITE_REST_API,
         method: "DELETE",
       })
         .then(() => { })
