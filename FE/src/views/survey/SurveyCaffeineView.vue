@@ -8,14 +8,14 @@
         <div class="text-block">
           <span class="div-2-span">당신은 커피 러버</span>
           <br>
-          <span class="div-2-span2">혈액 대신 커피가 흐를지도?</span>
+          <span class="div-2-span2">심장이 항상 바쁘시군요</span>
         </div>
       </div>
 
       <div class="div-2-span">처방전</div>
       <div class="_1">오늘부터 디카페인 1일</div>
       <div class="button-wrapper">
-        <img class="image-24" src="@/components/icons/doctor.png" alt="doctor" />
+        <img class="image-24" src="@/components/icons/logo_4.png" alt="doctor" />
         <router-link to="/mainCaffeine" class="rectangle-4270">시작하기</router-link>
       </div>
     </div>

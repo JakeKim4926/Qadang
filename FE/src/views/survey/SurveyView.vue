@@ -6,7 +6,7 @@
 
                 <div class="cafe_name">카페명</div>
                 <select id="cafeSelect" v-model="cafeId" class="rectangle-4271 select-font"
-                    style="text-align: center; ">
+                    style="text-align: center;" @change="selectCafe">
                     <option v-for="cafe in drinkStore.getCafeList" :key="cafe.cafeId" :value="cafe.cafeId">
                         {{ cafe.cafeName }}
                     </option>
@@ -17,9 +17,10 @@
 
                 <select id="drinkSelect" v-model="drinkTemp" class="rectangle-4272 select-font" @change="selectDrink"
                     style="text-align: center; " :disabled="!cafeId">
-                    <option v-for="drink in filteredDrinks" :key="drink.drinkId" :value="drink">
+                        <option v-for="drink in filteredDrinks" :key="drink.drinkId" :value="drink">
                         {{ drink.drinkName }}
-                    </option>
+                    </option>    
+                    
                 </select>
 
             </div>
@@ -92,7 +93,7 @@
     </div>
 </template>
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import { useDrinksStore } from "@/stores/drinks";
 
 const drinkStore = useDrinksStore();
@@ -105,15 +106,17 @@ const sugar = ref(0);
 
 const searchText = ref('');
 const filteredDrinks = ref([]);
+const getFilteredDrinks = computed(()=>filteredDrinks);
 
-function filterDrinks() {
-    filteredDrinks.value = drinkStore.getCafeDrinkList.filter(drink =>
+async function filterDrinks() {
+    filteredDrinks.value = await drinkStore.getCafeDrinkList.filter(drink =>
         drink.drinkName.toLowerCase().includes(searchText.value.toLowerCase())
     );
 }
 
 // Call filterDrinks function whenever searchText changes
 watch(searchText, () => {
+
         filterDrinks();
 });
 
@@ -167,9 +170,9 @@ watch(cafeId, (newValue, oldValue) => {
 });
 
 
-onMounted(() => {
-    drinkStore.researchCafe();
-
+onMounted(async () => {
+    await drinkStore.researchCafe();
+    filteredDrinks.value = drinkStore.getCafeDrinkList;
 })
 
 

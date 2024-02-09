@@ -62,7 +62,6 @@ export default {
             let day = date.date.getDate();
             day = day < 10 ? "0" + day.toString() : day.toString();
             const currentDate = year.toString() + '-' + month.toString() + '-' + day.toString();
-
             const sample = JSON.parse(sessionStorage.getItem('calendarMonth'));
             if (sample != undefined) {
                 let dataForDate = sample.find(item => item.accumulateDate === currentDate);
@@ -106,6 +105,23 @@ export default {
             };
         }
         const updateCalendarOptions = async () => {
+            
+            const handleDateSet = async (arg) => {
+                console.log(arg);
+                const accumulateStore = useAccumulateStore();
+
+                console.log("hello 2", arg.view.currentStart)
+                const year = arg.view.currentStart.getFullYear();
+                let month = arg.view.currentStart.getMonth() + 1;
+                month = month < 10 ? "0" + month.toString() : month.toString();
+                const now = ref(year.toString() + month.toString());
+                console.log("updated");
+                accumulateStore.month(now);
+                const asd = { date: arg.view.currentStart };
+                dayCellContentFunction(asd);
+            };
+            dateSet:handleDateSet;
+            dayCellContent: dayCellContentFunction;
         };
 
         onMounted(() => {

@@ -83,11 +83,11 @@ onMounted(async () => {
   // WebSocket 연결
   socket = new WebSocket('ws://localhost:8080/ws/chat');
   // 메시지 수신 이벤트 핸들링
-  socket.onmessage = (event) => {
+  socket.onmessage = () => {
     console.log("listen")
-    console.log("asd", event);
-    const message = JSON.parse(event.data);
-    console.log("수신22 ", event);
+    // console.log("asd", event);
+    // const message = JSON.parse(event.data);
+    // console.log("수신22 ", event);
     
     chatStore.researchChatList(cafe.value.id);
   };

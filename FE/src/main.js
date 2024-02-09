@@ -18,7 +18,7 @@ import {fas} from '@fortawesome/free-solid-svg-icons'
 import {far} from '@fortawesome/free-regular-svg-icons'
 import {fab} from '@fortawesome/free-brands-svg-icons'
 
-import { userAccessToken } from "@/stores/util"
+import { userAccessToken, } from "@/stores/util"
 
 import axios from 'axios';
 
@@ -28,6 +28,7 @@ const setTokenInAxiosHeader = () => {
     if (token) {
       axios.defaults.headers.common['Authorization'] = token;
       userAccessToken.value = token;
+      
     }
   };
   
