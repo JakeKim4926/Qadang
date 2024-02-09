@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-public class NickName {
+public class Nickname {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -200,8 +200,9 @@ public class UserController {
         }
 
         User user = kakaoService.getUser(passAccess);
-
-        userService.detailInfo(user);
+        if(user.getUserBirth()!=0) {
+            userService.detailInfo(user);
+        }
 
         return new ResponseEntity<UserAmount>(userService.userAmount(user), HttpStatus.OK);
     }

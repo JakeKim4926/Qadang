@@ -7,7 +7,7 @@ import com.ssafy.cadang.dto.IdResponse;
 import com.ssafy.cadang.dto.KakaoInfo;
 import com.ssafy.cadang.dto.KakaoToken;
 import com.ssafy.cadang.jwt.JwtLogin;
-import com.ssafy.cadang.repository.NickNameRepository;
+import com.ssafy.cadang.repository.NicknameRepository;
 import com.ssafy.cadang.repository.UserRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -23,7 +23,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.time.LocalDate;
 import java.util.Date;
 
 @Service
@@ -32,7 +31,7 @@ import java.util.Date;
 public class KakaoService {
 
     private final UserRepository userRepository;
-    private final NickNameRepository nickNameRepository;
+    private final NicknameRepository nickNameRepository;
 
     @Value("${spring.registration.kakao.client-id}")
     private String client_id;
@@ -159,7 +158,7 @@ public class KakaoService {
             System.out.println(" addUser / 없는 회원이므로 회원가입 ");
 
 
-            // 닉네임 ( 임시 )
+            // 닉네임
             String adjective = nickNameRepository.findRandomAdjective();
             String noun = nickNameRepository.findRandomNoun();
             String nickname = adjective+" "+noun;
