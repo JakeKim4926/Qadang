@@ -98,12 +98,13 @@ export const useRecordsStore = defineStore("records", () => {
       });
   };
 
-  const deleteDrink = function (recordId) {
-    axios({
+  const deleteDrink = async function (recordId) {
+    await axios({
       url: `${import.meta.env.VITE_REST_RECORDS_API}/${recordId}`,
       method: "DELETE",
     })
-      .then((res) => {})
+      .then((res) => {
+      })
       .catch((err) => {
         console.log(err);
       });

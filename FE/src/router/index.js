@@ -19,7 +19,7 @@ import SurveyUnHealthView from "@/views/survey/SurveyUnHealthView.vue";
 
 import UserUpdateView from "@/components/user/UserUpdateView.vue";
 import { createRouter, createWebHistory } from "vue-router";
-import { userAccessToken } from "@/stores/util";
+import { userAccessToken, isFooter } from "@/stores/util";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -134,9 +134,11 @@ router.beforeEach((to, from, next) => {
   if (localStorage.getItem('userAccessToken') == "" || localStorage.getItem('userAccessToken') == null ) {
     if(to.path == '/api/kakao-login') {
       next(); // Redirect to home if not logged in
+      isFooter.value = true;
     } else if (to.name !== "home") {
       window.alert("로그인이 필요합니다");
       next({ name: "home" }); // Redirect to home if not logged in
+      isFooter.value = false;
     } else {
       next(); // Allow access to kakaoLogin route
     }
@@ -146,6 +148,12 @@ router.beforeEach((to, from, next) => {
       next({ name: "mainCaffeine" }); // Redirect to home if not logged in
     } else {
       next(); // Allow access to other routes
+      if(!isFooter.value)
+        isFooter.value = true;
+
+      if(to.name == "survey" || to.name == "surveyHealth" ||
+      to.name == "surveyCaffeine" || to.name == "surveySugar" || to.name == "surveyUnhealth")
+        isFooter.value = false;
     }
   }
 });

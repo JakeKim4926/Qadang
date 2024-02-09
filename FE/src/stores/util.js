@@ -35,3 +35,6 @@ export const tempRecord = ref({})
 export const userAccessToken = ref(null);
 
 export const isRankModal = ref(false)
+
+export const isFooter = ref(false);
+export const updateCalendar = ref(true);
