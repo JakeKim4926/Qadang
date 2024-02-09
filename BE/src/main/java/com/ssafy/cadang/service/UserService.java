@@ -60,22 +60,25 @@ public class UserService {
     // 권장량 계산
     public void detailInfo(User user) {
 
+        LocalDate now = LocalDate.now();
+        int age = now.getYear() - user.getUserBirth() +1; // 나이계산
         // 카페인
-        if (user.getUserBirth() <= 11) { // 아동 : 0
+        if (age <= 11) { // 아동 : 0
             user.setUserCaffeine(0);
-        } else if (user.getUserBirth() > 11 && user.getUserBirth() < 20) { // 청소년 : 몸무게 * 2.5mg
+        } else if (age > 11 && age < 20) { // 청소년 : 몸무게 * 2.5mg
             user.setUserCaffeine(2.5 * user.getUserWeight());
+        }else{
+            user.setUserCaffeine(400); // 성인 최대 권장량 : 400
         }
 
         double health = 0; // 활동량 점수
-        LocalDate now = LocalDate.now();
-        int age = now.getYear() - user.getUserBirth() +1; // 나이계산
+
         System.out.println("현재연도 : "+now.getYear());
         System.out.println("getUserBirth : "+user.getUserBirth());
         System.out.println(age);
 
         // 당
-        if (user.getUserBirth() < 20) {
+        if (age < 20) {
             if (user.getUserGender() == 1) { // 청소년 & 남자
 
                 switch (user.getUserHealth()) {

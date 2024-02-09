@@ -180,7 +180,6 @@ public class UserController {
         userService.update(user);
         System.out.println("2userBirth : "+user.getUserBirth());
 
-
         userService.detailInfo(user);
 
 
@@ -202,6 +201,7 @@ public class UserController {
 
         User user = kakaoService.getUser(passAccess);
 
+        userService.detailInfo(user);
 
         return new ResponseEntity<UserAmount>(userService.userAmount(user), HttpStatus.OK);
     }

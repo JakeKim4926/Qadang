@@ -7,6 +7,7 @@ import com.ssafy.cadang.dto.IdResponse;
 import com.ssafy.cadang.dto.KakaoInfo;
 import com.ssafy.cadang.dto.KakaoToken;
 import com.ssafy.cadang.jwt.JwtLogin;
+import com.ssafy.cadang.repository.NickNameRepository;
 import com.ssafy.cadang.repository.UserRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -31,6 +32,7 @@ import java.util.Date;
 public class KakaoService {
 
     private final UserRepository userRepository;
+    private final NickNameRepository nickNameRepository;
 
     @Value("${spring.registration.kakao.client-id}")
     private String client_id;
@@ -156,8 +158,16 @@ public class KakaoService {
 
             System.out.println(" addUser / 없는 회원이므로 회원가입 ");
 
+
             // 닉네임 ( 임시 )
-            String nickname = String.valueOf((int) (Math.random() * 900000) + 100000);
+            String adjective = nickNameRepository.findRandomAdjective();
+            String noun = nickNameRepository.findRandomNoun();
+            String nickname = adjective+" "+noun;
+            if(userRepository.findByUserName(nickname)!=null){
+                adjective = nickNameRepository.findRandomAdjective();
+                noun = nickNameRepository.findRandomNoun();
+                nickname = adjective+" "+noun;
+            }
 
 
             // 유저 정보 입력
@@ -199,8 +209,6 @@ public class KakaoService {
                 .setHeaderParam("alg", "HS256") //Header 설정부분
                 .claim("userId", user.getUserId()) // Payload 설정부분
                 .setExpiration(new Date(System.currentTimeMillis() + 1 * (1000 * 60 * 60 * 24))) // 만료시간 : 24시간
-//                .setExpiration(new Date(System.currentTimeMillis() + 1 * (1000 * 60 * 60 * 72))) // 만료시간 : 72시간
-//                .setExpiration(new Date(System.currentTimeMillis() + 1 * (1000 * 60 * 2))) // 만료시간 : 2분
                 .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
                 .compact();
 
@@ -215,8 +223,7 @@ public class KakaoService {
                 .setHeaderParam("type", "jwt") //Header 설정부분
                 .setHeaderParam("alg", "HS256") //Header 설정부분
                 .claim("userId", addUser.getUserId()) // Payload 설정부분
-                .setExpiration(new Date(System.currentTimeMillis() + 1 * (1000 * 60 * 60 * 24 * 30))) // 만료시간 : 30일
-//                .setExpiration(new Date(System.currentTimeMillis() + 1 * (1000 * 60 * 3))) // 만료시간 : 4분
+                .setExpiration(new Date(System.currentTimeMillis() + 1 * (1000 * 60 * 60 * 24 * 14))) // 만료시간 : 14일
                 .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
                 .compact();
 
@@ -242,7 +249,6 @@ public class KakaoService {
 //        if (token != null && token.startsWith("Bearer ")) { // 헤더에 토큰이 있고 Bearer가 붙어있으면
 //            return token.substring(7); // "Bearer " 다음의 문자열이 토큰이므로 추출
         if (token != null) { // 헤더에 토큰이 있고 Bearer가 붙어있으면
-            System.out.println("추출된 토큰 : " + token.substring(7));
             return token; // "Bearer " 다음의 문자열이 토큰이므로 추출
         }
         return null; // 헤더에 token이 없거나 올바른 형식이 아니면 null 반환
