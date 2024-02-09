@@ -162,10 +162,12 @@ public class KakaoService {
             String adjective = nickNameRepository.findRandomAdjective();
             String noun = nickNameRepository.findRandomNoun();
             String nickname = adjective+" "+noun;
-            if(userRepository.findByUserName(nickname)!=null){
+            while (userRepository.findByUserName(nickname) != null) {
+
                 adjective = nickNameRepository.findRandomAdjective();
                 noun = nickNameRepository.findRandomNoun();
                 nickname = adjective+" "+noun;
+
             }
 
 
