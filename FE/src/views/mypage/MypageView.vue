@@ -64,7 +64,8 @@ const openUpdateModal = () => {
   isUpdateModal.value = true
   console.log('!',isUpdateModal.value)}
 
-
+console.log(store.getUserMaxCaffeine)
+console.log(store.getUserMaxSugar)
 const message = computed(() => {
   return store.isInfoFilled
     ? "오늘 하루는 어떠셨나요? \n이제 개인별 맞춤 정보를 제공받을 수 있어요\n오늘도 건강한 하루 보내세요:)"
