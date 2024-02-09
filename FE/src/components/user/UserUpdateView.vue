@@ -50,7 +50,7 @@
             <button type="button" :class="{ active: userInfo.userHealth === 4 }" @click="userInfo.userHealth = 4" class="shading">매우활동적</button>
             <a @click="togglePopup" class="popup-mark"><font-awesome-icon :icon="['fas', 'circle-question']" /></a>
             <div v-if="isPopupVisible" class="popup">
-              <p>여기에 특정 메시지를 입력하세요.</p>
+              <p>권장량을 정확하게 계산하기 위해 필요합니다!</p>
               <a @click="togglePopup" class="close">
                 <font-awesome-icon :icon="['fas', 'circle-xmark']" style="color: #000000;" size="xl"/>
               </a>
