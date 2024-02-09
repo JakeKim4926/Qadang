@@ -89,10 +89,11 @@ export const useUserStore = defineStore(
         redirectUri: `${import.meta.env.VITE_REST_KAKAO_LOGIN_API}`,
       });
     };
+  
     const logout = async () => {
       try {
         await axios({
-          url: `http://localhost:8080/api/logout`,
+          url: `${import.meta.env.VITE_REST_API}/logout`,
           method: "PUT",
         });
         localStorage.removeItem("userAccessToken");
@@ -103,6 +104,7 @@ export const useUserStore = defineStore(
         console.error("에러", err);
       }
     };
+
 
     const sendKakaoToken = function (token) {
       axios({
@@ -223,24 +225,38 @@ export const useUserStore = defineStore(
         });
     };
 
-    const updateUser = function (updateData) {
-      axios({
-        url: import.meta.env.VITE_REST_USER_API,
-        method: "PUT",
-        data: updateData,
-      })
-        .then(() => {
-          alert("사용자 정보가 성공적으로 업데이트되었습니다.");
-          router.push("/mypage");
-        })
-        .catch((err) => {
-          console.error("Error updating user:", err);
-        });
+    // const updateUser = function (updateData) {
+    //   axios({
+    //     url: import.meta.env.VITE_REST_USER_API,
+    //     method: "PUT",
+    //     data: updateData,
+    //   })
+    //     .then(() => {
+    //       alert("사용자 정보가 성공적으로 업데이트되었습니다.");
+    //       router.push("/mypage");
+    //     })
+    //     .catch((err) => {
+    //       console.error("Error updating user:", err);
+    //     });
+    // };
+
+    const updateUser = async function (updateData) {
+      try {
+        const response = await axios.put(import.meta.env.VITE_REST_USER_API, updateData);        
+        for (const key in updateData) {
+          if (updateData.hasOwnProperty(key)) {
+            user.value[key] = updateData[key];
+          }
+        }
+        alert("사용자 정보가 성공적으로 업데이트되었습니다.");
+      } catch (err) {
+        console.error("Error updating user:", err);
+      }
     };
 
     const deleteUser = function () {
       axios({
-        url: import.meta.env.VITE_REST_USER_API,
+        url: import.meta.env.VITE_REST_API,
         method: "DELETE",
       })
         .then(() => { })
@@ -275,19 +291,18 @@ export const useUserStore = defineStore(
         });
     };
 
-    const infoFilled = computed(() => {
-      const userInfo = user.value;
+    const isInfoFilled = computed(() => {
+      const userInfo = getUser.value;
       if (!userInfo) {
         return false;
       }
       // 모든 필요한 속성이 존재하는지 확인
       return (
-        userInfo.hasOwnProperty("userHeight") &&
-        userInfo.userHeight !== 0 &&
-        userInfo.hasOwnProperty("userWeight") &&
-        userInfo.userWeight !== 0 &&
-        userInfo.hasOwnProperty("userHealth") &&
-        userInfo.userHealth !== 0
+        userInfo.userGender > 0 &&
+        userInfo.userBirth > 0 &&
+        userInfo.userHeight > 0 &&
+        userInfo.userWeight > 0 &&
+        userInfo.userHealth > 0
       );
     });
 
@@ -330,6 +345,6 @@ export const useUserStore = defineStore(
       deleteUser,
       researchRecommendSugar,
       researchRecommendCaffeine,
-      infoFilled,
+      isInfoFilled,
     };
   }, { persist: true });
