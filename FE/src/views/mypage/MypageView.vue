@@ -14,13 +14,13 @@
         <div class="nutrition-info">
           <div class="nutrition-item">
             <h1> 
-              {{ store.getUserRDICaffeine }} mg
+              {{ formattedRDICaffeine  }} mg
             </h1>      
             <h3>하루 권장 카페인 섭취량</h3>
           </div>
           <div class="nutrition-item">
             <h1> 
-              {{ store.getUserRDISugar }} g
+              {{ formattedRDISugar }} g
             </h1>      
             <h3>하루 권장 설탕 섭취량</h3>
           </div>        
@@ -51,22 +51,23 @@
 </template>
 
 <script setup>
-import { ref, onMounted,computed } from 'vue';
+import { watch ,ref, onMounted,computed } from 'vue';
 import { useUserStore } from '../../stores/user'; 
 import router from '@/router';
 import { isUpdateModal } from '../../stores/util'
 import UserUpdateView from '@/components/user/UserUpdateView.vue'
 
 const store = useUserStore();
-const isInfoFilled = store.isInfoFilled;
+const isInfoFilled = computed(() => store.isInfoFilled);
+
 const openUpdateModal = () => {
   isUpdateModal.value = true
   console.log('!',isUpdateModal.value)}
 
 
 const message = computed(() => {
-  return store.infoFilled.value
-    ? "오늘 하루는 어떠셨나요? \n 카페인 없는 하루 화이팅"
+  return store.isInfoFilled
+    ? "오늘 하루는 어떠셨나요? \n이제 개인별 맞춤 정보를 제공받을 수 있어요\n오늘도 건강한 하루 보내세요:)"
     : "추가정보를 입력하지 않았어요\n 추가정보를 입력하시면\n개인별 맞춤 정보를 제공받을 수 있어요";
 });
 
@@ -75,7 +76,7 @@ const userWithdraw = async () => {
     try {
       await store.deleteUser();      
       alert('회원 탈퇴가 완료되었습니다.');
-      router.push('/home');
+      router.push('/');
     } catch (error) {
       console.error('회원 탈퇴 중 오류가 발생했습니다.', error);      
     }
@@ -86,7 +87,20 @@ const handleLogout = () => {
   store.logout();
 };
 
-onMounted(() => {  
+watch(() => store.isInfoFilled, (newVal) => {
+  console.log('infoFilled changed:', newVal); 
+});
+
+const formattedRDICaffeine = computed(() => {
+  return store.getUserRDICaffeine ? store.getUserRDICaffeine.toFixed(1) : '0.0';
+});
+
+const formattedRDISugar = computed(() => {
+  return store.getUserRDISugar ? store.getUserRDISugar.toFixed(1) : '0.0';
+});
+
+onMounted(() => {
+  console.log('Initial infoFilled value:', store.isInfoFilled);   
   store.researchMax();
   store.researchUser();
   store.researchName();
@@ -288,7 +302,7 @@ h4 {
   color: #562B1A; 
 }
 .nickname{
-  
+  margin-bottom: 2px;
 }
 
 </style>

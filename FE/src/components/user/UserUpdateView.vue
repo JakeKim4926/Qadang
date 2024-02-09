@@ -14,29 +14,28 @@
       <form @submit.prevent="updateUserInfo" class="update-form">        
         <div class="form-row">
           <div class="form-group half-width">
-            <label for="gender" class="label-margin tag-bold">성별</label>
-            <button type="button" :class="{ active: userInfo.gender === 1 }" @click="userInfo.gender = 1" class="shading2">남성</button>
-            <button type="button" :class="{ active: userInfo.gender === 2 }" @click="userInfo.gender = 2" class="shading2">여성</button>
-            
+            <label for="userGender" class="label-margin tag-bold">성별</label>
+            <button type="button" :class="{ active: userInfo.userGender === 1 }" @click="userInfo.userGender = 1" class="shading2">남성</button>
+            <button type="button" :class="{ active: userInfo.userGender === 2 }" @click="userInfo.userGender = 2" class="shading2">여성</button>            
           </div>
           <div class="form-group half-width">
-            <label for="birthYear" class="label-margin tag-bold">연도</label>
-            <input type="number" v-model="userInfo.birthYear" class="input-field2" min="0"/>
+            <label for="userBirth" class="label-margin tag-bold">출생년도</label>
+            <input type="number" v-model="userInfo.userBirth" class="input-field2" min="0"/>
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group half-width">
-            <label for="height" class="label-margin tag-bold">키</label>
-            <select v-model="userInfo.height" class="input-field label-margin">
-              <option v-for="height in heightOptions" :key="height" :value="height">{{ height }} </option>
+            <label for="userHeight" class="label-margin tag-bold">키</label>
+            <select v-model="userInfo.userHeight" class="input-field label-margin">
+              <option v-for="userHeight in heightOptions" :key="userHeight" :value="userHeight">{{ userHeight }} </option>
             </select>
             <span class="unit">cm</span> 
           </div>
           <div class="form-group half-width">
-            <label for="weight" class="label-margin tag-bold">몸무게</label>
-            <select v-model="userInfo.weight" class="input-field label-margin">
-              <option v-for="weight in weightOptions" :key="weight" :value="weight">{{ weight }} </option>
+            <label for="userWeight" class="label-margin tag-bold">몸무게</label>
+            <select v-model="userInfo.userWeight" class="input-field label-margin">
+              <option v-for="userWeight in weightOptions" :key="userWeight" :value="userWeight">{{ userWeight }} </option>
             </select>
             <span class="unit">kg</span>
           </div>
@@ -45,10 +44,10 @@
         <div class="form-group">
           <label class="label-margin tag-bold">활동량</label>
           <div class="button-group">
-            <button type="button" :class="{ active: userInfo.activityLevel === 1 }" @click="userInfo.activityLevel = 1" class="shading">비활동적</button>
-            <button type="button" :class="{ active: userInfo.activityLevel === 2 }" @click="userInfo.activityLevel = 2" class="shading">저활동적</button>
-            <button type="button" :class="{ active: userInfo.activityLevel === 3 }" @click="userInfo.activityLevel = 3" class="shading" > 활동적 </button>
-            <button type="button" :class="{ active: userInfo.activityLevel === 4 }" @click="userInfo.activityLevel = 4" class="shading">매우활동적</button>
+            <button type="button" :class="{ active: userInfo.userHealth === 1 }" @click="userInfo.userHealth = 1" class="shading">비활동적</button>
+            <button type="button" :class="{ active: userInfo.userHealth === 2 }" @click="userInfo.userHealth = 2" class="shading">저활동적</button>
+            <button type="button" :class="{ active: userInfo.userHealth === 3 }" @click="userInfo.userHealth = 3" class="shading" > 활동적 </button>
+            <button type="button" :class="{ active: userInfo.userHealth === 4 }" @click="userInfo.userHealth = 4" class="shading">매우활동적</button>
             <a @click="togglePopup" class="popup-mark"><font-awesome-icon :icon="['fas', 'circle-question']" /></a>
             <div v-if="isPopupVisible" class="popup">
               <p>여기에 특정 메시지를 입력하세요.</p>
@@ -57,12 +56,15 @@
               </a>
             </div>
           </div>
-        </div>            
-        <button type="submit" class="submit-bttn">저장하기</button>        
+        </div>
+            
+        <button type="submit" class="submit-bttn">저장하기</button>
+        
       </form>
     </div>
   </div>
 </div>
+
 </template>
 
 <script setup>
@@ -72,38 +74,37 @@ import { useUserStore } from '../../stores/user';
 import router from '@/router';
 import { isUpdateModal } from '../../stores/util'
 
-onMounted(() => {
-  bringUserInfo();
-});
 
 const store = useUserStore();
 const isLoading = ref(false);
-const userInfo = reactive({
-  gender: null,
-  birthYear: null,
-  height: null,
-  weight: null,
-  activityLevel: null
+const userInfo = reactive({  
+  userGender: null,
+  userBirth: null,
+  userHeight: null,
+  userWeight: null,
+  userHealth: null
 });
 const isPopupVisible = ref(false);
 const heightOptions = Array.from({ length: 25 }, (_, i) => 100 + i * 5); 
 const weightOptions = Array.from({ length: 25 }, (_, i) => 30 + i * 5); 
 
+
+
 const closeUpdateModal = () => {
-  isUpdateModal.value = false
-  console.log('!',isUpdateModal.value)
-}
+  isUpdateModal.value = false;
+  
+  console.log('!', isUpdateModal.value);
+}; 
 
 const bringUserInfo = async () => {
   isLoading.value = true;
   try {
     await store.researchUser();    
-    userInfo.gender = store.user.value?.userGender || null;
-    userInfo.birthYear = store.user.value?.userBirth || null;
-    userInfo.height = store.user.value?.userHeight || null;
-    userInfo.weight = store.user.value?.userWeight || null;
-    userInfo.activityLevel = store.user.value?.userHealth || null;
-    
+    userInfo.userGender = store.getUser.userGender || null;
+    userInfo.userBirth = store.getUser.userBirth || null; 
+    userInfo.userHeight = store.getUser.userHeight || null;
+    userInfo.userWeight = store.getUser.userWeight || null;
+    userInfo.userHealth = store.getUser.userHealth || null;
   } catch (error) {
     console.error("데이터를 가져오지 못했습니다.", error);
   } finally {
@@ -112,27 +113,34 @@ const bringUserInfo = async () => {
 };
 
 
+
+
 const updateUserInfo = async () => {
   
   const updateData = {};  
-  if (userInfo.gender !== null) updateData.gender = userInfo.gender;
-  if (userInfo.birthYear) updateData.birthYear = userInfo.birthYear;
-  if (userInfo.height !== null) updateData.height = userInfo.height;
-  if (userInfo.weight !== null) updateData.weight = userInfo.weight;
-  if (userInfo.activityLevel !== null) updateData.activityLevel = userInfo.activityLevel;
+  if (userInfo.userBirth) updateData.userBirth = userInfo.userBirth;
+  if (userInfo.userGender !== null) updateData.userGender = userInfo.userGender;
+  if (userInfo.userHeight !== null) updateData.userHeight = userInfo.userHeight;
+  if (userInfo.userWeight !== null) updateData.userWeight = userInfo.userWeight;
+  if (userInfo.userHealth !== null) updateData.userHealth = userInfo.userHealth;
 
   try {
-    await store.updateUser(updateData);
-    alert('수정완료');
+    await store.updateUser(updateData);    
     isUpdateModal.value = false
-    console.log(updateData)
+    console.log(updateData) 
+    window.location.reload();
     router.push('/mypage');
   } catch (error) {
     console.error("업데이트 실패", error);
   }
-};
+}
 
 
+
+onMounted(() => {
+  bringUserInfo();  
+  store.researchName();
+});
 
 const togglePopup = () => {
   isPopupVisible.value = !isPopupVisible.value;
