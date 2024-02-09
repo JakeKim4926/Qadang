@@ -28,15 +28,21 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
     // chatRoomId
     private final Map<Long,Set<WebSocketSession>> chatRoomSessionMap = new HashMap<>();
     private final MessageService messageService;
+    // 소켓 통신 시 메세지의 전송을 다루는 부분
+
     // 소켓 연결 확인
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+        try {
+            log.info("{} 연결됨", session.getId());
+            System.out.println("connected : " + session.getId());
+            sessions.add(session);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
         // TODO Auto-generated method stub
-        log.info("{} 연결됨", session.getId());
-        sessions.add(session);
-    }
 
-    // 소켓 통신 시 메세지의 전송을 다루는 부분
+    }
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String payload = message.getPayload();
@@ -56,7 +62,7 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
 
         if (chatMessageDTO.getMessageType().equals(ChatMessageDTO.MessageType.ENTER)) {
             //user check
-
+            setUserName(chatMessageDTO);
             //채팅 방 안에 넣기.
             chatRoomSession.add(session);
         }
@@ -66,8 +72,9 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
         }
         else if (chatMessageDTO.getMessageType().equals(ChatMessageDTO.MessageType.TALK)){
             //채팅방 안에 있는 사람이 보낸것이라면
-            if(chatRoomSession.contains(session))
-                sendMessageToChatRoom(chatMessageDTO, chatRoomSession);
+//            if(chatRoomSession.contains(session))
+//                sendMessageToChatRoom(chatMessageDTO, chatRoomSession);
+            sendMessageToChatRoom(chatMessageDTO, chatRoomSession);
         }
     }
 
@@ -99,5 +106,10 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
+    }
+
+    public void setUserName(ChatMessageDTO chatMessageDTO){
+        System.out.println(chatMessageDTO.getMessage());
+        messageService.setUserName(chatMessageDTO.getMessage());
     }
 }
