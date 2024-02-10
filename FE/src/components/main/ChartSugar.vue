@@ -1,6 +1,6 @@
 <template>
   <div class="chart-container">
-    <p>최근에 마신 카페인을 한눈에 보아요</p>
+    <p>최근에 마신 당을 한눈에 보아요</p>
     <select name="selectDate" id="selectDate" v-model="seleteDate" class="button_select chart-date-button">
       <option value="day" class="date-text">일</option>
       <option value="week" class="date-text">주</option>
@@ -31,9 +31,9 @@ type: 'bar',
 data: {
   labels: [], // 날짜
   datasets: [{
-    label: '일별 카페인 섭취량',
+    label: '일별 당 섭취량',
     data: [], // 날짜에 따른 데이터 기록 합산
-    backgroundColor: ['#846046'],
+    backgroundColor: ['#374B59'],
   }]
 },
 options: {
@@ -103,7 +103,7 @@ onMounted(async () => {
       // 차트 데이터에 넣을 데이터 적절하게 삽입
       newData.forEach(data => {
         tmpDayData.push(data.accumulateDate)
-        tmpDataData.push(data.accumulateCaffeine)
+        tmpDataData.push(data.accumulateSugar)
       })
 
       // 오늘 날짜까지 갱신하기 위해 현재 날짜가 없으면 날짜 삽입
@@ -233,7 +233,7 @@ onMounted(async () => {
       }
 
       // while문 종료 후 차트에 대입
-      chartData.data.datasets[0].label = '주별 카페인 섭취량'
+      chartData.data.datasets[0].label = '주별 당 섭취량'
       chartData.data.labels = tmpDayData
       chartData.data.datasets[0].data = tmpDataData
       chartData.options.scales.x.time.unit = xTime
@@ -268,7 +268,7 @@ onMounted(async () => {
         // 차트 데이터에 넣을 데이터 적절하게 삽입
         newData.forEach(data => {
           tmpDayData.push(data.accumulateDate)
-          tmpDataData.push(data.accumulateCaffeine)
+          tmpDataData.push(data.accumulateSugar)
         })
 
         // 오늘 날짜까지 갱신하기 위해 현재 날짜가 없으면 날짜 삽입
@@ -277,7 +277,7 @@ onMounted(async () => {
         }
 
         // 다 끝난 뒤 차트에 대입
-        chartData.data.datasets[0].label = '일별 카페인 섭취량'
+        chartData.data.datasets[0].label = '일별 당 섭취량'
         chartData.data.labels = tmpDayData
         chartData.data.datasets[0].data = tmpDataData
         chartData.options.scales.x.time.unit = xTime
@@ -314,6 +314,7 @@ p {
 }
 
 .chart-date-button {
+  border-color: #374B59;
   width: 50px;
   height: 20px;
   margin-top: 10px;

@@ -25,11 +25,20 @@
 
         <div v-if="cafeId">
           <label for="drinkSelect" class="big-font">음료명</label>
-          <select name="drinkSelect" id="drinkSelect"
-          v-model="drinkInfo" @change="changeDrinkInfo" class="button_select select">
-          <option v-for="drink in drinkStore.getCafeDrinkList"
-          :key="drink.drinkId"
-          :value="drink">
+          <input type="text" v-model="searchText"
+          class="search-text-box" placeholder="음료명을 검색해주세요">
+          <select name="drinkSelect" id="drinkSelect" v-model="drinkInfo"
+          @change="changeDrinkInfo" class="button_select select">
+
+          <option v-if="!searchText" key="if-branch"
+          v-for="drink in drinkStore.getCafeDrinkList"
+          :key="drink.drinkId" :value="drink">
+            {{ drink.drinkName }}
+          </option>
+
+          <option v-else key="else-branch"
+          v-for="drink in filteredDrinks"
+          :key="drink.drinkId" :value="drink">
             {{ drink.drinkName }}
           </option>
         </select>
@@ -66,19 +75,6 @@
           </button>
         </div>
 
-        <!-- {{ drinkInfo }}
-
-        {{ drinkCaffeine }}
-        {{ drinkSugar }}
-
-        {{ minusCaffeineButton }}
-        {{ plusCaffeineButton }}
-        {{ minusSugarButton }}
-        {{ plusSugarButton }}
-
-        {{ plusShot }}
-        {{ plusSyrup }} -->
-
         <div class="item-container">
           <button @click="goInputNothingModal" class="button_input_color buttons">여기없어용</button>
           <span @mouseover="showToolTip = true" @mouseleave="showToolTip = false">
@@ -97,7 +93,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { onMounted } from 'vue';
 
 import { useDrinksStore } from "@/stores/drinks";
@@ -109,6 +105,20 @@ const recordsStore = useRecordsStore()
 
 // 음료 전체 정보
 const drinkInfo = ref({})
+
+// 음료 필터링
+const searchText = ref('')
+const filteredDrinks = ref([])
+
+const searchFilteredDrinks = () => {
+  filteredDrinks.value = drinkStore.getCafeDrinkList.filter(drink => {
+    return drink.drinkName.toLowerCase().includes(searchText.value.toLowerCase())
+  })
+}
+
+watch(searchText, () => {
+  searchFilteredDrinks()
+})
 
 // 음료 생성을 위해 보내줄 데이터
 const cafeName = ref(null)
@@ -142,6 +152,12 @@ const closeInputModal = () => {
 
 const openInputNothingModal = () => {
   isInputNothingModal.value = true
+}
+
+// 새로운 값을 갱신하기 위한 함수
+const updateInfo = () => {
+  closeInputModal()
+  window.location.reload()
 }
 
 // 여기없어용으로 이동하기 위한 함수
@@ -234,6 +250,7 @@ const changeDrinkInfo = () => {
     drinkName.value = drinkInfo.value.drinkName
     drinkCaffeine.value = drinkInfo.value.drinkCaffeine
     drinkSugar.value = drinkInfo.value.drinkSugar
+    searchText.value = drinkInfo.value.drinkName
 
     activeminusCaffeineButton()
     activminusSugarButton()
@@ -290,7 +307,7 @@ const drinkSubmit = () => {
     // 데이터 전송 및 창 닫기
     recordsStore.createCafeDrink(drink)
     alert('입력값이 올바릅니다. 데이터를 전송합니다.')
-    closeInputModal()
+    updateInfo()
 
     } else {
       console.log('입력값이 올바르지 않습니다')
@@ -380,6 +397,16 @@ div {
   border: 2px solid #846046;
   padding: 10px 20px;
   width: 353px;
+}
+
+.search-text-box {
+  border: none;
+  outline: none;
+  position: absolute;
+  margin-top: 12px;
+  margin-left: 25px;
+  z-index: 1;
+  width: 250px;
 }
 
 .button_input_color {

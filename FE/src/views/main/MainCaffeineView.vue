@@ -57,8 +57,18 @@
       </div>
     </div>
 
-    <div>
+    <div v-if="recordsStore.getDayDrink.length > 0 && getCnt > 0">
       <ChartCaffeine />
+    </div>
+
+    <div v-else>
+      <p>최근에 마신 카페인을 한눈에 보아요</p>
+      <div class="info-box">
+        <p class="chart-text-box">
+          최근 3개월 간 음료를 기록하지 않았거나<br>
+          카페인이 들어간 음료를 마시지 않았습니다.
+        </p>
+      </div>
     </div>
 
     <div>
@@ -70,8 +80,8 @@
       </div>
     </div>
 
-    <div @click="goChat" class="chat">
-      <font-awesome-icon :icon="['fas', 'comments']" style="color: #000000;" size="2xl"/>
+    <div class="chat-box">
+      <font-awesome-icon :icon="['fas', 'comments']" style="color: #000000;" size="2xl" @click="goChat" class="chat"/>
     </div>
   </div>
 </template>
@@ -79,7 +89,7 @@
 <script setup>
 import ChartCaffeine from '@/components/main/ChartCaffeine.vue';
 
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { onMounted } from 'vue';
 import router from '@/router';
 
@@ -94,6 +104,11 @@ const userStore = useUserStore()
 const accumulateStore = useAccumulateStore()
 const recordsStore = useRecordsStore()
 const recommendStore = useRecommendStore()
+
+let cnt = ref(0)
+const getCnt = computed(() => {
+  return cnt.value
+})
 
 // 데이터를 가져오기 위한 함수
 onMounted(async () => {
@@ -123,11 +138,20 @@ onMounted(async () => {
   const date = ref(null)
   date.value = year + month + day
 
-  // await userStore.researchUser()                // 닉네임 <- 404 error
-  // await userStore.researchAmount()              // 권장량 <- 404 error
+  await userStore.researchName()                // 닉네임
+  await userStore.researchAmount()              // 권장량
   await accumulateStore.today()                    // 섭취량
   await recommendStore.researchRecommendCaffeine()     // 기록 기반 음료추천 카페인
   await recordsStore.researchDayDrink(date)       // 방금 마신 음료 계산을 위한 일자별 기록
+  await accumulateStore.duration()                // 차트 표시 여부 결정
+
+  watch(() => accumulateStore.getAccumulateList, (newData) => {
+    if (newData.length > 0) {
+      newData.forEach(data => {
+        cnt.value += data.accumulateCaffeine
+      })
+    }
+  })
 })
 
 // 당 섭취량 메인페이지로 이동
@@ -168,9 +192,11 @@ p {
 }
 
 .main-container {
+  position: relative;
   display: flex;
-  flex-direction: column;
   align-items: center;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .toggle {
@@ -237,6 +263,18 @@ p {
   margin-top: 0;
 }
 
+.chart-text-box {
+  width: 500px;
+  height: 250px;
+  margin: auto;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .photo {
   width: 50px;
   margin: 10px;
@@ -254,10 +292,14 @@ p {
   cursor: pointer;
 }
 
-.chat {
-  width: 700px;
-  right: 20px;
+.chat-box {
+  display: flex;
+  justify-content: flex-end;
   margin-top: 15px;
-  margin-left: 1300px;
+  width: 700px;
+}
+
+.chat {
+  cursor: pointer;
 }
 </style>
