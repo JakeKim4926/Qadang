@@ -11,7 +11,10 @@
     <template v-if="cafe.id > 0">
       <div class="chat-container">
         <div class="chat-messages" ref="chatContainer">
-          <div v-for="(chat, index) in chatStore.getChatList.value" :key="chat.index">
+          <div
+            v-for="(chat, index) in chatStore.getChatList.value"
+            :key="chat.index"
+          >
             <template v-if="chat.userName == userStore.getUserName">
               <div class="my-chat">
                 <p class="time">{{ extractTimeFromDate(chat.time) }}</p>
@@ -19,26 +22,39 @@
               </div>
             </template>
             <div v-else class="their-chat">
-              <div class="nickname" :class="'nickname-' + ((index % 7) + 1)">{{ chat.userName }}</div>
+              <div class="nickname" :class="'nickname-' + ((index % 7) + 1)">
+                {{ chat.userName }}
+              </div>
               <p class="message">{{ chat.message }}</p>
               <p class="time">{{ extractTimeFromDate(chat.time) }}</p>
             </div>
           </div>
         </div>
-        <hr class="chat-line">
+        <hr class="chat-line" />
         <div class="chat-input-container">
           <a class="chat-icon">
-            <font-awesome-icon :icon="['fas', 'paper-plane']" style="color: #000000;" />
+            <font-awesome-icon
+              :icon="['fas', 'paper-plane']"
+              style="color: #000000"
+            />
           </a>
-          <textarea v-model="message" class="chat-input" placeholder="Jake로 대화 시작" @keydown.enter.prevent="sendMessage" />
+          <textarea
+            v-model="message"
+            class="chat-input"
+            placeholder="Jake로 대화 시작"
+            @keydown.enter.prevent="sendMessage"
+          />
         </div>
       </div>
     </template>
     <template v-else>
       <div class="chat-container-disable">
-        <hr class="chat-line-disable">
+        <hr class="chat-line-disable" />
         <div class="chat-icon-disable">
-          <font-awesome-icon :icon="['fas', 'paper-plane']" style="color: #000000;" />
+          <font-awesome-icon
+            :icon="['fas', 'paper-plane']"
+            style="color: #000000"
+          />
         </div>
       </div>
     </template>
@@ -51,6 +67,7 @@ import { nextTick, ref, watchEffect, onMounted, computed, watch } from "vue";
 import { useSocketStore, messageType, testCafeList } from "@/stores/socket";
 import { useChatStore } from "@/stores/chat";
 import { useUserStore } from "@/stores/user";
+import { isSocketConnected } from "@/stores/util";
 
 import Stomp from "webstomp-client";
 import SockJS from "sockjs-client";
@@ -74,72 +91,53 @@ watch(chatStore.chatList, () => {
 });
 
 onMounted(async () => {
-
   await userStore.researchName();
-  // naming for test
-  // userStore.userName = "Jake";
-  // await chatStore.researchChatList(3);
-
-  // WebSocket 연결
-  socket = new WebSocket('ws://localhost:8080/ws/chat');
-  // 메시지 수신 이벤트 핸들링
-  socket.onmessage = () => {
-    console.log("listen")
-    // console.log("asd", event);
-    // const message = JSON.parse(event.data);
-    // console.log("수신22 ", event);
-    
-    chatStore.researchChatList(cafe.value.id);
-  };
-
-  // 연결 시 ENTER 메시지 보내기
-  socket.onopen = () => {
-    const enterMessage = {
-      messageType: 'ENTER', // 입장 메시지 타입
-      chatRoomId: 1, // 채팅 방 ID
-      senderId: 1, // 보낸 사람 ID
-      message: userStore.userName // 메시지 내용은 비어 있어도 됩니다.
-    };
-    console.log('name33', userStore.userName);
-    socket.send(JSON.stringify(enterMessage));
-  };
-
-  socket.onerror = function (event) {
-    console.error('WebSocket connection error:', event);
-    // You can display an error message to the user or take other actions as needed
-  };
-
-
-
-  // 연결이 닫힐 때의 핸들링
-  socket.onclose = (event) => {
-    console.log('WebSocket connection closed: ', event);
-  };
-
 });
 
 function extractTimeFromDate(dateTimeString) {
   // dateTimeString에서 공백을 기준으로 분할하여 시간 부분만 추출
   if (dateTimeString == undefined || dateTimeString.length < 5) return "";
-  // const time = dateTimeString.split(" ")[1];
-  // const minute = time.split(":")[0] + ":" + time.split(":")[1]
 
-  const minute = dateTimeString.split(":")[0].slice(-2) + ":" + dateTimeString.split(":")[1]
+  const minute =
+    dateTimeString.split(":")[0].slice(-2) + ":" + dateTimeString.split(":")[1];
 
   return minute;
 }
 
 async function sendOpen() {
   // 연결 시 ENTER 메시지 보내기
+  console.log("hello");
+  isSocketConnected.value = true;
+  // 1. open your url
+  socket = new WebSocket(`${import.meta.env.VITE_SOCKET_API}`);
+  // sendClose();
   socket.onopen = () => {
     const enterMessage = {
-      messageType: 'ENTER', // 입장 메시지 타입
+      messageType: "ENTER", // 입장 메시지 타입
       chatRoomId: cafe.value.id, // 채팅 방 ID
-      senderId: userId.value++, // 보낸 사람 ID
-      message: userStore.userName // 메시지 내용은 비어 있어도 됩니다.
+      senderId: cafe.value.id, // 보낸 사람 ID
+      message: userStore.userName, // 메시지 내용은 비어 있어도 됩니다.
     };
     socket.send(JSON.stringify(enterMessage));
+    console.log("how ? ", JSON.stringify(enterMessage))
+  };
 
+  socket.onmessage = (event) => {
+    console.log("listen");
+    console.log("asd", event);
+    const message = JSON.parse(event.data);
+    console.log("수신22 ", event);
+
+    chatStore.researchChatList(cafe.value.id);
+  };
+
+  socket.onerror = function (event) {
+    console.error("WebSocket connection error:", event);
+  };
+
+  // 연결이 닫힐 때의 핸들링
+  socket.onclose = (event) => {
+    console.log("WebSocket connection closed: ", event);
   };
 
   await chatStore.researchChatList(cafe.value.id);
@@ -153,47 +151,51 @@ async function sendMessage() {
   const enterMessage = {
     messageType: messageType.TALK,
     chatRoomId: cafe.value.id,
-    senderId: userId.value,
+    senderId: cafe.value.id,
     message: message.value,
-  }
+  };
 
   socket.send(JSON.stringify(enterMessage));
-  message.value = '';
+  message.value = "";
 
   await chatStore.researchChatList(cafe.value.id);
   console.log(enterMessage);
   // 스크롤을 새 메시지 아래로 이동시킵니다.
+  socket.onmessage = (event) => {
+    const message = JSON.parse(event.data);
+    console.log("수신22 ", event);
+    console.log("수신33", message);
 
+    chatStore.researchChatList(cafe.value.id);
+  };
   await nextTick(() => {
     scrollChatToBottom();
   });
 }
 
-// async function sendClose() {
-//   const chat = {
-//     messageType: messageType.QUIT,
-//     chatRoomId: cafe.value.id,
-//     senderId: userId.value,
-//     message: "QUIT",
-//   }
+async function sendClose() {
+  const chat = {
+    messageType: messageType.QUIT,
+    chatRoomId: cafe.value.id,
+    senderId: userId.value,
+    message: "QUIT",
+  }
 
-//   console.log(chat);
+  console.log(chat);
 
-//   socketStore.socket.timeout(5000).emit('', chat)
-// }
+}
 
-function adjustTextarea() { }
+function adjustTextarea() {}
 
 async function scrollChatToBottom() {
   if (chatContainer.value) {
     chatContainer.value.scrollTop = chatContainer.value.scrollHeight;
-
   }
 }
 
 watch(chatStore.getChatList, () => {
   // chatStore.getChatList의 길이가 변할 때마다 스크롤을 맨 아래로 내리는 함수를 호출합니다.
-  console.log("detected")
+  console.log("detected");
   scrollChatToBottom();
 });
 </script>
@@ -244,9 +246,8 @@ watch(chatStore.getChatList, () => {
   font-weight: 700;
 }
 
-
 .chat-container {
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 30px;
   border-style: solid;
   border-color: #d9d9d9;
@@ -295,7 +296,6 @@ watch(chatStore.getChatList, () => {
   top: 90.64%;
   height: 0%;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-
 }
 
 .chat-line-disable {
@@ -310,9 +310,7 @@ watch(chatStore.getChatList, () => {
   top: 90.64%;
   height: 0%;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-
 }
-
 
 .chat-icon {
   position: absolute;
@@ -357,7 +355,6 @@ watch(chatStore.getChatList, () => {
   transform: translateY(-50%);
 }
 
-
 .my-chat {
   align-self: flex-end;
   text-align: left;
@@ -387,7 +384,6 @@ watch(chatStore.getChatList, () => {
   transform: translateY(50%);
   /* 수직으로 중앙으로 이동 */
 }
-
 
 .their-chat {
   position: relative;
@@ -454,7 +450,6 @@ watch(chatStore.getChatList, () => {
 .nickname-7 {
   color: purple;
 }
-
 
 .chat-input {
   color: black;

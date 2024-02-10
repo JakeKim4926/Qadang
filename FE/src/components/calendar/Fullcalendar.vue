@@ -215,10 +215,10 @@ export default {
 
 .circle {
     position: absolute;
-    top: 10;
-    right: 0;
-    width: 20px;
-    height: 20px;
+    top: 1%;
+    right: 1%;
+    width: 25%;
+    height: 15%;
     border-radius: 50%;
     background-color: rgb(68, 74, 104);
     z-index: 0;

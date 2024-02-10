@@ -19,7 +19,7 @@ import SurveyUnHealthView from "@/views/survey/SurveyUnHealthView.vue";
 
 import UserUpdateView from "@/components/user/UserUpdateView.vue";
 import { createRouter, createWebHistory } from "vue-router";
-import { userAccessToken, isFooter } from "@/stores/util";
+import { userAccessToken, isFooter, isSocketConnected } from "@/stores/util";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -131,8 +131,11 @@ const router = createRouter({
 
 // == navigationguard
 router.beforeEach((to, from, next) => {
-  if (localStorage.getItem('userAccessToken') == "" || localStorage.getItem('userAccessToken') == null ) {
-    if(to.path == '/api/kakao-login') {
+  if (
+    localStorage.getItem("userAccessToken") == "" ||
+    localStorage.getItem("userAccessToken") == null
+  ) {
+    if (to.path == "/api/kakao-login") {
       next(); // Redirect to home if not logged in
       isFooter.value = true;
     } else if (to.name !== "home") {
@@ -142,17 +145,21 @@ router.beforeEach((to, from, next) => {
     } else {
       next(); // Allow access to kakaoLogin route
     }
-  } else if(localStorage.getItem('userAccessToken') != null){
+  } else if (localStorage.getItem("userAccessToken") != null) {
     if (to.name == "home") {
       window.alert("접근 불가");
       next({ name: "mainCaffeine" }); // Redirect to home if not logged in
     } else {
       next(); // Allow access to other routes
-      if(!isFooter.value)
-        isFooter.value = true;
+      if (!isFooter.value) isFooter.value = true;
 
-      if(to.name == "survey" || to.name == "surveyHealth" ||
-      to.name == "surveyCaffeine" || to.name == "surveySugar" || to.name == "surveyUnhealth")
+      if (
+        to.name == "survey" ||
+        to.name == "surveyHealth" ||
+        to.name == "surveyCaffeine" ||
+        to.name == "surveySugar" ||
+        to.name == "surveyUnhealth"
+      )
         isFooter.value = false;
     }
   }
