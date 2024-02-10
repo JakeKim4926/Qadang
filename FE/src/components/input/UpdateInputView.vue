@@ -24,11 +24,20 @@
 
         <div>
           <label for="drinkSelect" class="big-font">음료명</label>
-          <select name="drinkSelect" id="drinkSelect"
-          v-model="drinkInfo" @change="changeDrinkInfo" class="button_select select">
-          <option v-for="drink in drinkStore.getCafeDrinkList"
-          :key="drink.drinkId"
-          :value="drink">
+          <input type="text" v-model="searchText"
+          class="search-text-box" placeholder="음료명을 검색해주세요">
+          <select name="drinkSelect" id="drinkSelect" v-model="drinkInfo"
+          @change="changeDrinkInfo" class="button_select select">
+
+          <option v-if="searchText===tempRecord.drinkName || !searchText" key="if-branch"
+          v-for="drink in drinkStore.getCafeDrinkList"
+          :key="drink.drinkId" :value="drink">
+            {{ drink.drinkName }}
+          </option>
+
+          <option v-else key="else-branch"
+          v-for="drink in filteredDrinks"
+          :key="drink.drinkId" :value="drink">
             {{ drink.drinkName }}
           </option>
         </select>
@@ -57,19 +66,6 @@
             <font-awesome-icon :icon="['fas', 'plus']" style="color: #000000;" />
           </button>
         </div>
-
-        <!-- {{ drinkInfo }}
-
-        {{ drinkCaffeine }}
-        {{ drinkSugar }}
-
-        {{ minusCaffeineButton }}
-        {{ plusCaffeineButton }}
-        {{ minusSugarButton }}
-        {{ plusSugarButton }}
-
-        {{ plusShot }}
-        {{ plusSyrup }} -->
 
         <div class="item-container">
           <button @click="drinkUpdateSubmit" class="button_caffeine buttons">수정완료</button>
@@ -133,6 +129,22 @@ watch(() => drinkStore.getCafeDrinkList, (drinkList) => {
   }
 })
 
+// 음료 필터링
+const searchText = ref(tempRecord.value.drinkName)
+const filteredDrinks = ref()
+
+const searchFilteredDrinks = () => {
+  filteredDrinks.value = drinkStore.getCafeDrinkList.filter(drink => {
+    return drink.drinkName.toLowerCase().includes(searchText.value.toLowerCase())
+  })
+}
+
+watch(searchText, () => {
+  if (searchText.value) {
+    searchFilteredDrinks()
+  }
+})
+
 const drinkId = ref(tempRecord.value.drinkId)
 const drinkCaffeine = ref(tempRecord.value.drinkCaffeine)
 const drinkSugar = ref(tempRecord.value.drinkSugar)
@@ -154,6 +166,7 @@ const reset = () => {
   drinkName.value = null
   plusShot.value = 0
   plusSyrup.value = 0
+  searchText.value = null
 
   drinkId.value = 0
   drinkCaffeine.value = 0
@@ -231,16 +244,17 @@ const changeDrinkInfo = () => {
     drinkName.value = drinkInfo.value.drinkName
     drinkCaffeine.value = drinkInfo.value.drinkCaffeine
     drinkSugar.value = drinkInfo.value.drinkSugar
+    searchText.value = drinkInfo.value.drinkName
+
+    // 기존 입력한 샷, 시럽 추가 초기화
+    plusShot.value = 0
+    plusSyrup.value = 0
 
     // 샷, 시럽 버튼 활성화
     activeminusCaffeineButton()
     activminusSugarButton()
     activeplusCaffeineButton()
     activeplusSugarButton()
-
-    // 기존 입력한 샷, 시럽 추가 초기화
-    plusShot.value = 0
-    plusSyrup.value = 0
   }
 }
 
@@ -383,6 +397,16 @@ div {
   border: 2px solid #846046;
   padding: 10px 20px;
   width: 353px;
+}
+
+.search-text-box {
+  border: none;
+  outline: none;
+  position: absolute;
+  margin-top: 12px;
+  margin-left: 25px;
+  z-index: 1;
+  width: 250px;
 }
 
 .button_input_color {
