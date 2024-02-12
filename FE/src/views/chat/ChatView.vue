@@ -22,7 +22,7 @@
               </div>
             </template>
             <div v-else class="their-chat">
-              <div class="nickname" :class="'nickname-' + ((index % 7) + 1)">
+              <div class="nickname" :class="'nickname-' + getNicknameIndex(chat.userName)">
                 {{ chat.userName }}
               </div>
               <p class="message">{{ chat.message }}</p>
@@ -85,6 +85,24 @@ const showMessages = ref(false);
 // for test
 const userId = ref(1);
 let socket = null;
+
+const userNameIndexMap = {
+  "username1": 1,
+  "username2": 2,
+};
+
+
+function getNicknameIndex(userName) {
+  if (userName in userNameIndexMap) {
+    // 사용자 이름이 맵 안에 있으면 해당 인덱스 반환
+    return userNameIndexMap[userName];
+  } else {
+    // 사용자 이름이 맵 안에 없으면 랜덤 인덱스 생성 후 맵에 추가
+    const randomIndex = Math.floor(Math.random() * 7) + 1; // 1부터 7까지의 랜덤 인덱스 생성
+    userNameIndexMap[userName] = randomIndex; // 새로운 사용자 이름과 해당 인덱스를 맵에 추가
+    return randomIndex;
+  }
+}
 
 watch(chatStore.chatList, () => {
   chatStore.researchChatList(cafe.id.value);
