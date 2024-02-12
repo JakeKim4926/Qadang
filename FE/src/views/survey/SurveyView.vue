@@ -5,22 +5,26 @@
                 <div class="title01">카페에서 마시는 최애 음료는?</div>
 
                 <div class="cafe_name">카페명</div>
-                <select id="cafeSelect" v-model="cafeId" class="rectangle-4271 select-font"
-                    style="text-align: center;" @change="selectCafe">
+                <select id="cafeSelect" v-model="cafeId" class="rectangle-4271 select-font" style="text-align: center;"
+                    @change="selectCafe">
                     <option v-for="cafe in drinkStore.getCafeList" :key="cafe.cafeId" :value="cafe.cafeId">
                         {{ cafe.cafeName }}
                     </option>
                 </select>
                 <div class="div5">음료명</div>
-                <input type="text" v-model="searchText" class="rectangle-4272 select-font" style="text-align: center; margin-bottom: 10px;"
-                    placeholder="Search for drinks" :disabled="!cafeId">
+                <input type="text" v-model="searchText" class="rectangle-4272 select-font"
+                    style="text-align: center; position: absolute; border: none;  outline: none; margin-left: 7%; margin-top: 10%; z-index:1; width:40%; height: 10%;" placeholder="Search for drinks" :disabled="!cafeId">
 
                 <select id="drinkSelect" v-model="drinkTemp" class="rectangle-4272 select-font" @change="selectDrink"
                     style="text-align: center; " :disabled="!cafeId">
-                        <option v-for="drink in filteredDrinks" :key="drink.drinkId" :value="drink">
+                    <option v-if="!searchText" key="if" v-for="drink in drinkStore.getCafeDrinkList" :key="drink.drinkId" :value="drink">
                         {{ drink.drinkName }}
-                    </option>    
-                    
+                    </option>
+
+                    <option v-else v-for="drink in filteredDrinks" :key="drink.drinkId" :value="drink">
+                        {{ drink.drinkName }}
+                    </option>
+
                 </select>
 
             </div>
@@ -106,7 +110,7 @@ const sugar = ref(0);
 
 const searchText = ref('');
 const filteredDrinks = ref([]);
-const getFilteredDrinks = computed(()=>filteredDrinks);
+const getFilteredDrinks = computed(() => filteredDrinks);
 
 async function filterDrinks() {
     filteredDrinks.value = await drinkStore.getCafeDrinkList.filter(drink =>
@@ -117,7 +121,7 @@ async function filterDrinks() {
 // Call filterDrinks function whenever searchText changes
 watch(searchText, () => {
 
-        filterDrinks();
+    filterDrinks();
 });
 
 function selectCafe() {
@@ -129,6 +133,7 @@ function selectCafe() {
 function selectDrink() {
     caffeine.value = drinkTemp.value.drinkCaffeine * drinkCount.value;
     sugar.value = drinkTemp.value.drinkSugar * drinkCount.value;
+    searchText.value = drinkTemp.value.drinkName;
 }
 
 function clickMinus() {
@@ -615,14 +620,15 @@ onMounted(async () => {
 
 .select-font {
     font-family: "DmSans-Bold", sans-serif;
-    font-size: 20px;
-    line-height: 18px;
+    font-size: 18px;
+    line-height: 15px;
     font-weight: 700;
     text-align: center;
 }
 
 .select-cafe option {
-  padding: 10px; /* Adjust padding as needed */
+    padding: 10px;
+    /* Adjust padding as needed */
 }
 </style>
   
