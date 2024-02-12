@@ -41,7 +41,7 @@
           <textarea
             v-model="message"
             class="chat-input"
-            placeholder="Jake로 대화 시작"
+            :placeholder="`${userStore.getUserName}로 대화 시작`"
             @keydown.enter.prevent="sendMessage"
           />
         </div>
@@ -82,6 +82,7 @@ const cafe = ref({});
 const receivedMessages = ref([]);
 const Msgcnt = ref(0);
 const showMessages = ref(false);
+let colorIndex = 0;
 // for test
 const userId = ref(1);
 let socket = null;
@@ -98,9 +99,11 @@ function getNicknameIndex(userName) {
     return userNameIndexMap[userName];
   } else {
     // 사용자 이름이 맵 안에 없으면 랜덤 인덱스 생성 후 맵에 추가
-    const randomIndex = Math.floor(Math.random() * 7) + 1; // 1부터 7까지의 랜덤 인덱스 생성
-    userNameIndexMap[userName] = randomIndex; // 새로운 사용자 이름과 해당 인덱스를 맵에 추가
-    return randomIndex;
+    colorIndex += 1;
+    if(colorIndex > 7)
+      colorIndex = 1;
+    userNameIndexMap[userName] = colorIndex; // 새로운 사용자 이름과 해당 인덱스를 맵에 추가
+    return colorIndex;
   }
 }
 
@@ -191,17 +194,17 @@ async function sendMessage() {
   });
 }
 
-async function sendClose() {
-  const chat = {
-    messageType: messageType.QUIT,
-    chatRoomId: cafe.value.id,
-    senderId: userId.value,
-    message: "QUIT",
-  }
+// async function sendClose() {
+//   const chat = {
+//     messageType: messageType.QUIT,
+//     chatRoomId: cafe.value.id,
+//     senderId: userId.value,
+//     message: "QUIT",
+//   }
 
-  console.log(chat);
+//   console.log(chat);
 
-}
+// }
 
 function adjustTextarea() {}
 
@@ -437,6 +440,7 @@ watch(chatStore.getChatList, () => {
   font-size: 17px;
   line-height: 18px;
   font-weight: 700;
+  width:250px;
   background-color: transparent;
   /* 배경색 투명하게 설정 */
 }
