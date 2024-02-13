@@ -8,6 +8,7 @@ import com.ssafy.cadang.dto.UserInfo;
 import com.ssafy.cadang.jwt.JwtLogin;
 import com.ssafy.cadang.service.KakaoService;
 import com.ssafy.cadang.service.UserService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -150,6 +151,7 @@ public class UserController {
     }
 
     // 회원탈퇴
+    @Transactional
     @DeleteMapping("/user")
     public ResponseEntity<Void> deleteUser(@RequestHeader("Authorization") String token) {
         // 토큰 유효성 검사

@@ -163,9 +163,12 @@ public class UserService {
 
     // 회원 탈퇴시 기록삭제
     public void delete (Long id){
+
+        //accumulateRepository.deleteByAccumulatePKUserId(id); // 통계삭제
         accumulateRepository.deleteByAccumulatePKUserId(id); // 통계삭제
         recordReporsitory.deleteByUserId(id); // 기록삭제
-        kakaoService.EndKakao(id); // 연결끊기
+//        kakaoService.EndKakao(id); // 연결끊기
+        kakaoService.revokeScopes(id);
         userRepository.deleteByUserId(id); // 유저삭제
     }
 

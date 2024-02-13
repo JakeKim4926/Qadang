@@ -6,7 +6,6 @@ import com.ssafy.cadang.dto.ChatMessageDTO;
 import com.ssafy.cadang.repository.ChatMessageRepository;
 import com.ssafy.cadang.response.ChatMessageResponseDTO;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,13 +14,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MessageService {
     private final ChatMessageRepository chatMessageRepository;
-    private final UserService userService;
 
-    @Setter
-    private String userName; // 닉네임
 
-    public ChatForwardDTO sendMessage(ChatMessageDTO chatMessageDTO) {
-//        String userName = userService.findUserName(chatMessageDTO.getSenderId());
+    public ChatForwardDTO sendMessage(ChatMessageDTO chatMessageDTO, String userName) {
         ChatMessages chatMessage = ChatMessages.builder()
                 .chatRoomId(chatMessageDTO.getChatRoomId())
                 .senderId(chatMessageDTO.getSenderId())

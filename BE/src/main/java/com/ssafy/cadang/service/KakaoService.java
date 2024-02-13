@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.cadang.domain.User;
 import com.ssafy.cadang.dto.IdResponse;
 import com.ssafy.cadang.dto.KakaoInfo;
+import com.ssafy.cadang.dto.KakaoOut;
 import com.ssafy.cadang.dto.KakaoToken;
 import com.ssafy.cadang.jwt.JwtLogin;
 import com.ssafy.cadang.repository.NicknameRepository;
@@ -17,13 +18,22 @@ import io.jsonwebtoken.security.SignatureException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
+import org.springframework.http.client.MultipartBodyBuilder;
+import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -379,29 +389,59 @@ public class KakaoService {
     public void EndKakao(Long userid){
 
         // 요청 param ( body )
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
         params.add("target_id_type", "user_id");
-        params.add("target_id", String.valueOf(userid));
+        params.add("target_id",userid);
+
+//        Map<String, Object> params = new HashMap<>();
+//        params.put("target_id_type","user_id");
+//        params.put("target_id",userid);
 
         //request
         WebClient wc = WebClient.create(unlink_uri);
-        String response = wc.post()
+        KakaoOut kakaoOut  = wc.post()
                 .uri(unlink_uri)
-                .header("Authorization", "Bearer " + admin_key)
+                .body(BodyInserters.fromMultipartData(params))
+//                .bodyValue()
+                .header("Authorization", "KakaoAK " + admin_key)
                 .header("Content-type", "application/x-www-form-urlencoded;charset=utf-8") // 요청 헤더
                 .retrieve()
-                .bodyToMono(String.class)
+                .bodyToMono(KakaoOut.class)
                 .block();
-
-        //json형태로 변환
-        ObjectMapper objectMapper = new ObjectMapper();
-        Long id = null;
-
-        try {
-            id = objectMapper.readValue(response, Long.class);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
     }
+
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE+";charset=UTF-8");
+//        headers.add("Authorization", " KakaoAK " + admin_key);
+//
+//        MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
+//        params.set("target_id_type", "user_id");
+//        params.set("target_id", userid);
+//
+//        org.springframework.http.HttpEntity<MultiValueMap<String, Object>> restRequest = new org.springframework.http.HttpEntity<>(params, headers);
+//        ResponseEntity<JSONObject> apiResponse = restTemplate.postForEntity(uri, restRequest, JSONObject.class);
+
+
+
+    public String revokeScopes(Long userid) {
+        String url = "https://kapi.kakao.com/v2/user/revoke/scopes";
+        String serviceAppAdminKey = admin_key;
+        String targetId = String.valueOf(userid);
+        String scopes = "[\"account_email\"]";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/x-www-form-urlencoded");
+        headers.set("Authorization", "KakaoAK " + serviceAppAdminKey);
+
+        String requestBody = "target_id_type=user_id&target_id=" + targetId + "&scopes=" + scopes;
+        HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+
+        return response.getBody();
+
+    }
+
 
 }
