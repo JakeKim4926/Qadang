@@ -75,7 +75,7 @@
     </div>
 
     <div>
-      <p>오늘은 이 음료 어때요?</p>
+      <p>당신이 즐겨 마시는 음료와 비슷한 음료 정보를 확인해보세요</p>
       <div class="info-box">
         <img :src="recommendStore.getRecommendedSugar.drinkUrl" alt="Recommended Drink" class="photo"/>
         <p>{{ recommendStore.getRecommendedSugar.cafeName }} {{ recommendStore.getRecommendedSugar.drinkName }}</p>
