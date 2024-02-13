@@ -29,15 +29,19 @@
     </div>
     
     <div class="intake-section">
-      <div class="intake-card shading">
-        <h1>{{ store.getUserMaxCaffeine }} mg</h1>
+      <div class="intake-card shading">        
+        <h1 v-if="store.getUserMaxCaffeine">{{ store.getUserMaxCaffeine }} mg</h1>
+        <h1 v-else>계산중</h1>
         <h3>하루 최고 카페인 섭취량</h3>
-        <h4>{{ store.getUserMaxCaffeineDate }}</h4>
+        <h4 v-if="store.getUserMaxCaffeineDate">{{ store.getUserMaxCaffeineDate }}</h4>
+        <h4 v-else>아직 기록기간이 부족해요</h4>        
       </div>
       <div class="intake-card shading">
-        <h1>{{ store.getUserMaxSugar }} g</h1>
+        <h1 v-if="store.getUserMaxSugar">{{ store.getUserMaxSugar }} g</h1>
+        <h1 v-else>계산중</h1>        
         <h3>하루 최고 당 섭취량</h3>
-        <h4>{{ store.getUserMaxSugarDate }}</h4>
+        <h4 v-if="store.getUserMaxSugarDate">{{ store.getUserMaxSugarDate }}</h4>
+        <h4 v-else>아직 기록기간이 부족해요</h4>
       </div>
     </div>
     
@@ -56,9 +60,10 @@ import { useUserStore } from '../../stores/user';
 import router from '@/router';
 import { isUpdateModal } from '../../stores/util'
 import UserUpdateView from '@/components/user/UserUpdateView.vue'
-
+import { useRecordsStore} from '../../stores/records'
 const store = useUserStore();
 const isInfoFilled = computed(() => store.isInfoFilled);
+const recordsStore = useRecordsStore();
 
 const openUpdateModal = () => {
   isUpdateModal.value = true
@@ -106,6 +111,8 @@ onMounted(() => {
   store.researchUser();
   store.researchName();
   store.researchAmount();
+  recordsStore.researchMaxSugar();
+  recordsStore.researchMaxCaffeine();
 });
 
 
@@ -150,7 +157,7 @@ onMounted(() => {
   width: 150px;
   height: 100px;
   color: #CB8A58;
-  font-size: x-large;
+  
 }
 
 
@@ -304,6 +311,9 @@ h4 {
 }
 .nickname{
   margin-bottom: 2px;
+  text-align: center;
+  margin-right: 5px;
+  font-size: 23px;
 }
 
 </style>
