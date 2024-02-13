@@ -31,14 +31,6 @@ export const useRecordsStore = defineStore("records", () => {
     return myDrink.value;
   });
 
-  // const getMaxSugar = computed(() => {
-  //   return maxSugar.value;
-  // });
-
-  // const getMaxCaffeine = computed(() => {
-  //   return maxCaffeine.value;
-  // });
-
   const getRecordDay = computed(() => {
     return recordDay.value;
   });
@@ -142,8 +134,6 @@ export const useRecordsStore = defineStore("records", () => {
     getDayDrink,
     getCafeDrink,
     getMyDrink,
-    getMaxSugar,
-    getMaxCaffeine,
     getRecordDate,
     getRecordDay,
     createCafeDrink,
