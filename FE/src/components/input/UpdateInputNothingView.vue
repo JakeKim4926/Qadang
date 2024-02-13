@@ -7,7 +7,7 @@
 
       <div class="update-container">
         <div>
-          <h2>카페 음료를 입력하여 수정해주세요</h2>
+          <h2>당신만의 음료 기록을 수정해보세요</h2>
         </div>
 
         <div>
