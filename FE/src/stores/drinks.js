@@ -43,7 +43,7 @@ export const useDrinksStore = defineStore("drinks", () => {
       })
       .catch((err) => {
         
-        console.log(err);
+        
       });
   };
 
@@ -59,7 +59,7 @@ export const useDrinksStore = defineStore("drinks", () => {
       })
       .catch((err) => {
         
-        console.log(err);
+        
       });
   };
 
@@ -74,7 +74,7 @@ export const useDrinksStore = defineStore("drinks", () => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        
       });
   };
 
@@ -87,7 +87,7 @@ export const useDrinksStore = defineStore("drinks", () => {
         allDrinkList.value = res.data;
       })
       .catch((err) => {
-        console.log(err);
+        
       });
   };
 

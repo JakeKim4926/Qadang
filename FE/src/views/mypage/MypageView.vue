@@ -60,17 +60,13 @@ import { useUserStore } from '../../stores/user';
 import router from '@/router';
 import { isUpdateModal } from '../../stores/util'
 import UserUpdateView from '@/components/user/UserUpdateView.vue'
-import { useRecordsStore} from '../../stores/records'
+
 const store = useUserStore();
 const isInfoFilled = computed(() => store.isInfoFilled);
-const recordsStore = useRecordsStore();
-
 const openUpdateModal = () => {
   isUpdateModal.value = true
   console.log('!',isUpdateModal.value)}
 
-console.log(store.getUserMaxCaffeine)
-console.log(store.getUserMaxSugar)
 const message = computed(() => {
   return store.isInfoFilled
     ? "오늘 하루는 어떠셨나요? \n이제 개인별 맞춤 정보를 제공받을 수 있어요\n오늘도 건강한 하루 보내세요:)"

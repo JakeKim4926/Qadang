@@ -29,7 +29,7 @@ export const useRankStore = defineStore("rank", () => {
         rankKeywordList.value = res.data;
       })
       .catch((err) => {
-        console.log(err);
+        
       });
   };
 
@@ -42,7 +42,7 @@ export const useRankStore = defineStore("rank", () => {
         rankRecordList.value = res.data;
       })
       .catch((err) => {
-        console.log(err);
+        
       });
   };
 
