@@ -48,13 +48,13 @@
 
         <div class="right-info superbig-font">
           <div v-if="accumulateStore.getAccumulateToday.accumulateSugar < userStore.getUserRDI.userSugar * 1/2">
-            <p>양호 메시지</p>
+            <p>건강 상태 달달!</p>
           </div>
           <div v-else-if="accumulateStore.getAccumulateToday.accumulateSugar < userStore.getUserRDI.userSugar">
-            <p>보통 메시지</p>
+            <p>적당한 당 생활을 유지해보아요~</p>
           </div>
           <div v-else="accumulateStore.getAccumulateToday.accumulateSugar >= userStore.getUserRDI.userSugar">
-            <p>나쁨 메시지</p>
+            <p>혈관이 달달해요~</p>
           </div>
         </div>
       </div>
