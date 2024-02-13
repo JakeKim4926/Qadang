@@ -2,8 +2,8 @@
   <div class="container">
     <div class="title">이야기 나누고 싶은 카페명을 선택하세요</div>
     <br />
-    <select v-model="cafe" @change="sendOpen" class="select-cafe">
-      <option v-for="cafe in drinkStore.getCafeList" :key="cafe.id" :value="cafe" :disabled="selectCafe">
+    <select v-model="cafe" @change="sendOpen" class="select-cafe" :disabled="selectCafe">
+      <option v-for="cafe in drinkStore.getCafeList" :key="cafe.id" :value="cafe">
         {{ cafe.cafeName }}
       </option>
     </select>
@@ -73,15 +73,23 @@ const cafe = ref({});
 const receivedMessages = ref([]);
 const Msgcnt = ref(0);
 const showMessages = ref(false);
+let socket = null;
 let colorIndex = 0;
 // for test
 const userId = ref(1);
-let socket = null;
 
 const userNameIndexMap = {
   "username1": 1,
   "username2": 2,
 };
+
+// 페이지가 언로드될 때 연결을 닫습니다.
+window.addEventListener('beforeunload', () => {
+  if (socket && socket.readyState === WebSocket.OPEN) {
+    sendClose();
+    console.log("close");
+  }
+});
 
 function getNicknameIndex(userName) {
   if (userName in userNameIndexMap) {
@@ -105,18 +113,6 @@ onMounted(async () => {
   await drinkStore.researchCafe();
   await userStore.researchName();
 
-  // socket = new WebSocket(`${import.meta.env.VITE_SOCKET_API}`);
-  // if (socket && socket.readyState === WebSocket.OPEN) {
-  //   const chat = {
-  //     messageType: messageType.QUIT,
-  //     chatRoomId: cafe.value.id,
-  //     senderId: userId.value,
-  //     message: "QUIT",
-  //   };
-
-  //   socket.send(JSON.stringify(chat));
-  //   console.log("quit");
-  // }
 });
 
 function extractTimeFromDate(dateTimeString) {
@@ -135,26 +131,32 @@ async function sendOpen() {
   await chatStore.researchChatList(cafe.value.cafeId);
 
   // 1. open your url
+
+  // 소켓 연결 생성 및 세션 스토리지에 저장
   socket = new WebSocket(`${import.meta.env.VITE_SOCKET_API}`);
+
   // sendClose();
   socket.onopen = () => {
     const token = localStorage.getItem('userAccessToken');
     const enterMessage = {
       messageType: "ENTER", // 입장 메시지 타입
       chatRoomId: cafe.value.cafeId, // 채팅 방 ID
-      senderId: cafe.value.cafeId, // 보낸 사람 ID
+      senderId: cafe.value.userId++, // 보낸 사람 ID
       message: token, // 메시지 내용은 비어 있어도 됩니다.
     };
     socket.send(JSON.stringify(enterMessage));
     scrollChatToBottom();
   };
 
+  // 소켓 연결 생성 및 세션 스토리지에 저장
+  sessionStorage.setItem('socket-room', cafe.value.cafeId);
+
   socket.onmessage = (event) => {
 
     const message = JSON.parse(event.data);
     const getTime = new Date();
     const currentTime = getTime.toTimeString();
-
+    console.log(message);
     if (message.message == "" || message.message == null)
       return;
     const chat = {
@@ -194,6 +196,17 @@ async function sendMessage() {
   };
 
   socket.send(JSON.stringify(enterMessage));
+
+  const getTime = new Date();
+  const currentTime = getTime.toTimeString();
+  const chat = {
+    userId: enterMessage.senderId,
+    userName: userStore.getUserName,
+    message: enterMessage.message,
+    time: currentTime,
+  }
+
+  chatStore.chatList.push(chat);
   message.value = "";
   // 스크롤을 새 메시지 아래로 이동시킵니다.
 
@@ -530,14 +543,17 @@ input[type="text"] {
 
 .leave-chat-button {
   position: absolute;
-  left: 10%;
+  right: 11%;
   bottom: -10%;
   padding: 10px;
-  background: #846046;
+  background: #B29F91;
   color: #EFEFEF;
   border: none;
-  border-radius: 20px;
-  font-size: 16px;
+  text-decoration: none;
+  border-radius: 30px;
+  font-size: 20px;
+  width: 10%;
+  text-align: center;
   cursor: pointer;
 }
 

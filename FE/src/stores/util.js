@@ -40,3 +40,4 @@ export const isFooter = ref(false);
 export const updateCalendar = ref(true);
 
 export const isSocketConnected = ref(false);
+export let socket = null;
