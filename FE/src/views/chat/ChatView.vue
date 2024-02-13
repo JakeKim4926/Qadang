@@ -147,10 +147,11 @@ async function sendOpen() {
     console.log("OPEN : ", JSON.stringify(enterMessage))
   };
 
-  socket.onmessage = (event) => {;
+  socket.onmessage = (event) => {
+
     const message = JSON.parse(event.data);
     console.log("listen : ", event);
-
+    console.log("listen : ", message);
     chatStore.researchChatList(cafe.value.cafeId);
   };
 

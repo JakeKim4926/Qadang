@@ -71,12 +71,13 @@ export default {
 
                     let caffeineHTML = `
                             <h5>
-                            <img src="src/components/icons/caffeine.png" alt="no" class="icons" /> x ${caffeine}
+                            <img src="../../../public/caffeine.png" alt="no" class="icons" /> x ${caffeine}
+                            
                             </h5>
                     `
                     let sugarHTML = `
                             <h5>
-                            <img src="src/components/icons/sugar.png" alt="no" class="icons" />
+                            <img src="../../../public/sugar.png" alt="no" class="icons" />
                             x ${sugar}
                             </h5>
                     `
@@ -89,7 +90,7 @@ export default {
                     return {
                         html: `
                         <div class="circle"></div>
-                        <div class="day-number-exist" style="text-align: right; font-weight:bold; z-index:1; right:2%"">${date.dayNumberText}</div>
+                        <div class="day-number-exist" style="text-align: right; font-weight:bold; z-index:1; right:3%"">${date.dayNumberText}</div>
                         <div style="text-align: center;
                                 justify-content: center;">` + caffeineHTML + sugarHTML +
 
@@ -215,10 +216,10 @@ export default {
 
 .circle {
     position: absolute;
-    top: 1%;
-    right: 1%;
-    width: 25%;
-    height: 15%;
+    top: 2%;
+    right: 1.5%;
+    width: 30%;
+    height: 17%;
     border-radius: 50%;
     background-color: rgb(68, 74, 104);
     z-index: 0;
