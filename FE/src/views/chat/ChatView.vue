@@ -3,7 +3,7 @@
     <div class="title">이야기 나누고 싶은 카페명을 선택하세요</div>
     <br />
     <select v-model="cafe" @change="sendOpen" class="select-cafe">
-      <option v-for="cafe in drinkStore.getCafeList" :key="cafe.id" :value="cafe">
+      <option v-for="cafe in drinkStore.getCafeList" :key="cafe.id" :value="cafe" :disabled="selectCafe">
         {{ cafe.cafeName }}
       </option>
     </select>
@@ -45,6 +45,7 @@
         </div>
       </div>
     </template>
+    <RouterLink to="/mainCaffeine" @click="sendClose()" class="leave-chat-button">나가기</RouterLink>
     <!-- <button @click="sendClose">통신 종료</button> -->
   </div>
 </template>
@@ -65,6 +66,7 @@ const chatStore = useChatStore();
 const userStore = useUserStore();
 const drinkStore = useDrinksStore();
 
+const selectCafe = ref(false);
 const message = ref("");
 const chatContainer = ref(null);
 const cafe = ref({});
@@ -80,7 +82,6 @@ const userNameIndexMap = {
   "username1": 1,
   "username2": 2,
 };
-
 
 function getNicknameIndex(userName) {
   if (userName in userNameIndexMap) {
@@ -103,6 +104,19 @@ function getNicknameIndex(userName) {
 onMounted(async () => {
   await drinkStore.researchCafe();
   await userStore.researchName();
+
+  // socket = new WebSocket(`${import.meta.env.VITE_SOCKET_API}`);
+  // if (socket && socket.readyState === WebSocket.OPEN) {
+  //   const chat = {
+  //     messageType: messageType.QUIT,
+  //     chatRoomId: cafe.value.id,
+  //     senderId: userId.value,
+  //     message: "QUIT",
+  //   };
+
+  //   socket.send(JSON.stringify(chat));
+  //   console.log("quit");
+  // }
 });
 
 function extractTimeFromDate(dateTimeString) {
@@ -141,15 +155,18 @@ async function sendOpen() {
     const getTime = new Date();
     const currentTime = getTime.toTimeString();
 
-    if(message.message == "" || message.message == null)
+    if (message.message == "" || message.message == null)
       return;
     const chat = {
-      userId:message.senderId,
-      userName:message.userName,
-      message:message.message,
-      time:currentTime,
+      userId: message.senderId,
+      userName: message.userName,
+      message: message.message,
+      time: currentTime,
     }
-    chatStore.chatList.push(chat);
+    if (message.userName != userStore.getUserName) {
+      chatStore.chatList.push(chat);
+    }
+    scrollChatToBottom();
   };
 
   socket.onerror = function (event) {
@@ -165,6 +182,7 @@ async function sendOpen() {
   await nextTick(() => {
     scrollChatToBottom();
   });
+  selectCafe.value = true;
 }
 
 async function sendMessage() {
@@ -177,7 +195,6 @@ async function sendMessage() {
 
   socket.send(JSON.stringify(enterMessage));
   message.value = "";
-
   // 스크롤을 새 메시지 아래로 이동시킵니다.
 
 
@@ -186,17 +203,20 @@ async function sendMessage() {
   });
 }
 
-// async function sendClose() {
-//   const chat = {
-//     messageType: messageType.QUIT,
-//     chatRoomId: cafe.value.id,
-//     senderId: userId.value,
-//     message: "QUIT",
-//   }
+async function sendClose() {
+  const chat = {
+    messageType: messageType.QUIT,
+    chatRoomId: cafe.value.id,
+    senderId: userId.value,
+    message: "QUIT",
+  }
 
-//   console.log(chat);
+  console.log(chat);
+  if (cafe.value.cafeId > 0 && socket.readyState === WebSocket.OPEN) {
+    socket.send(JSON.stringify(chat));
+  }
 
-// }
+}
 
 function adjustTextarea() { }
 
@@ -212,7 +232,7 @@ async function scrollChatToBottom() {
 // });
 
 watch(cafe, () => {
-  if(cafe != undefined)
+  if (cafe != undefined)
     scrollChatToBottom();
 });
 </script>
@@ -223,7 +243,7 @@ watch(cafe, () => {
   height: 80%;
   /* 컴포넌트의 높이를 화면의 80%로 지정 */
   position: absolute;
-  top: 50%;
+  top: 45%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
@@ -506,6 +526,19 @@ input[type="text"] {
   border: 1px solid #ccc;
   border-radius: 5px;
   margin-right: 10px;
+}
+
+.leave-chat-button {
+  position: absolute;
+  left: 10%;
+  bottom: -10%;
+  padding: 10px;
+  background: #846046;
+  color: #EFEFEF;
+  border: none;
+  border-radius: 20px;
+  font-size: 16px;
+  cursor: pointer;
 }
 
 /* 

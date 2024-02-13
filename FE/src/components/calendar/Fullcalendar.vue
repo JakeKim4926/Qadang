@@ -73,13 +73,13 @@ export default {
 
                     let caffeineHTML = `
                             <h5>
-                            <img src="../../../public/caffeine.png" alt="no" class="icons" /> x ${caffeine}
+                            <img src="/caffeine.png" alt="no" class="icons" /> x ${caffeine}
                             
                             </h5>
                     `
                     let sugarHTML = `
                             <h5>
-                            <img src="../../../public/sugar.png" alt="no" class="icons" />
+                            <img src="/sugar.png" alt="no" class="icons" />
                             x ${sugar}
                             </h5>
                     `

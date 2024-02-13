@@ -55,6 +55,32 @@ axios.interceptors.request.use((config)=> {
     return config;
 }, (error) => {
     // console.log('[요청 실패]: ', error);
+    if(config.status == responseState.CONTINUE) {
+
+    } else if(config.status == responseState.PROCESSING) {
+
+    } else if(config.status == responseState.SUCCESS) {
+
+    } else if(config.status == responseState.CREATED) {
+
+    } else if(config.status == responseState.ACCEPT) {
+
+    } else if(config.status == responseState.BAD_REQUEST) {
+        window.alert("잘못된 요청입니다.");
+    } else if(config.status == responseState.UNAUTORIZED) {
+        window.alert("클라이언트 인증 오류입니다.");
+        localStorage.removeItem("userAccessToken");
+        userAccessToken.value = null;
+        router.push('/');
+    } else if(config.status == responseState.FORBIDDEN) {
+        window.alert("권한이 없습니다");
+    } else if(config.status == responseState.NOT_FOUND) {
+        window.alert("NOT_FOUND");
+    } else if(config.status == responseState.INTERENAL_SERVER_ERROR) {
+        window.alert("서버 에러");
+    } else if(config.status == responseState.NOT_IMPLEMENT) {
+        console.log("NOT_IMPLEMENT");
+    }
     return Promise.reject(error);
 })
 
@@ -75,6 +101,7 @@ axios.interceptors.response.use((config)=> {
         window.alert("클라이언트 인증 오류입니다.");
         localStorage.removeItem("userAccessToken");
         userAccessToken.value = null;
+        router.push('/');
     } else if(config.status == responseState.FORBIDDEN) {
         window.alert("권한이 없습니다");
     } else if(config.status == responseState.NOT_FOUND) {
@@ -93,6 +120,7 @@ axios.interceptors.response.use((config)=> {
         localStorage.removeItem("userAccessToken");
         userAccessToken.value = null;
         window.alert("클라이언트 인증 오류입니다.");
+        router.push('/');
     } else if(config.status == responseState.FORBIDDEN) {
         window.alert("권한이 없습니다");
         router.push('/');
