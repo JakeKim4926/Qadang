@@ -48,13 +48,13 @@
 
         <div class="right-info superbig-font">
           <div v-if="accumulateStore.getAccumulateToday.accumulateSugar < userStore.getUserRDI.userSugar * 1/2">
-            <p>양호 메시지</p>
+            <p>건강 상태 달달!</p>
           </div>
           <div v-else-if="accumulateStore.getAccumulateToday.accumulateSugar < userStore.getUserRDI.userSugar">
-            <p>보통 메시지</p>
+            <p>적당한 당 생활을 유지해보아요~</p>
           </div>
           <div v-else="accumulateStore.getAccumulateToday.accumulateSugar >= userStore.getUserRDI.userSugar">
-            <p>나쁨 메시지</p>
+            <p>혈관이 달달해요~</p>
           </div>
         </div>
       </div>
@@ -75,7 +75,7 @@
     </div>
 
     <div>
-      <p>오늘은 이 음료 어때요?</p>
+      <p>당신이 즐겨 마시는 음료와 비슷한 음료 정보를 확인해보세요</p>
       <div class="info-box">
         <img :src="recommendStore.getRecommendedSugar.drinkUrl" alt="Recommended Drink" class="photo"/>
         <p>{{ recommendStore.getRecommendedSugar.cafeName }} {{ recommendStore.getRecommendedSugar.drinkName }}</p>
