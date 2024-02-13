@@ -11,7 +11,7 @@
       <p>카페인 섭취량</p>
       <div class="info-box">
 
-        <div v-if="accumulateStore.getAccumulateToday.accumulateCaffeine < userStore.getUserRDI.userCaffeine * 1/2">
+        <div v-if="accumulateStore.getAccumulateToday.accumulateCaffeine < userStore.getUserRDI.userCaffeine * 1 / 2">
           <img src="@/components/icons/ca_good.png" alt="양호 이미지" class="status-img left-info">
         </div>
         <div v-else-if="accumulateStore.getAccumulateToday.accumulateCaffeine < userStore.getUserRDI.userCaffeine">
@@ -24,27 +24,28 @@
         <div class="mid-info">
           <p class="recent-drink">방금 마신 음료</p>
           <div v-if="recordsStore.getDayDrink.length > 0" class="drink-info">
-            {{ (recordsStore.getDayDrink[recordsStore.getDayDrink.length-1].drinkCaffeine
-            + 75 * recordsStore.getDayDrink[recordsStore.getDayDrink.length-1].plusShot).toFixed(1) }}mg
+            {{ (recordsStore.getDayDrink[recordsStore.getDayDrink.length - 1].drinkCaffeine
+              + 75 * recordsStore.getDayDrink[recordsStore.getDayDrink.length - 1].plusShot).toFixed(1) }}mg
           </div>
           <div v-else class="drink-info">
             오늘 마신 음료가 없습니다!
           </div>
 
           <p class="today-title">하루 총합 섭취량 / 권장량</p>
-            <p v-if="accumulateStore.getAccumulateToday.accumulateCaffeine < userStore.getUserRDI.userCaffeine" class="today-info font_green">
-              {{ accumulateStore.getAccumulateToday.accumulateCaffeine }} / 
-              {{ userStore.getUserRDI.userCaffeine }}mg
-            </p>
-            <p v-else class="today-info font_red">
-              {{ accumulateStore.getAccumulateToday.accumulateCaffeine }} / 
-              {{ userStore.getUserRDI.userCaffeine }}mg
-            </p>
+          <p v-if="accumulateStore.getAccumulateToday.accumulateCaffeine < userStore.getUserRDI.userCaffeine"
+            class="today-info font_green">
+            {{ accumulateStore.getAccumulateToday.accumulateCaffeine }} /
+            {{ userStore.getUserRDI.userCaffeine }}mg
+          </p>
+          <p v-else class="today-info font_red">
+            {{ accumulateStore.getAccumulateToday.accumulateCaffeine }} /
+            {{ userStore.getUserRDI.userCaffeine }}mg
+          </p>
 
         </div>
 
         <div class="right-info superbig-font">
-          <div v-if="accumulateStore.getAccumulateToday.accumulateCaffeine < userStore.getUserRDI.userCaffeine * 1/2">
+          <div v-if="accumulateStore.getAccumulateToday.accumulateCaffeine < userStore.getUserRDI.userCaffeine * 1 / 2">
             <p>양호 메시지</p>
           </div>
           <div v-else-if="accumulateStore.getAccumulateToday.accumulateCaffeine < userStore.getUserRDI.userCaffeine">
@@ -74,14 +75,14 @@
     <div>
       <p>오늘은 이 음료 어때요?</p>
       <div class="info-box">
-        <img :src="recommendStore.getRecommendedCaffeine.drinkUrl" alt="Recommended Drink" class="photo"/>
+        <img :src="recommendStore.getRecommendedCaffeine.drinkUrl" alt="Recommended Drink" class="photo" />
         <p>{{ recommendStore.getRecommendedCaffeine.cafeName }} {{ recommendStore.getRecommendedCaffeine.drinkName }}</p>
         <button @click="goRecommedModal(recommendStore.getRecommendedCaffeine)" class="button_caffeine">상세보기</button>
       </div>
     </div>
 
     <div class="chat-box">
-      <font-awesome-icon :icon="['fas', 'comments']" style="color: #000000;" size="2xl" @click="goChat" class="chat"/>
+      <font-awesome-icon :icon="['fas', 'comments']" style="color: #000000;" size="2xl" @click="goChat" class="chat" />
     </div>
   </div>
 </template>
@@ -117,9 +118,8 @@ onMounted(async () => {
   // 'code' 파라미터 값 가져오기
   const kakaoCode = urlParams.get('code');
 
-  if(kakaoCode != null && kakaoCode.length > 0) {
+  if (kakaoCode != null && kakaoCode.length > 0) {
     await userStore.sendKakaoToken(kakaoCode);
-    console.log(kakaoCode);
 
     // URL에서 'code' 파라미터 제거
     const newUrl = window.location.origin + window.location.pathname;
@@ -152,11 +152,12 @@ onMounted(async () => {
       })
     }
   })
+
 })
 
 // 당 섭취량 메인페이지로 이동
 const goSugar = () => {
-  router.push({name : 'mainSugar'})
+  router.push({ name: 'mainSugar' })
 }
 
 // 추천 음료 상세페이지로 이동
@@ -173,7 +174,7 @@ const goRecommedModal = (recommendDrinkInfo) => {
 
 // 채팅으로 이동
 const goChat = () => {
-  router.push({name : 'chat'})
+  router.push({ name: 'chat' })
 }
 </script>
 
