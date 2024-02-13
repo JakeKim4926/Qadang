@@ -49,13 +49,13 @@
 
         <div class="right-info superbig-font">
           <div v-if="accumulateStore.getAccumulateToday.accumulateCaffeine < userStore.getUserRDI.userCaffeine * 1 / 2">
-            <p>양호 메시지</p>
+            <p>건강도장 쾅!</p>
           </div>
           <div v-else-if="accumulateStore.getAccumulateToday.accumulateCaffeine < userStore.getUserRDI.userCaffeine">
-            <p>보통 메시지</p>
+            <p>카페인섭취를 오늘처럼 유지해보아요~</p>
           </div>
           <div v-else="accumulateStore.getAccumulateToday.accumulateCaffeine >= userStore.getUserRDI.userCaffeine">
-            <p>나쁨 메시지</p>
+            <p>혈관에 커피가 흐르진 않나요?</p>
           </div>
         </div>
       </div>
