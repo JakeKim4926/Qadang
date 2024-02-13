@@ -225,17 +225,17 @@ export default {
 
 .circle {
     position: absolute;
-    top: 2%;
-    right: 1.5%;
-    width: 30%;
-    height: 17%;
+    top: 1%;
+    right: 3%;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
     background-color: rgb(68, 74, 104);
     z-index: 0;
 }
 
 .icons {
-    width: 20%;
+    width: 15%;
     height: 10%;
 }
 </style>
