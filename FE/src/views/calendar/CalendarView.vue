@@ -45,8 +45,10 @@ const detailKey = ref(1);
 watch(isCalendarModal, (newValue, oldValue) => {
   if (!newValue ) {
     calendarKey.value += 1;
-    if(!isUpdateNothingModal && !isUpdateInputModal)
-      router.go();
+    if(isUpdateNothingModal.value || isUpdateInputModal.value)
+      return;  
+
+    router.go();
   }
 });
 
