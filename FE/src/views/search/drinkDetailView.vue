@@ -175,8 +175,8 @@ const addToBasket = () => {
 }
 
 .drink-image {
-  width: 80%;
-  height: auto;
+  width: 100px;
+  height: 130px;
   margin-bottom: 0px;
 }
 
