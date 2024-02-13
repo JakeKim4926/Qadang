@@ -31,13 +31,13 @@ export const useRecordsStore = defineStore("records", () => {
     return myDrink.value;
   });
 
-  const getMaxSugar = computed(() => {
-    return maxSugar.value;
-  });
+  // const getMaxSugar = computed(() => {
+  //   return maxSugar.value;
+  // });
 
-  const getMaxCaffeine = computed(() => {
-    return maxCaffeine.value;
-  });
+  // const getMaxCaffeine = computed(() => {
+  //   return maxCaffeine.value;
+  // });
 
   const getRecordDay = computed(() => {
     return recordDay.value;
@@ -58,7 +58,7 @@ export const useRecordsStore = defineStore("records", () => {
     })
       .then((res) => {})
       .catch((err) => {
-        console.log(err);
+       
       });
   };
 
@@ -70,7 +70,7 @@ export const useRecordsStore = defineStore("records", () => {
     })
       .then((res) => {})
       .catch((err) => {
-        console.log(err);
+        
       });
   };
 
@@ -82,7 +82,7 @@ export const useRecordsStore = defineStore("records", () => {
     })
       .then((res) => {})
       .catch((err) => {
-        console.log(err);
+        
       });
   };
 
@@ -94,7 +94,7 @@ export const useRecordsStore = defineStore("records", () => {
     })
       .then((res) => {})
       .catch((err) => {
-        console.log(err);
+        
       });
   };
 
@@ -106,7 +106,7 @@ export const useRecordsStore = defineStore("records", () => {
       .then((res) => {
       })
       .catch((err) => {
-        console.log(err);
+        
       });
   };
 
@@ -118,41 +118,16 @@ export const useRecordsStore = defineStore("records", () => {
     })
       .then((res) => {
         if(res.status == responseState.SUCCESS) {
-          console.log("success ", res.data );
+          
         }
 
         dayDrink.value = res.data;
       })
       .catch((err) => {
-        console.log(err);
+        
       });
   };
 
-  const researchMaxSugar = function () {
-    axios({
-      url: `${import.meta.env.VITE_REST_RECORDS_API}/maxsugar`,
-      method: "GET",
-    })
-      .then((res) => {
-        maxSugar.value = res.data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const researchMaxCaffeine = function () {
-    axios({
-      url: `${import.meta.env.VITE_REST_RECORDS_API}/maxcaffeine`,
-      method: "GET",
-    })
-      .then((res) => {
-        maxCaffeine.value = res.data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
 
   return {
     days,
@@ -177,7 +152,5 @@ export const useRecordsStore = defineStore("records", () => {
     updateMyDrink,
     deleteDrink,
     researchDayDrink,
-    researchMaxSugar,
-    researchMaxCaffeine,
   };
 }, {persist:true});

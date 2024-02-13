@@ -82,7 +82,7 @@ import { isDetailModal } from '../../stores/util'
 
 const closeDetailModal = () => {
   isDetailModal.value = false
-  console.log('!',isDetailModal.value)
+  
 }
 
 const drinksStore = useDrinksStore();

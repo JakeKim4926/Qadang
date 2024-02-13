@@ -105,8 +105,7 @@ const bringUserInfo = async () => {
     userInfo.userHeight = store.getUser.userHeight || null;
     userInfo.userWeight = store.getUser.userWeight || null;
     userInfo.userHealth = store.getUser.userHealth || null;
-  } catch (error) {
-    console.error("데이터를 가져오지 못했습니다.", error);
+  } catch (error) {    
   } finally {
     isLoading.value = false;
   }
@@ -127,11 +126,11 @@ const updateUserInfo = async () => {
   try {
     await store.updateUser(updateData);    
     isUpdateModal.value = false
-    console.log(updateData) 
+    
     window.location.reload();
     router.push('/mypage');
   } catch (error) {
-    console.error("업데이트 실패", error);
+    
   }
 }
 
