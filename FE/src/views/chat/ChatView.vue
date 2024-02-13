@@ -3,12 +3,12 @@
     <div class="title">이야기 나누고 싶은 카페명을 선택하세요</div>
     <br />
     <select v-model="cafe" @change="sendOpen" class="select-cafe">
-      <option v-for="cafe in testCafeList" :key="cafe.id" :value="cafe">
-        {{ cafe.cafe }}
+      <option v-for="cafe in drinkStore.getCafeList" :key="cafe.id" :value="cafe">
+        {{ cafe.cafeName }}
       </option>
     </select>
 
-    <template v-if="cafe.id > 0">
+    <template v-if="cafe.cafeId > 0">
       <div class="chat-container">
         <div class="chat-messages" ref="chatContainer">
           <div
@@ -32,7 +32,7 @@
         </div>
         <hr class="chat-line" />
         <div class="chat-input-container">
-          <a class="chat-icon">
+          <a @click="sendMessage" class="chat-icon">
             <font-awesome-icon
               :icon="['fas', 'paper-plane']"
               style="color: #000000"
@@ -71,10 +71,12 @@ import { isSocketConnected } from "@/stores/util";
 
 import Stomp from "webstomp-client";
 import SockJS from "sockjs-client";
+import { useDrinksStore } from "@/stores/drinks";
 
 const socketStore = useSocketStore();
 const chatStore = useChatStore();
 const userStore = useUserStore();
+const drinkStore=  useDrinksStore();
 
 const message = ref("");
 const chatContainer = ref(null);
@@ -108,10 +110,11 @@ function getNicknameIndex(userName) {
 }
 
 watch(chatStore.chatList, () => {
-  chatStore.researchChatList(cafe.id.value);
+  chatStore.researchChatList(cafe.value.cafeId);
 });
 
 onMounted(async () => {
+  await drinkStore.researchCafe();
   await userStore.researchName();
 });
 
@@ -135,8 +138,8 @@ async function sendOpen() {
   socket.onopen = () => {
     const enterMessage = {
       messageType: "ENTER", // 입장 메시지 타입
-      chatRoomId: cafe.value.id, // 채팅 방 ID
-      senderId: cafe.value.id, // 보낸 사람 ID
+      chatRoomId: cafe.value.cafeId, // 채팅 방 ID
+      senderId: cafe.value.cafeId, // 보낸 사람 ID
       message: userStore.userName, // 메시지 내용은 비어 있어도 됩니다.
     };
     socket.send(JSON.stringify(enterMessage));
@@ -149,7 +152,7 @@ async function sendOpen() {
     const message = JSON.parse(event.data);
     console.log("수신22 ", event);
 
-    chatStore.researchChatList(cafe.value.id);
+    chatStore.researchChatList(cafe.value.cafeId);
   };
 
   socket.onerror = function (event) {
@@ -161,7 +164,7 @@ async function sendOpen() {
     console.log("WebSocket connection closed: ", event);
   };
 
-  await chatStore.researchChatList(cafe.value.id);
+  await chatStore.researchChatList(cafe.value.cafeId);
 
   await nextTick(() => {
     scrollChatToBottom();
@@ -171,23 +174,21 @@ async function sendOpen() {
 async function sendMessage() {
   const enterMessage = {
     messageType: messageType.TALK,
-    chatRoomId: cafe.value.id,
-    senderId: cafe.value.id,
+    chatRoomId: cafe.value.cafeId,
+    senderId: cafe.value.cafeId,
     message: message.value,
   };
 
   socket.send(JSON.stringify(enterMessage));
   message.value = "";
 
-  await chatStore.researchChatList(cafe.value.id);
+  await chatStore.researchChatList(cafe.value.cafeId);
   console.log(enterMessage);
   // 스크롤을 새 메시지 아래로 이동시킵니다.
   socket.onmessage = (event) => {
     const message = JSON.parse(event.data);
     console.log("수신22 ", event);
     console.log("수신33", message);
-
-    chatStore.researchChatList(cafe.value.id);
   };
   await nextTick(() => {
     scrollChatToBottom();

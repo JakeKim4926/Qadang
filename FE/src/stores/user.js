@@ -106,8 +106,8 @@ export const useUserStore = defineStore(
     };
 
 
-    const sendKakaoToken = function (token) {
-      axios({
+    const sendKakaoToken = async function (token) {
+      await axios({
         url: `${import.meta.env.VITE_REST_KAKAO_API}`,
         method: "GET",
         params: { code: token },
@@ -123,17 +123,20 @@ export const useUserStore = defineStore(
           console.log(success, " ? ");
           if (success == 1) {
             const getToken = res.data.accesstoken;
+
+             // 헤더 설정
+             axios.defaults.headers.common["Authorization"] = getToken;
+             userAccessToken.value = getToken;
+ 
             if (res.data.isUser == 0) {
               router.push("/survey");
+            } else {
+              router.push('/mainCaffeine');
             }
-            // 헤더 설정
-            axios.defaults.headers.common["Authorization"] = getToken;
-            userAccessToken.value = getToken;
-
+           
             // 로컬 스토리지에 액세스 토큰 저장
             localStorage.setItem("userAccessToken", getToken);
           }
-
 
           console.log("헤더 체크", axios.defaults.headers);
         })
