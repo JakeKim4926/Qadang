@@ -139,7 +139,9 @@ export const useUserStore = defineStore(
           
         })
         .catch((err) => {
+          window.alert("로그인 실패");
           
+          router.push("/");
         });
     };
 
