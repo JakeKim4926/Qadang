@@ -3,14 +3,15 @@ import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from '@fullcalendar/interaction'
 
-import { onMounted, ref, onUpdated } from "vue";
+import { onMounted, ref, watch } from "vue";
 import axios from "axios";
 import router from "@/router";
 import { useRecordsStore } from "@/stores/records";
 import { useAccumulateStore } from "@/stores/accumulate";
-import { isCalendarModal, isUpdateInputModal, isUpdateNothingModal, } from "@/stores/util"
+import { isCalendarModal, isUpdateInputModal, isUpdateNothingModal, isInputModal, isInputNothingModal } from "@/stores/util"
 
 export const callendarMonth = ref([]);
+export const calendarKey = ref(0);
 
 export default {
     components: {
@@ -19,6 +20,7 @@ export default {
     setup() {
         const recordStore = useRecordsStore();
         const accumulateStore = useAccumulateStore();
+
 
         const calendarOptions = ref({
             plugins: [dayGridPlugin, interactionPlugin,],
@@ -106,7 +108,7 @@ export default {
             };
         }
         const updateCalendarOptions = async () => {
-            
+
             const handleDateSet = async (arg) => {
                 console.log(arg);
                 const accumulateStore = useAccumulateStore();
@@ -121,15 +123,21 @@ export default {
                 const asd = { date: arg.view.currentStart };
                 dayCellContentFunction(asd);
             };
-            dateSet:handleDateSet;
+            dateSet: handleDateSet;
             dayCellContent: dayCellContentFunction;
-        };
 
-        onMounted(() => {
-            updateCalendarOptions();
-            console.log("updated")
+        };
+        const calendarKey = ref(0); // calendarKey를 선언
+        onMounted(async () => {
+
+            await updateCalendarOptions();
+
+            await rerenderFullCalendar();
         });
 
+        const rerenderFullCalendar = async () => {
+            calendarKey.value += 1;
+        };
 
         updateCalendarOptions();
 
@@ -155,6 +163,7 @@ export default {
             updateCalendarOptions,
             dayCellContentFunction,
             handleDateSet,
+            calendarKey,
         };
 
     },
@@ -167,7 +176,7 @@ export default {
 </script>
 
 <template>
-    <FullCalendar :options="calendarOptions" @dateSet="handleDateSet" />
+    <FullCalendar :options="calendarOptions" @dateSet="handleDateSet" :key="calendarKey" />
 </template>
 
 <style>

@@ -11,7 +11,7 @@
     </div>
     <div v-if="!loading" :key="calendarKey" class="calendar-container">
       <FullCalendar v-if="updateCalendar" class="calendar" :key="calendarKey" />
-      <CalendarDetail v-if="isCalendarModal" />
+      <CalendarDetail v-if="isCalendarModal" :key="detailKey" />
     </div>
   </div>
 </template>
@@ -20,6 +20,7 @@
 import FullCalendar from "@/components/calendar/Fullcalendar.vue";
 import CalendarDetail from "@/components/calendar/calendarDetail.vue";
 import { RouterView } from "vue-router";
+import router from '@/router';
 import {
   isCalendarModal,
   isUpdateInputModal,
@@ -29,60 +30,51 @@ import {
   updateCalendar,
 } from "@/stores/util";
 import { useAccumulateStore } from "@/stores/accumulate";
+import { useRecordsStore } from "@/stores/records";
 import { ref, onMounted, onBeforeMount, watch } from "vue";
 
 const accumulateStore = useAccumulateStore();
+const recordStroe = useRecordsStore();
 const loading = ref(true);
-const calendarKey = ref(0);
-const detailKey = ref(0);
+const calendarKey = ref(1);
+const detailKey = ref(1);
 
 // const accumulateList = ref([]);
 // const getAccumulateList = computed(()=>accumulateList);
 
 watch(isCalendarModal, (newValue, oldValue) => {
   if (!newValue) {
-    console.log("iscal");
-    updateCalendar.value = false;
     calendarKey.value += 1;
-    updateCalendar.value = true;
-
-    if (isUpdateInputModal.value) calendarKey.value += 1;
-    else if (isUpdateNothingModal.value) calendarKey.value += 1;
-    else window.location.reload();
+    router.go();
   }
 });
 
 watch(isUpdateInputModal, (newValue, oldValue) => {
   if (!newValue) {
-    console.log("iscal2");
     calendarKey.value += 1;
-    if (!isUpdateNothingModal.value) window.location.reload();
+    router.go();
   }
 });
 
 watch(isUpdateNothingModal, (newValue, oldValue) => {
   if (!newValue) {
-    console.log("iscal3");
     calendarKey.value += 1;
-    if (!isUpdateInputModal.value) window.location.reload();
+    router.go();
   }
 });
 
 watch(isInputModal, (newValue, oldValue) => {
   if (!newValue) {
-    console.log("iscal4");
     calendarKey.value += 1;
-    if (!isInputNothingModal.value) window.location.reload();
+    router.go();
+
   }
 });
 
 watch(isInputNothingModal, (newValue, oldValue) => {
   if (!newValue) {
-    console.log("iscal5");
-
     calendarKey.value += 1;
-
-    if (!isInputModal.value) window.location.reload();
+    router.go();
   }
 });
 
@@ -126,7 +118,8 @@ onBeforeMount(async () => {
 
 .calendar-title {
   color: rgb(68, 74, 104);
-  margin-top: 20px; /* 원하는 만큼의 상단 마진 추가 */
+  margin-top: 20px;
+  /* 원하는 만큼의 상단 마진 추가 */
   margin-left: 10%;
 }
 
@@ -143,8 +136,10 @@ onBeforeMount(async () => {
 }
 
 .calendar-container {
-  width: 70%; /* 캘린더 컨테이너 너비 조정 */
-  height: calc(100% - 100%); /* 캘린더 컨테이너 높이 조정 */
+  width: 70%;
+  /* 캘린더 컨테이너 너비 조정 */
+  height: calc(100% - 100%);
+  /* 캘린더 컨테이너 높이 조정 */
   /* 100px은 아이콘과 제목이 차지하는 높이를 고려하여 조절합니다. */
   display: flex;
   justify-content: center;
