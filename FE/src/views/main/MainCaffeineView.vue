@@ -58,7 +58,7 @@
       </div>
     </div>
 
-    <div v-if="recordsStore.getDayDrink.length > 0 && getCnt > 0">
+    <div v-if="getCnt > 0">
       <ChartCaffeine />
     </div>
 
