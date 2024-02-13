@@ -17,5 +17,5 @@ public interface RecordReporsitory extends JpaRepository<Records, Long> {
             "GROUP BY r.drinkId ORDER BY count(*) DESC LIMIT 10")
     List<Long> findByRank();
 
-    public void deletedByUserId(Long userId);
+    public void deleteByUserId(Long userId);
 }

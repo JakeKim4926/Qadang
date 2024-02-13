@@ -3,7 +3,9 @@ package com.ssafy.cadang.repository;
 import com.ssafy.cadang.domain.AccumulatePK;
 import com.ssafy.cadang.domain.Accumulates;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,5 +24,7 @@ public interface AccumulateRepository extends JpaRepository<Accumulates, Accumul
     List<Accumulates> findByDay(LocalDate date);
 
     // userId에 해당하는 모든 누적데이터 삭제
-    public void deletedByAccumulatePKUserId(Long userId);
+    @Modifying
+    @Query(value = "DELETE FROM accumulates WHERE user_id=: userId", nativeQuery = true)
+    void deleteAccumulatesByAccumulatePK_UserId(@Param("userId") Long userId);
 }
