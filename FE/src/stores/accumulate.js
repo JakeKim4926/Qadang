@@ -93,6 +93,13 @@ export const useAccumulateStore = defineStore("accumulate", () => {
       .then((res) => {
         if (res.status == responseState.SUCCESS) {
           accumulateDay.value = res.data;
+
+          if(accumulateDay.value.accumulateCaffeine != undefined) {
+            accumulateDay.value.accumulateCaffeine = accumulateDay.value.accumulateCaffeine.toFixed(1);
+          }
+          if(accumulateDay.value.accumulateSugar != undefined) {
+            accumulateDay.value.accumulateSugar = accumulateDay.value.accumulateSugar.toFixed(1);
+          }
         }
       })
       .catch((err) => {

@@ -157,7 +157,6 @@ const openInputNothingModal = () => {
 // 새로운 값을 갱신하기 위한 함수
 const updateInfo = () => {
   closeInputModal()
-  window.location.reload()
 }
 
 // 여기없어용으로 이동하기 위한 함수
