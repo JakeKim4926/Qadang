@@ -18,7 +18,7 @@ ARG JAR_FILE=build/libs/cadang-0.0.1-SNAPSHOT.jar
 COPY ${JAR_FILE} app.jar
 
 
-EXPOSE 8081
+EXPOSE 8000
 
 # root 대신 nobody 권한으로 실행
 USER nobody
