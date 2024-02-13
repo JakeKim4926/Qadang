@@ -87,7 +87,6 @@ const userNameIndexMap = {
 window.addEventListener('beforeunload', () => {
   if (socket && socket.readyState === WebSocket.OPEN) {
     sendClose();
-    console.log("close");
   }
 });
 
@@ -156,7 +155,6 @@ async function sendOpen() {
     const message = JSON.parse(event.data);
     const getTime = new Date();
     const currentTime = getTime.toTimeString();
-    console.log(message);
     if (message.message == "" || message.message == null)
       return;
     const chat = {
