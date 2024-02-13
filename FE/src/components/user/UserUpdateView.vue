@@ -20,7 +20,7 @@
           </div>
           <div class="form-group half-width">
             <label for="userBirth" class="label-margin tag-bold">출생년도</label>
-            <input type="number" v-model="userInfo.userBirth" class="input-field2" min="0"/>
+            <input type="number" v-model="userInfo.userBirth" class="input-field2" min="1900" max="2024"/>
           </div>
         </div>
 
