@@ -77,7 +77,6 @@
   
   const closeRecommendDetailModal = () => {
     isRecommedModal.value = false
-    console.log('!',isRecommedModal.value)
   }
   </script>
   <style scoped>

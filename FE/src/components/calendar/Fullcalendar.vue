@@ -110,15 +110,12 @@ export default {
         const updateCalendarOptions = async () => {
 
             const handleDateSet = async (arg) => {
-                console.log(arg);
                 const accumulateStore = useAccumulateStore();
 
-                console.log("hello 2", arg.view.currentStart)
                 const year = arg.view.currentStart.getFullYear();
                 let month = arg.view.currentStart.getMonth() + 1;
                 month = month < 10 ? "0" + month.toString() : month.toString();
                 const now = ref(year.toString() + month.toString());
-                console.log("updated");
                 accumulateStore.month(now);
                 const asd = { date: arg.view.currentStart };
                 dayCellContentFunction(asd);
@@ -143,15 +140,12 @@ export default {
 
         // FullCalendar의 dateSet 이벤트 핸들러
         const handleDateSet = async (arg) => {
-            console.log(arg);
             const accumulateStore = useAccumulateStore();
 
-            console.log("hello 2", arg.view.currentStart)
             const year = arg.view.currentStart.getFullYear();
             let month = arg.view.currentStart.getMonth() + 1; // Adding 1 to adjust for zero-based months
             month = month < 10 ? "0" + month.toString() : month.toString();
             const now = ref(year.toString() + month.toString());
-            console.log(now);
             accumulateStore.month(now);
             const asd = { date: arg.view.currentStart };
             dayCellContentFunction(asd);

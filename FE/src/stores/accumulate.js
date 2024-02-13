@@ -46,6 +46,12 @@ export const useAccumulateStore = defineStore("accumulate", () => {
     })
       .then((res) => {
         accumulateToday.value = res.data;
+        if(accumulateToday.value.accumulateCaffeine != undefined) {
+          accumulateToday.value.accumulateCaffeine = accumulateToday.value.accumulateCaffeine.toFixed(1);
+        }
+        if(accumulateToday.value.accumulateSugar != undefined) {
+          accumulateToday.value.accumulateSugar = accumulateToday.value.accumulateSugar.toFixed(1);
+        }
       })
       .catch((err) => {
         

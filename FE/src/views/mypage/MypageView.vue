@@ -46,7 +46,7 @@
     </div>
     
     <div class="user-actions">
-      <!-- <button @click="userWithdraw" class="button-withdraw">회원 탈퇴</button> -->
+      <button @click="userWithdraw" class="button-withdraw">회원 탈퇴</button>
       <button @click="handleLogout" class="button-logout">로그아웃</button>
     </div>
   </div>
@@ -65,8 +65,7 @@ const store = useUserStore();
 const isInfoFilled = computed(() => store.isInfoFilled);
 const openUpdateModal = () => {
   isUpdateModal.value = true
-  console.log('!',isUpdateModal.value)}
-
+}
 const message = computed(() => {
   return store.isInfoFilled
     ? "오늘 하루는 어떠셨나요? \n이제 개인별 맞춤 정보를 제공받을 수 있어요\n오늘도 건강한 하루 보내세요:)"
@@ -94,15 +93,16 @@ watch(() => store.isInfoFilled, (newVal) => {
 });
 
 const formattedRDICaffeine = computed(() => {
-  return store.getUserRDICaffeine ? store.getUserRDICaffeine.toFixed(1) : '0.0';
+  // return store.getUserRDICaffeine ? store.getUserRDICaffeine.toFixed(1) : '0.0';
+  return store.getUserRDICaffeine;
 });
 
 const formattedRDISugar = computed(() => {
-  return store.getUserRDISugar ? store.getUserRDISugar.toFixed(1) : '0.0';
+  // return store.getUserRDISugar ? store.getUserRDISugar.toFixed(1) : '0.0';
+  return store.getUserRDISugar;
 });
 
 onMounted(() => {
-  console.log('Initial infoFilled value:', store.isInfoFilled);   
   store.researchMax();
   store.researchUser();
   store.researchName();

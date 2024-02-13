@@ -78,14 +78,12 @@ onMounted(async () => {
   // 초기값이 day이므로 day로 설정
   watch(() => accumulateStore.getAccumulateList, (newData) => {
     if (newData.length > 0) {
-      console.log('!!!', newData)
 
       const tmpDayData = []
       const tmpDataData = []
 
       // 일은 최근 일주일 간을 표시해주기 위해 첫 시작을 지정
       let firstDate = new Date(new Date(`${year}-${month}-${day}`).setDate(new Date(`${year}-${month}-${day}`).getDate() - 7))
-      console.log('날짜를 보여줘', firstDate)
 
       let firsttYear = firstDate.getFullYear()
       let firstMonth = firstDate.getMonth() + 1
@@ -238,7 +236,6 @@ onMounted(async () => {
       chartData.data.datasets[0].data = tmpDataData
       chartData.options.scales.x.time.unit = xTime
 
-      console.log('갱신했다!', chartData.data.labels, chartData.data.datasets[0].data, chartData.options.scales.x.time.unit)
     }
 
     else if (xTime === 'day') {
@@ -282,7 +279,6 @@ onMounted(async () => {
         chartData.data.datasets[0].data = tmpDataData
         chartData.options.scales.x.time.unit = xTime
 
-        console.log('갱신했다!', chartData.data.labels, chartData.data.datasets[0].data, chartData.options.scales.x.time.unit)
       }
     }
 

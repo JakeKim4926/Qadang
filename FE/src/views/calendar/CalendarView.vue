@@ -93,7 +93,6 @@ onBeforeMount(async () => {
   const now = ref(year.toString() + month.toString());
 
   await accumulateStore.month(now);
-  console.log("are you really here?");
   loading.value = false;
 });
 </script>
