@@ -256,10 +256,13 @@ export const useUserStore = defineStore(
 
     const deleteUser = function () {
       axios({
-        url: import.meta.env.VITE_REST_API,
+        url: import.meta.env.VITE_REST_USER_API,
         method: "DELETE",
       })
-        .then(() => { })
+        .then(() => {
+          localStorage.removeItem("userAccessToken");
+          userAccessToken.value = null;
+         })
         .catch((err) => {
           console.log(err);
         });
