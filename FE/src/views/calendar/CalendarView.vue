@@ -43,9 +43,10 @@ const detailKey = ref(1);
 // const getAccumulateList = computed(()=>accumulateList);
 
 watch(isCalendarModal, (newValue, oldValue) => {
-  if (!newValue) {
+  if (!newValue ) {
     calendarKey.value += 1;
-    router.go();
+    if(!isUpdateNothingModal && !isUpdateInputModal)
+      router.go();
   }
 });
 
@@ -64,16 +65,20 @@ watch(isUpdateNothingModal, (newValue, oldValue) => {
 });
 
 watch(isInputModal, (newValue, oldValue) => {
-  if (!newValue) {
+  if (!newValue ) {
     calendarKey.value += 1;
+    if(isInputNothingModal.value)
+      return;
     router.go();
-
   }
 });
 
 watch(isInputNothingModal, (newValue, oldValue) => {
-  if (!newValue) {
+  if (!newValue ) {
     calendarKey.value += 1;
+    if(isInputModal.value)
+      return;
+
     router.go();
   }
 });
