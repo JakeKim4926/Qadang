@@ -101,7 +101,7 @@ export const useUserStore = defineStore(
 
         router.push("/");
       } catch (err) {
-        console.error("에러", err);
+        
       }
     };
 
@@ -112,9 +112,8 @@ export const useUserStore = defineStore(
         method: "GET",
         params: { code: token },
       })
-        .then((res) => {
-          // 카카오 에서 받아온 토큰을 백으로 전달
-          console.log("결과", res);
+        .then((res) => {          // 카카오 에서 받아온 토큰을 백으로 전달
+          
 
           // 스토어에 액세스 토큰 업데이트
           // userAccessToken.value = accessToken;
@@ -138,10 +137,10 @@ export const useUserStore = defineStore(
             localStorage.setItem("userAccessToken", getToken);
           }
 
-          console.log("헤더 체크", axios.defaults.headers);
+          
         })
         .catch((err) => {
-          console.log("에러", err);
+          
         });
     };
 
@@ -159,11 +158,10 @@ export const useUserStore = defineStore(
     
           router.push('/login');
         })
-        .catch((err) => {
-          console.error('에러', err);
+        .catch((err) => {          
         });
       } catch (err) {
-        console.error('에러 처리', err);
+        
       }
     };
 
@@ -175,8 +173,7 @@ export const useUserStore = defineStore(
         .then((res) => {
           user.value = res.data;
         })
-        .catch((err) => {
-          console.log(err);
+        .catch((err) => {          
         });
     };
 
@@ -187,10 +184,10 @@ export const useUserStore = defineStore(
       })
         .then((res) => {
           userName.value = res.data;
-          console.log('name', res.data);
+          
         })
         .catch((err) => {
-          console.log(err);
+          
         });
     };
 
@@ -203,10 +200,10 @@ export const useUserStore = defineStore(
           userRDI.value = res.data;
           userRDICaffeine.value = userRDI.value.userCaffeine;
           userRDISugar.value = userRDI.value.userSugar;
-          console.log('amount', res.data);
+          
         })
         .catch((err) => {
-          console.log(err);
+          
         });
     };
 
@@ -221,10 +218,10 @@ export const useUserStore = defineStore(
           userMaxCaffeineDate.value = userMax.value.maxCaffeineDate;
           userMaxSugar.value = userMax.value.maxSugarValue;
           userMaxSugarDate.value = userMax.value.maxSugarDate;
-          console.log(res.data, 'Max');
+          
         })
         .catch((err) => {
-          console.log(err);
+          
         });
     };
 
@@ -253,7 +250,7 @@ export const useUserStore = defineStore(
         }
         alert("사용자 정보가 성공적으로 업데이트되었습니다.");
       } catch (err) {
-        console.error("Error updating user:", err);
+        
       }
     };
 
@@ -267,7 +264,7 @@ export const useUserStore = defineStore(
           userAccessToken.value = null;
          })
         .catch((err) => {
-          console.log(err);
+          
         });
     };
 
@@ -280,7 +277,7 @@ export const useUserStore = defineStore(
           recommendedSugar.value = res.data;
         })
         .catch((err) => {
-          console.log(err);
+          
         });
     };
 
@@ -293,7 +290,7 @@ export const useUserStore = defineStore(
           recommendedCaffeine.value = res.data;
         })
         .catch((err) => {
-          console.log(err);
+          
         });
     };
 

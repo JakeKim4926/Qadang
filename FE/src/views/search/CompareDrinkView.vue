@@ -85,7 +85,7 @@ import { isCompareModal } from '../../stores/util'
 
 const closeCompareModal = () => {
   isCompareModal.value = false
-  console.log('!',isCompareModal.value)
+  
 }
 const comparisonStore = useComparisonStore();
 const basket = comparisonStore.basket;

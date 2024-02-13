@@ -84,7 +84,7 @@ const userWithdraw = async () => {
       alert('회원 탈퇴가 완료되었습니다.');
       router.push('/');
     } catch (error) {
-      console.error('회원 탈퇴 중 오류가 발생했습니다.', error);      
+         
     }
   }
 };
@@ -94,7 +94,7 @@ const handleLogout = () => {
 };
 
 watch(() => store.isInfoFilled, (newVal) => {
-  console.log('infoFilled changed:', newVal); 
+  
 });
 
 const formattedRDICaffeine = computed(() => {
@@ -110,9 +110,7 @@ onMounted(() => {
   store.researchMax();
   store.researchUser();
   store.researchName();
-  store.researchAmount();
-  recordsStore.researchMaxSugar();
-  recordsStore.researchMaxCaffeine();
+  store.researchAmount();  
 });
 
 
@@ -226,7 +224,7 @@ onMounted(() => {
   border-radius: 22px;
   background: #FFF;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  width: 580px;
+  width: 97%;
   margin: auto;
   height: 150px;
 }
