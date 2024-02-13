@@ -16,6 +16,7 @@ import java.util.Date;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final KakaoService kakaoService;
 
     public User findUser(Long userId) {
         return userRepository.findByUserId(userId);
@@ -31,6 +32,8 @@ public class UserService {
     }
 
     public void delete(Long userId) {
+
+        kakaoService.EndKakao(userId); // 연결끊기
         userRepository.deleteByUserId(userId);
     }
 

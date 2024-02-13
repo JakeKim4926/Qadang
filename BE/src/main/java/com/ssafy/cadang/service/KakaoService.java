@@ -54,6 +54,12 @@ public class KakaoService {
     @Value("${spring.registration.kakao.logout-uri}")
     private String logout_uri;
 
+    @Value("${spring.provider.kakao.unlink-uri}")
+    private String unlink_uri;
+
+    @Value("${spring.registration.kakao.admin-key}")
+    private String admin_key;
+
 
     // 프론트에서 보낸 인가코드를 사용해서 카카오에게 엑세스 토큰 요청하기
     public KakaoToken getAccessToken(String code) {
@@ -87,6 +93,8 @@ public class KakaoService {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
+
+
 
         return kakaoToken;
     }
@@ -395,7 +403,7 @@ public class KakaoService {
         params.add("client_secret", client_secret);
 
         //request
-        WebClient wc = WebClient.create(logout_uri);
+        WebClient wc = WebClient.create(unlink_uri);
         String response = wc.post()
                 .uri(logout_uri)
                 .header("Authorization", "Bearer " + code)
@@ -416,6 +424,35 @@ public class KakaoService {
 
         return id;
 
+    }
+
+    // 카카오 연동 끊기
+    public void EndKakao(Long userid){
+
+        // 요청 param ( body )
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("target_id_type", "user_id");
+        params.add("target_id", String.valueOf(userid));
+
+        //request
+        WebClient wc = WebClient.create(unlink_uri);
+        String response = wc.post()
+                .uri(unlink_uri)
+                .header("Authorization", "Bearer " + admin_key)
+                .header("Content-type", "application/x-www-form-urlencoded;charset=utf-8") // 요청 헤더
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+
+        //json형태로 변환
+        ObjectMapper objectMapper = new ObjectMapper();
+        Long id = null;
+
+        try {
+            id = objectMapper.readValue(response, Long.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 
 }

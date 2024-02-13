@@ -36,13 +36,9 @@ public class UserController {
     @GetMapping("/kakao-login")
     public ResponseEntity<JwtLogin> KakaoLogin(@RequestParam("code") String code) {
 
-        System.out.println("[로그인] 인가코드 : "+code);
+        System.out.println("[로그인] 인가코드 : " + code);
 
-        JwtLogin jwtLogin = JwtLogin.builder()
-                .accesstoken("")
-                .isUser(0)
-                .isLogin(0)
-                .build();
+        JwtLogin jwtLogin = JwtLogin.builder().accesstoken("").isUser(0).isLogin(0).build();
 
 //        엑세스 토큰 받기
         if (code == null) { // 인가코드를 받지 못하면 로그인 실패
@@ -118,9 +114,8 @@ public class UserController {
 //}
 
 
-
-// 회원정보조회
-@GetMapping("/user")
+    // 회원정보조회
+    @GetMapping("/user")
     public ResponseEntity<UserInfo> userInfo(@RequestHeader("Authorization") String token) {
 
         // 토큰 유효성 검사
@@ -132,15 +127,7 @@ public class UserController {
         // jwt를 이용해 user 가져오기
         User user = kakaoService.getUser(passAccess);
 
-        return new ResponseEntity<>(UserInfo
-                .builder()
-                .userName(user.getUserName())
-                .userBirth(user.getUserBirth())
-                .userHeight(user.getUserHeight())
-                .userWeight(user.getUserWeight())
-                .userGender(user.getUserGender())
-                .userHealth(user.getUserHealth())
-                .build(), HttpStatus.OK);
+        return new ResponseEntity<>(UserInfo.builder().userName(user.getUserName()).userBirth(user.getUserBirth()).userHeight(user.getUserHeight()).userWeight(user.getUserWeight()).userGender(user.getUserGender()).userHealth(user.getUserHealth()).build(), HttpStatus.OK);
     }
 
     // 닉네임 조회
@@ -169,8 +156,8 @@ public class UserController {
         }
 
         User user = kakaoService.getUser(passAccess);
-        System.out.println("정보 들어왔는지 확인 : "+userInfo);
-        System.out.println("1userBirth : "+user.getUserBirth());
+        System.out.println("정보 들어왔는지 확인 : " + userInfo);
+        System.out.println("1userBirth : " + user.getUserBirth());
 
         user.setUserBirth(userInfo.userBirth);
         user.setUserHeight(userInfo.userHeight);
@@ -178,12 +165,12 @@ public class UserController {
         user.setUserGender(userInfo.userGender);
         user.setUserHealth(userInfo.userHealth);
         userService.update(user);
-        System.out.println("2userBirth : "+user.getUserBirth());
+        System.out.println("2userBirth : " + user.getUserBirth());
 
         userService.detailInfo(user);
 
 
-        System.out.println("회원정보 확인 완료 "+user);
+        System.out.println("회원정보 확인 완료 " + user);
 
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -200,7 +187,7 @@ public class UserController {
         }
 
         User user = kakaoService.getUser(passAccess);
-        if(user.getUserBirth()!=0) {
+        if (user.getUserBirth() != 0) {
             userService.detailInfo(user);
         }
 
