@@ -50,7 +50,7 @@ public class UserService {
 
         MaxRecord max = MaxRecord.builder()
                 .maxSugarValue(user.getMaxSugarValue())
-                .maxCaffenineValue(user.getMaxCaffeineValue())
+                .maxCaffeineValue(user.getMaxCaffeineValue())
                 .maxSugarDate(user.getMaxSugarDate())
                 .maxCaffeineDate((user.getMaxCaffeineDate()))
                 .build();
