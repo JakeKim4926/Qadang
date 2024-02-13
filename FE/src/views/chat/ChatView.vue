@@ -136,21 +136,20 @@ async function sendOpen() {
   socket = new WebSocket(`${import.meta.env.VITE_SOCKET_API}`);
   // sendClose();
   socket.onopen = () => {
+    const token = localStorage.getItem('userAccessToken');
     const enterMessage = {
       messageType: "ENTER", // 입장 메시지 타입
       chatRoomId: cafe.value.cafeId, // 채팅 방 ID
       senderId: cafe.value.cafeId, // 보낸 사람 ID
-      message: userStore.userName, // 메시지 내용은 비어 있어도 됩니다.
+      message: token, // 메시지 내용은 비어 있어도 됩니다.
     };
     socket.send(JSON.stringify(enterMessage));
-    console.log("how ? ", JSON.stringify(enterMessage))
+    console.log("OPEN : ", JSON.stringify(enterMessage))
   };
 
-  socket.onmessage = (event) => {
-    console.log("listen");
-    console.log("asd", event);
+  socket.onmessage = (event) => {;
     const message = JSON.parse(event.data);
-    console.log("수신22 ", event);
+    console.log("listen : ", event);
 
     chatStore.researchChatList(cafe.value.cafeId);
   };
@@ -185,11 +184,7 @@ async function sendMessage() {
   await chatStore.researchChatList(cafe.value.cafeId);
   console.log(enterMessage);
   // 스크롤을 새 메시지 아래로 이동시킵니다.
-  socket.onmessage = (event) => {
-    const message = JSON.parse(event.data);
-    console.log("수신22 ", event);
-    console.log("수신33", message);
-  };
+ 
   await nextTick(() => {
     scrollChatToBottom();
   });
