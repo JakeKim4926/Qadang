@@ -393,7 +393,7 @@ const goToRanklist = () => {
 
 .search-results-container {
   flex: auto;
-  width: 530px; 
+  width: 550px; 
   margin-top: 20px; 
   overflow-x: auto; 
   margin: auto;
