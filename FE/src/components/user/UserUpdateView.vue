@@ -93,7 +93,6 @@ const weightOptions = Array.from({ length: 25 }, (_, i) => 30 + i * 5);
 const closeUpdateModal = () => {
   isUpdateModal.value = false;
   
-  console.log('!', isUpdateModal.value);
 }; 
 
 const bringUserInfo = async () => {

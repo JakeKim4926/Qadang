@@ -91,7 +91,6 @@ onMounted(() => {
   drinkStore.researchCafe()
 })
 
-console.log('가져온 데이터', tempRecord.value);
 
 // 음료 업데이트를 위해 보내줄 데이터
 // 초기값은 캘린더에서 받아오는 값으로 설정
@@ -290,7 +289,6 @@ const plusSugar = () => {
 // 업데이트된 음료 데이터 전송
 const drinkUpdateSubmit = () => {
   if (cafeName.value && drinkName.value) {
-    console.log('입력값이 올바릅니다. 데이터를 전송합니다.')
 
     // 음료 업데이트를 위해 보내줄 데이터
     const drink = {
@@ -302,15 +300,12 @@ const drinkUpdateSubmit = () => {
       plusSyrup: plusSyrup.value,
     }
 
-    console.log(drink)
-
     // 데이터 전송 및 창 닫기
     recordsStore.updateCafeDrink(drink)
     alert('입력값이 올바릅니다. 데이터를 전송합니다.')
     closeUpdateModal()
 
     } else {
-      console.log('입력값이 올바르지 않습니다')
       alert('입력값이 올바르지 않습니다. 다시 확인해주세요.')
     }
   }

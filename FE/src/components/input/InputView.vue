@@ -290,7 +290,6 @@ const plusSugar = () => {
 // 생성된 음료 데이터 전송
 const drinkSubmit = () => {
   if (cafeName.value && drinkName.value) {
-    console.log('입력값이 올바릅니다. 데이터를 전송합니다.')
 
     // 음료 생성을 위해 보내줄 데이터
     const drink = {
@@ -301,15 +300,12 @@ const drinkSubmit = () => {
       plusSyrup: plusSyrup.value,
     }
 
-    console.log(drink)
-
     // 데이터 전송 및 창 닫기
     recordsStore.createCafeDrink(drink)
     alert('입력값이 올바릅니다. 데이터를 전송합니다.')
     updateInfo()
 
     } else {
-      console.log('입력값이 올바르지 않습니다')
       alert('입력값이 올바르지 않습니다. 다시 확인해주세요.')
     }
   }

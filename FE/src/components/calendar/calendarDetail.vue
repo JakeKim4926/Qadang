@@ -184,10 +184,6 @@ function editRecord(recordDrink) {
   const confirmed = window.confirm("수정하겠습니까 ?");
   if (confirmed) {
     tempRecord.value = recordDrink;
-    console.log("수정 할 꺼 ", tempRecord.value);
-
-    console.log("@@@", tempRecord.value.drinkId);
-
     // 선택해서 입력했는지 직접 입력했는지에 따라
     // 뜨는 모달창을 다르게 변경
     if (tempRecord.value.drinkId) {
@@ -210,7 +206,6 @@ async function deleteRecord(recordDrink) {
     await recordStore.deleteDrink(recordDrink.recordId);
 
     // 데이터를 삭제한 후에 Vue의 반응성을 강제로 트리거하여 UI를 다시 렌더링합니다.
-    console.log("day", recordDay);
     await recordStore.getDayDrink.splice(
       recordStore.getDayDrink.indexOf(recordDrink),
       1

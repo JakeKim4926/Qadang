@@ -152,7 +152,6 @@ const goRecommedModal = (recommendDrinkInfo) => {
 
   if (recommedDrinkInfo.value) {
     isRecommedModal.value = true
-    console.log('!!! 열었다!', isRecommedModal.value)
   } else {
     alert('해당 음료를 찾을 수 없습니다.')
   }

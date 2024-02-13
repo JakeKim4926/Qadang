@@ -81,7 +81,6 @@ const openInputModal = () => {
 // 새로운 값을 갱신하기 위한 함수
 const updateInfo = () => {
   closeInputNothingModal()
-  window.location.reload()
 }
 
 // 음료선택으로 이동하기 위한 함수
@@ -92,7 +91,6 @@ const goInputModal = () => {
 
 const makeSubmit = () => {
   if (isValid()) {
-    console.log('입력값이 올바릅니다. 데이터를 전송합니다.')
 
     const drink = {
       cafeName: cafeName.value,
@@ -101,15 +99,11 @@ const makeSubmit = () => {
       drinkSugar: drinkSugar.value.toFixed(1)
     }
 
-    console.log(drink)
-
     // 유효한 데이터를 백엔드로 전송 및 창 닫기
     store.createMyDrink(drink)
-    alert('입력값이 올바릅니다. 데이터를 전송합니다.')
     updateInfo()
 
     } else {
-      console.log('입력값이 올바르지 않습니다')
       alert('입력값이 올바르지 않습니다. 다시 확인해주세요.')
     }
   }

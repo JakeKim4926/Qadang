@@ -119,7 +119,6 @@ export const useUserStore = defineStore(
           // userAccessToken.value = accessToken;
 
           const success = res.data.isLogin;
-          console.log(success, " ? ");
           if (success == 1) {
             const getToken = res.data.accesstoken;
 
@@ -204,7 +203,7 @@ export const useUserStore = defineStore(
           }
           
           if (userRDISugar.value !== undefined) {
-            userRDI.value.userSugar.toFixed(1);
+            userRDISugar.value = userRDI.value.userSugar.toFixed(1);
           }
           
           console.log('amount', res.data);
