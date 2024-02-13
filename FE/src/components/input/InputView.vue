@@ -7,7 +7,7 @@
 
       <div class="input-container">
         <div>
-          <h2>오늘 마신 카페 음료를 선택해주세요</h2>
+          <h2>카페에서 마신 음료를 기록해보세요</h2>
         </div>
 
         <div>
@@ -76,13 +76,13 @@
         </div>
 
         <div class="item-container">
-          <button @click="goInputNothingModal" class="button_input_color buttons">여기없어용</button>
+          <button @click="goInputNothingModal" class="button_input_color buttons">직접입력</button>
           <span @mouseover="showToolTip = true" @mouseleave="showToolTip = false">
             <font-awesome-icon :icon="['fas', 'circle-question']" size="xl"/>
           </span>
           <div v-if="showToolTip" class="tip-container">
             <div class="tip">
-              <p>여기에 여기없어용에 대한 자세한 설명을 작성합니다</p>
+              <p>좌측 버튼을 누르면 목록에 없는 음료의 카페인과 당을 직접 입력할 수 있어요</p>
             </div>
           </div>
           <button @click="drinkSubmit" class="button_caffeine buttons">입력완료</button>
