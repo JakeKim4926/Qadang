@@ -3,6 +3,8 @@ package com.ssafy.cadang.service;
 import com.ssafy.cadang.domain.User;
 import com.ssafy.cadang.dto.MaxRecord;
 import com.ssafy.cadang.dto.UserAmount;
+import com.ssafy.cadang.repository.AccumulateRepository;
+import com.ssafy.cadang.repository.RecordReporsitory;
 import com.ssafy.cadang.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,6 +19,8 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final KakaoService kakaoService;
+    private final AccumulateRepository accumulateRepository;
+    private final RecordReporsitory recordReporsitory;
 
     public User findUser(Long userId) {
         return userRepository.findByUserId(userId);
@@ -29,12 +33,6 @@ public class UserService {
     public String findUserName(Long userId) {
         User user = findUser(userId);
         return user.getUserName();
-    }
-
-    public void delete(Long userId) {
-
-        kakaoService.EndKakao(userId); // 연결끊기
-        userRepository.deleteByUserId(userId);
     }
 
     // 유저 권장량 조회
@@ -75,10 +73,6 @@ public class UserService {
         }
 
         double health = 0; // 활동량 점수
-
-        System.out.println("현재연도 : " + now.getYear());
-        System.out.println("getUserBirth : " + user.getUserBirth());
-        System.out.println(age);
 
         // 당
         if (age < 20) {
@@ -165,6 +159,14 @@ public class UserService {
 
         update(user);
 
+    }
+
+    // 회원 탈퇴시 기록삭제
+    public void delete (Long id){
+        accumulateRepository.deletedByAccumulatePKUserId(id); // 통계삭제
+        recordReporsitory.deletedByUserId(id); // 기록삭제
+        kakaoService.EndKakao(id); // 연결끊기
+        userRepository.deleteByUserId(id); // 유저삭제
     }
 
 

@@ -20,4 +20,7 @@ public interface AccumulateRepository extends JpaRepository<Accumulates, Accumul
     @Query("SELECT b FROM Accumulates b " +
             "WHERE b.accumulatePK.accumulateDate =:date")
     List<Accumulates> findByDay(LocalDate date);
+
+    // userId에 해당하는 모든 누적데이터 삭제
+    public void deletedByAccumulatePKUserId(Long userId);
 }

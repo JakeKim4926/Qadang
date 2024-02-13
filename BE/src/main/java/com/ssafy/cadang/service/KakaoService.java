@@ -64,8 +64,6 @@ public class KakaoService {
     // 프론트에서 보낸 인가코드를 사용해서 카카오에게 엑세스 토큰 요청하기
     public KakaoToken getAccessToken(String code) {
 
-        System.out.println("[로그인] 엑세스 토큰 요청 시작");
-
         // 요청 param ( body )
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
@@ -103,12 +101,8 @@ public class KakaoService {
     // 카카오로부터 받은 엑세스 토큰을 사용하여 사용자 정보 가져오기
     public KakaoInfo requestInfo(String access_token) {
 
-        System.out.println(" requestInfo / 정보 가져오기 ");
-
         // HTTP 요청
         WebClient wc = WebClient.create(user_info_uri);
-
-        System.out.println(" requestInfo / webclient 시작 ");
 
         String response = wc.get()
                 .uri(user_info_uri)
@@ -118,29 +112,14 @@ public class KakaoService {
                 .bodyToMono(String.class)
                 .block();
 
-        System.out.println(" requestInfo / response ");
-
-
         ObjectMapper objectMapper = new ObjectMapper();
         KakaoInfo userinfo = null;
 
-        System.out.println(" requestInfo / 정보담기 ");
-
-
         try {
-
-            System.out.println(" requestInfo / try response ");
-
             userinfo = objectMapper.readValue(response, KakaoInfo.class);
         } catch (JsonProcessingException e) {
-
-            System.out.println(" requestInfo / catch ");
-
             e.printStackTrace();
         }
-
-        System.out.println(" requestInfo / 성공 " + userinfo);
-
         return userinfo;
     }
 
@@ -151,20 +130,11 @@ public class KakaoService {
     @Transactional
     public User addUser(KakaoToken token, JwtLogin jwtLogin) {
 
-        System.out.println("addUser / 사용자 정보 가져오기");
-
         KakaoInfo info = requestInfo(token.getAccess_token()); // 사용자 정보 가져오기
-
-        System.out.println(" addUser / 회원 확인하기 ");
-        System.out.println("사용자 회원 번호 : " + info.getId());
         User user = userRepository.findByUserId(info.getId()); // 가입된 회원인지 확인하기
-
 
         // 최초 연동시 회원가입
         if (user == null) {
-
-            System.out.println(" addUser / 없는 회원이므로 회원가입 ");
-
 
             // 닉네임
             String adjective = nickNameRepository.findRandomAdjective();
@@ -178,7 +148,6 @@ public class KakaoService {
 
             }
 
-
             // 유저 정보 입력
             user = User.builder()
                     .userId(info.getId()) // 카카오 회원 식별번호
@@ -189,21 +158,14 @@ public class KakaoService {
 //                    .jwtRefreshToken(jwtRefreshToken) // jwt refresh token
                     .build();
 
-            System.out.println(" addUser / 회원 정보담기");
-
-
             userRepository.save(user);
-            System.out.println(" addUser / 회원 추가하기 ");
 
             getJwtRefresh(user);
         } else {
             jwtLogin.setIsUser(1);
         }
 
-        System.out.println(" addUser / 성공 ");
-
         kakaoLogout(token.getAccess_token()); // 카카오 엑세스 토큰 만료
-        System.out.println("카카오 만료");
 
         return user;
     }
@@ -211,7 +173,6 @@ public class KakaoService {
     // jwtAccessToken 발급
     public String getJwtAccess(User user) { // jwttoken 최초 발급
 
-        System.out.println("getJwt / 들어옴 ");
         // jwtAccessToken 발급
         String jwtAccessToken = Jwts.builder()
                 .setHeaderParam("type", "jwt") //Header 설정부분
@@ -221,7 +182,6 @@ public class KakaoService {
                 .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
                 .compact();
 
-        System.out.println("jwt / 엑세스 ");
         return jwtAccessToken;
     }
 
@@ -236,13 +196,9 @@ public class KakaoService {
                 .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
                 .compact();
 
-        System.out.println("시스템 현재 시간 : "+System.currentTimeMillis());
-
         addUser.setJwtRefreshToken(jwtRefreshToken);
 
         userRepository.save(addUser);
-
-        System.out.println("jwt / 리프레시");
 
         return jwtRefreshToken;
     }
@@ -254,7 +210,7 @@ public class KakaoService {
 //        String token = request.getHeader("Authorization");
 //        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
 //        this.key = Keys.hmacShaKeyFor(keyBytes);
-        System.out.println("[유효성검사1] 헤더토큰추출 " + token);
+
 //        if (token != null && token.startsWith("Bearer ")) { // 헤더에 토큰이 있고 Bearer가 붙어있으면
 //            return token.substring(7); // "Bearer " 다음의 문자열이 토큰이므로 추출
         if (token != null) { // 헤더에 토큰이 있고 Bearer가 붙어있으면
@@ -266,7 +222,6 @@ public class KakaoService {
     // JWT 토큰  만료시간 검증
     public boolean validToken(String token) { // true면 실패
         try {
-            System.out.println("[유효성검사2] 토큰 만료시간 검증");
             Jwts.parser()
                     .setSigningKey(secretKey.getBytes())
                     .parseClaimsJws(token)
@@ -285,26 +240,20 @@ public class KakaoService {
     // JWT 토큰 유효성 검사
     public Boolean vaildation(String token) { // false이면 실패
         try {
-            System.out.println("[유효성검사3] 토큰 유효성검사");
             Jwts.parserBuilder()
                     .setSigningKey(secretKey.getBytes())
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
         } catch (SignatureException e) {
-            System.out.println("여기1");
             return false; // 실패
         } catch (ExpiredJwtException e) {
-            System.out.println("여기2");
             return false;
         } catch (MalformedJwtException e) {
-            System.out.println("여기3");
             return false;
         } catch (IllegalArgumentException e) {
-            System.out.println("여기4");
             return false;
         } catch (Exception e) {
-            System.out.println("여기5");
             return false;
         }
         return true; // 성공
@@ -312,7 +261,6 @@ public class KakaoService {
 
     // 리프레시 토큰 유효성 검사
     public boolean refreshcheck(String accesstoken) { // false이면 실패
-        System.out.println("refresh 유효성 검사");
         Long id = getUser(accesstoken).getUserId();
         User user = userRepository.findByUserId(id);
         if (user.getJwtRefreshToken().isEmpty()) { // refresh token 없음 => 새로운 유저 or logout
@@ -332,28 +280,29 @@ public class KakaoService {
 
         boolean isExpire = validToken(accesstoken); // JWT 만료 여부 검사 ( true이면 실패 )
         if (isExpire == true) { // access 토큰이 만료되었으면
-            boolean isRefresh = refreshcheck(accesstoken); // refresh token 이 존재하는지 확인
-            if (isRefresh == false) { // refresh token이 없으면 실패
-                return null;
-            } else {
-                // 엑세스 토큰 갱신 => refresh 회원번호랑 토큰의 회원번호가 일치하면
-                Long accessUser = getUserId(accesstoken);
-                Long refreshUser = getUserId(userRepository.findByUserId(accessUser).getJwtRefreshToken());
-                if (accessUser == refreshUser) { // refresh 토큰 안의 회원번호와 access 토큰 안의 회원번호가 일치하면
-                    //refresh 토큰이 유효한지 검사하고 유효하면 갱신
-                    boolean refreshExpire = validToken(userRepository.findByUserId(refreshUser).getJwtRefreshToken());
-                    if (refreshExpire == true) {
-                        // 갱신
-                        String access = getJwtAccess(userRepository.findByUserId(refreshUser));
-                        token = access;
-                        return token;
-                    } else {
-                        return null;
-                    }
-                } else {
-                    return null;
-                }
-            }
+//            boolean isRefresh = refreshcheck(accesstoken); // refresh token 이 존재하는지 확인
+//            if (isRefresh == false) { // refresh token이 없으면 실패
+//                return null;
+//            } else {
+//                // 엑세스 토큰 갱신 => refresh 회원번호랑 토큰의 회원번호가 일치하면
+//                Long accessUser = getUserId(accesstoken);
+//                Long refreshUser = getUserId(userRepository.findByUserId(accessUser).getJwtRefreshToken());
+//                if (accessUser == refreshUser) { // refresh 토큰 안의 회원번호와 access 토큰 안의 회원번호가 일치하면
+//                    //refresh 토큰이 유효한지 검사하고 유효하면 갱신
+//                    boolean refreshExpire = validToken(userRepository.findByUserId(refreshUser).getJwtRefreshToken());
+//                    if (refreshExpire == true) {
+//                        // 갱신
+//                        String access = getJwtAccess(userRepository.findByUserId(refreshUser));
+//                        token = access;
+//                        return token;
+//                    } else {
+//                        return null;
+//                    }
+//                } else {
+//                    return null;
+//                }
+//            }
+            return null;
         }
 
         boolean isVaildation = vaildation(accesstoken); // JWT 토큰 유효성 검사 ( false이면 실패 )
@@ -426,7 +375,7 @@ public class KakaoService {
 
     }
 
-    // 카카오 연동 끊기
+    // 카카오 연동 끊기 ( admin key 이용 )
     public void EndKakao(Long userid){
 
         // 요청 param ( body )
