@@ -198,9 +198,16 @@ export const useUserStore = defineStore(
       })
         .then((res) => {
           userRDI.value = res.data;
-          userRDICaffeine.value = userRDI.value.userCaffeine;
-          userRDISugar.value = userRDI.value.userSugar;
+
+          if (userRDICaffeine.value !== undefined) {
+            userRDICaffeine.value = userRDI.value.userCaffeine.toFixed(1);
+          }
           
+          if (userRDISugar.value !== undefined) {
+            userRDI.value.userSugar.toFixed(1);
+          }
+          
+          console.log('amount', res.data);
         })
         .catch((err) => {
           
