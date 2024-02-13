@@ -48,7 +48,7 @@ export const useAccumulateStore = defineStore("accumulate", () => {
         accumulateToday.value = res.data;
       })
       .catch((err) => {
-        console.log(err);
+        
       });
   };
 
@@ -61,7 +61,7 @@ export const useAccumulateStore = defineStore("accumulate", () => {
         accumulateList.value = res.data;
       })
       .catch((err) => {
-        console.log(err);
+        
       });
   };
 
@@ -73,14 +73,14 @@ export const useAccumulateStore = defineStore("accumulate", () => {
     })
       .then((res) => {
         if (res.status == responseState.SUCCESS) {
-          console.log("success ", res.data);
+          
           accumulateMonth.value = res.data;
           if(accumulateMonth != undefined)
             sessionStorage.setItem('calendarMonth', JSON.stringify(accumulateMonth.value));
         }
       })
       .catch((err) => {
-        console.log(err);
+        
       });
   };
 
@@ -96,7 +96,7 @@ export const useAccumulateStore = defineStore("accumulate", () => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        
       });
   };
 

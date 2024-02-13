@@ -30,7 +30,7 @@ export const useRecommendStore = defineStore("recommend", () => {
         recommendedSugar.value = res.data;
       })
       .catch((err) => {
-        console.log(err);
+        
       });
   };
 
@@ -40,11 +40,11 @@ export const useRecommendStore = defineStore("recommend", () => {
       method: "GET",
     })
       .then((res) => {
-        // console.log(res)
+        
         recommendedCaffeine.value = res.data;
       })
       .catch((err) => {
-        console.log(err);
+        
       });
   };
   
