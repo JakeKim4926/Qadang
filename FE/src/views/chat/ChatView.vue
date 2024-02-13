@@ -3,12 +3,12 @@
     <div class="title">이야기 나누고 싶은 카페명을 선택하세요</div>
     <br />
     <select v-model="cafe" @change="sendOpen" class="select-cafe">
-      <option v-for="cafe in testCafeList" :key="cafe.id" :value="cafe">
-        {{ cafe.cafe }}
+      <option v-for="cafe in drinkStore.getCafeList" :key="cafe.id" :value="cafe">
+        {{ cafe.cafeName }}
       </option>
     </select>
 
-    <template v-if="cafe.id > 0">
+    <template v-if="cafe.cafeId > 0">
       <div class="chat-container">
         <div class="chat-messages" ref="chatContainer">
           <div
@@ -22,7 +22,7 @@
               </div>
             </template>
             <div v-else class="their-chat">
-              <div class="nickname" :class="'nickname-' + ((index % 7) + 1)">
+              <div class="nickname" :class="'nickname-' + getNicknameIndex(chat.userName)">
                 {{ chat.userName }}
               </div>
               <p class="message">{{ chat.message }}</p>
@@ -32,7 +32,7 @@
         </div>
         <hr class="chat-line" />
         <div class="chat-input-container">
-          <a class="chat-icon">
+          <a @click="sendMessage" class="chat-icon">
             <font-awesome-icon
               :icon="['fas', 'paper-plane']"
               style="color: #000000"
@@ -41,7 +41,7 @@
           <textarea
             v-model="message"
             class="chat-input"
-            placeholder="Jake로 대화 시작"
+            :placeholder="`${userStore.getUserName}로 대화 시작`"
             @keydown.enter.prevent="sendMessage"
           />
         </div>
@@ -71,10 +71,12 @@ import { isSocketConnected } from "@/stores/util";
 
 import Stomp from "webstomp-client";
 import SockJS from "sockjs-client";
+import { useDrinksStore } from "@/stores/drinks";
 
 const socketStore = useSocketStore();
 const chatStore = useChatStore();
 const userStore = useUserStore();
+const drinkStore=  useDrinksStore();
 
 const message = ref("");
 const chatContainer = ref(null);
@@ -82,15 +84,37 @@ const cafe = ref({});
 const receivedMessages = ref([]);
 const Msgcnt = ref(0);
 const showMessages = ref(false);
+let colorIndex = 0;
 // for test
 const userId = ref(1);
 let socket = null;
 
+const userNameIndexMap = {
+  "username1": 1,
+  "username2": 2,
+};
+
+
+function getNicknameIndex(userName) {
+  if (userName in userNameIndexMap) {
+    // 사용자 이름이 맵 안에 있으면 해당 인덱스 반환
+    return userNameIndexMap[userName];
+  } else {
+    // 사용자 이름이 맵 안에 없으면 랜덤 인덱스 생성 후 맵에 추가
+    colorIndex += 1;
+    if(colorIndex > 7)
+      colorIndex = 1;
+    userNameIndexMap[userName] = colorIndex; // 새로운 사용자 이름과 해당 인덱스를 맵에 추가
+    return colorIndex;
+  }
+}
+
 watch(chatStore.chatList, () => {
-  chatStore.researchChatList(cafe.id.value);
+  chatStore.researchChatList(cafe.value.cafeId);
 });
 
 onMounted(async () => {
+  await drinkStore.researchCafe();
   await userStore.researchName();
 });
 
@@ -112,23 +136,22 @@ async function sendOpen() {
   socket = new WebSocket(`${import.meta.env.VITE_SOCKET_API}`);
   // sendClose();
   socket.onopen = () => {
+    const token = localStorage.getItem('userAccessToken');
     const enterMessage = {
       messageType: "ENTER", // 입장 메시지 타입
-      chatRoomId: cafe.value.id, // 채팅 방 ID
-      senderId: cafe.value.id, // 보낸 사람 ID
-      message: userStore.userName, // 메시지 내용은 비어 있어도 됩니다.
+      chatRoomId: cafe.value.cafeId, // 채팅 방 ID
+      senderId: cafe.value.cafeId, // 보낸 사람 ID
+      message: token, // 메시지 내용은 비어 있어도 됩니다.
     };
     socket.send(JSON.stringify(enterMessage));
-    console.log("how ? ", JSON.stringify(enterMessage))
+    console.log("OPEN : ", JSON.stringify(enterMessage))
   };
 
-  socket.onmessage = (event) => {
-    console.log("listen");
-    console.log("asd", event);
+  socket.onmessage = (event) => {;
     const message = JSON.parse(event.data);
-    console.log("수신22 ", event);
+    console.log("listen : ", event);
 
-    chatStore.researchChatList(cafe.value.id);
+    chatStore.researchChatList(cafe.value.cafeId);
   };
 
   socket.onerror = function (event) {
@@ -140,7 +163,7 @@ async function sendOpen() {
     console.log("WebSocket connection closed: ", event);
   };
 
-  await chatStore.researchChatList(cafe.value.id);
+  await chatStore.researchChatList(cafe.value.cafeId);
 
   await nextTick(() => {
     scrollChatToBottom();
@@ -150,40 +173,34 @@ async function sendOpen() {
 async function sendMessage() {
   const enterMessage = {
     messageType: messageType.TALK,
-    chatRoomId: cafe.value.id,
-    senderId: cafe.value.id,
+    chatRoomId: cafe.value.cafeId,
+    senderId: cafe.value.cafeId,
     message: message.value,
   };
 
   socket.send(JSON.stringify(enterMessage));
   message.value = "";
 
-  await chatStore.researchChatList(cafe.value.id);
+  await chatStore.researchChatList(cafe.value.cafeId);
   console.log(enterMessage);
   // 스크롤을 새 메시지 아래로 이동시킵니다.
-  socket.onmessage = (event) => {
-    const message = JSON.parse(event.data);
-    console.log("수신22 ", event);
-    console.log("수신33", message);
-
-    chatStore.researchChatList(cafe.value.id);
-  };
+ 
   await nextTick(() => {
     scrollChatToBottom();
   });
 }
 
-async function sendClose() {
-  const chat = {
-    messageType: messageType.QUIT,
-    chatRoomId: cafe.value.id,
-    senderId: userId.value,
-    message: "QUIT",
-  }
+// async function sendClose() {
+//   const chat = {
+//     messageType: messageType.QUIT,
+//     chatRoomId: cafe.value.id,
+//     senderId: userId.value,
+//     message: "QUIT",
+//   }
 
-  console.log(chat);
+//   console.log(chat);
 
-}
+// }
 
 function adjustTextarea() {}
 
@@ -419,6 +436,7 @@ watch(chatStore.getChatList, () => {
   font-size: 17px;
   line-height: 18px;
   font-weight: 700;
+  width:250px;
   background-color: transparent;
   /* 배경색 투명하게 설정 */
 }
