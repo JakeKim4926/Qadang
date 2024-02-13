@@ -132,13 +132,13 @@ onBeforeMount(async () => {
 .icons {
   display: flex;
   align-items: center;
-  margin-right: 5%;
+  margin-right: 9%;
 }
 
 .icons img {
-  width: 10%;
-  height: 10%;
-  margin-left: 10%;
+  width: 20%;
+  height: 20%;
+  margin-left: 15%;
 }
 
 .calendar-container {

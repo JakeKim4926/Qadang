@@ -231,5 +231,6 @@ export default {
 .icons {
     width: 15%;
     height: 10%;
+    max-width: 120px;
 }
 </style>
