@@ -1,7 +1,10 @@
 <template>
   <div class="main-container">
     <div class="user-info">
-      <h2>{{ userStore.getUserName }} 님</h2>
+      <div class="user-set">
+        <h2>{{ userStore.getUserName }} 님</h2>
+        <font-awesome-icon :icon="['fas', 'comments']" style="color: #000000;" size="2xl" @click="goChat" class="chat"/>
+      </div>
       <div @click="goCaffeine">
         <img src="@/components/icons/su_toggle.png" alt="카페인 섭취량 메인페이지로 이동" class="toggle">
       </div>
@@ -78,10 +81,6 @@
         <p>{{ recommendStore.getRecommendedSugar.cafeName }} {{ recommendStore.getRecommendedSugar.drinkName }}</p>
         <button @click="goRecommedModal(recommendStore.getRecommendedSugar)" class="button_sugar">상세보기</button>
       </div>
-    </div>
-
-    <div class="chat-box">
-      <font-awesome-icon :icon="['fas', 'comments']" style="color: #000000;" size="2xl" @click="goChat" class="chat"/>
     </div>
   </div>
 </template>
@@ -173,6 +172,7 @@ h2 {
   color: #374B59;
   font-weight: bold;
   text-align: left;
+  margin-right: 20px;
 }
 
 p {
@@ -198,6 +198,11 @@ p {
   justify-content: space-between;
   align-items: center;
   width: 700px;
+}
+
+.user-set {
+  display: flex;
+  align-items: center;
 }
 
 .info-box {
@@ -279,13 +284,6 @@ p {
   margin-left: auto;
   margin-right: 15px;
   cursor:pointer;
-}
-
-.chat-box {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 15px;
-  width: 700px;
 }
 
 .chat {
