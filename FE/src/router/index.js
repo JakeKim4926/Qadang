@@ -19,7 +19,7 @@ import SurveyUnHealthView from "@/views/survey/SurveyUnHealthView.vue";
 
 import UserUpdateView from "@/components/user/UserUpdateView.vue";
 import { createRouter, createWebHistory } from "vue-router";
-import { userAccessToken, isFooter, isSocketConnected } from "@/stores/util";
+import { userAccessToken, isFooter, isSocketConnected, socket } from "@/stores/util";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -152,6 +152,10 @@ router.beforeEach((to, from, next) => {
     } else {
       next(); // Allow access to other routes
       if (!isFooter.value) isFooter.value = true;
+      
+      if(from.name == 'chat' && to.name != 'chat') {
+        
+      }
 
       if (
         to.name == "survey" ||
