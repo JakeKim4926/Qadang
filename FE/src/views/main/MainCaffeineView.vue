@@ -34,11 +34,11 @@
           <p class="today-title">하루 총합 섭취량 / 권장량</p>
             <p v-if="accumulateStore.getAccumulateToday.accumulateCaffeine < userStore.getUserRDI.userCaffeine" class="today-info font_green">
               {{ accumulateStore.getAccumulateToday.accumulateCaffeine }} / 
-              {{ userStore.getUserRDI.userCaffeine }}mg
+              {{ userStore.getUserRDICaffeine }}mg
             </p>
             <p v-else class="today-info font_red">
               {{ accumulateStore.getAccumulateToday.accumulateCaffeine }} / 
-              {{ userStore.getUserRDI.userCaffeine }}mg
+              {{ userStore.getUserRDICaffeine }}mg
             </p>
 
         </div>
