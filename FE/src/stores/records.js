@@ -31,13 +31,13 @@ export const useRecordsStore = defineStore("records", () => {
     return myDrink.value;
   });
 
-  const getMaxSugar = computed(() => {
-    return maxSugar.value;
-  });
+  // const getMaxSugar = computed(() => {
+  //   return maxSugar.value;
+  // });
 
-  const getMaxCaffeine = computed(() => {
-    return maxCaffeine.value;
-  });
+  // const getMaxCaffeine = computed(() => {
+  //   return maxCaffeine.value;
+  // });
 
   const getRecordDay = computed(() => {
     return recordDay.value;
@@ -128,31 +128,6 @@ export const useRecordsStore = defineStore("records", () => {
       });
   };
 
-  // const researchMaxSugar = function () {
-  //   axios({
-  //     url: `${import.meta.env.VITE_REST_RECORDS_API}/maxsugar`,
-  //     method: "GET",
-  //   })
-  //     .then((res) => {
-  //       maxSugar.value = res.data;
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
-
-  // const researchMaxCaffeine = function () {
-  //   axios({
-  //     url: `${import.meta.env.VITE_REST_RECORDS_API}/maxcaffeine`,
-  //     method: "GET",
-  //   })
-  //     .then((res) => {
-  //       maxCaffeine.value = res.data;
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
 
   return {
     days,
@@ -177,7 +152,5 @@ export const useRecordsStore = defineStore("records", () => {
     updateMyDrink,
     deleteDrink,
     researchDayDrink,
-    // researchMaxSugar,
-    // researchMaxCaffeine,
   };
 }, {persist:true});
