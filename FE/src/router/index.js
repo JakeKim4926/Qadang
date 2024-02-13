@@ -158,7 +158,8 @@ router.beforeEach((to, from, next) => {
         to.name == "surveyHealth" ||
         to.name == "surveyCaffeine" ||
         to.name == "surveySugar" ||
-        to.name == "surveyUnhealth"
+        to.name == "surveyUnhealth" ||
+        to.name == "chat"
       )
         isFooter.value = false;
     }
