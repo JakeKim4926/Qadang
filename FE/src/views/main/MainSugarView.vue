@@ -34,11 +34,11 @@
           <p class="today-title">하루 총합 섭취량 / 권장량</p>
             <p v-if="accumulateStore.getAccumulateToday.accumulateSugar < userStore.getUserRDI.userSugar" class="today-info font_green">
               {{ accumulateStore.getAccumulateToday.accumulateSugar }} / 
-              {{ userStore.getUserRDI.userSugar }}g
+              {{ userStore.userRDISugar }}g
             </p>
             <p v-else class="today-info font_red">
               {{ accumulateStore.getAccumulateToday.accumulateSugar }} / 
-              {{ userStore.getUserRDI.userSugar }}g
+              {{ userStore.userRDISugar }}g
             </p>
 
         </div>
