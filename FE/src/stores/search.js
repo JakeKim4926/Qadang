@@ -48,10 +48,10 @@ export const useSearchStore = defineStore("search", () => {
     try {
       const res = await axios.get(`${import.meta.env.VITE_REST_SEARCH_API}/${word}`);
       searchDrinkList.value = res.data;
-      console.log(res.data);
+      
       return res.data.length > 0;
     } catch (err) {
-      console.error(err);
+      
       return false;
     }
   };
@@ -65,7 +65,7 @@ export const useSearchStore = defineStore("search", () => {
       keywordRanking.value = res.data;
     })
     .catch((err) => {
-      console.error(err);
+      
     });
   };
 
@@ -78,7 +78,7 @@ export const useSearchStore = defineStore("search", () => {
       recordRanking.value = res.data;
     })
     .catch((err) => {
-      console.error(err);
+      
     });
   };
 
@@ -91,7 +91,7 @@ export const useSearchStore = defineStore("search", () => {
       allDrinks.value = res.data;
     })
     .catch((err) => {
-      console.error(err);
+      
     });
   };
 
@@ -104,7 +104,7 @@ export const useSearchStore = defineStore("search", () => {
       todayAccumulate.value = res.data;
     })
     .catch((err) => {
-      console.error(err);
+      
     });
   };
 

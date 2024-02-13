@@ -46,7 +46,7 @@
     </div>
     
     <div class="user-actions">
-      <button @click="userWithdraw" class="button-withdraw">회원 탈퇴</button>
+      <!-- <button @click="userWithdraw" class="button-withdraw">회원 탈퇴</button> -->
       <button @click="handleLogout" class="button-logout">로그아웃</button>
     </div>
   </div>
@@ -60,17 +60,13 @@ import { useUserStore } from '../../stores/user';
 import router from '@/router';
 import { isUpdateModal } from '../../stores/util'
 import UserUpdateView from '@/components/user/UserUpdateView.vue'
-import { useRecordsStore} from '../../stores/records'
+
 const store = useUserStore();
 const isInfoFilled = computed(() => store.isInfoFilled);
-const recordsStore = useRecordsStore();
-
 const openUpdateModal = () => {
   isUpdateModal.value = true
   console.log('!',isUpdateModal.value)}
 
-console.log(store.getUserMaxCaffeine)
-console.log(store.getUserMaxSugar)
 const message = computed(() => {
   return store.isInfoFilled
     ? "오늘 하루는 어떠셨나요? \n이제 개인별 맞춤 정보를 제공받을 수 있어요\n오늘도 건강한 하루 보내세요:)"
@@ -84,7 +80,7 @@ const userWithdraw = async () => {
       alert('회원 탈퇴가 완료되었습니다.');
       router.push('/');
     } catch (error) {
-      console.error('회원 탈퇴 중 오류가 발생했습니다.', error);      
+         
     }
   }
 };
@@ -94,7 +90,7 @@ const handleLogout = () => {
 };
 
 watch(() => store.isInfoFilled, (newVal) => {
-  console.log('infoFilled changed:', newVal); 
+  
 });
 
 const formattedRDICaffeine = computed(() => {
@@ -110,9 +106,7 @@ onMounted(() => {
   store.researchMax();
   store.researchUser();
   store.researchName();
-  store.researchAmount();
-  recordsStore.researchMaxSugar();
-  recordsStore.researchMaxCaffeine();
+  store.researchAmount();  
 });
 
 
@@ -226,7 +220,7 @@ onMounted(() => {
   border-radius: 22px;
   background: #FFF;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  width: 580px;
+  width: 97%;
   margin: auto;
   height: 150px;
 }
