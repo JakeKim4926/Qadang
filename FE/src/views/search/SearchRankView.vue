@@ -155,6 +155,7 @@ onMounted(() => {
 .ranking-item {
   margin-bottom: 5px; 
   text-align: left; 
+  cursor: pointer;
 }
 .ranking-item2 {
   margin-bottom: 5px; 
