@@ -549,7 +549,8 @@ input[type="text"] {
   border: none;
   text-decoration: none;
   border-radius: 30px;
-  font-size: 20px;
+  font-size: 100%;
+  font-weight: 700;
   width: 10%;
   text-align: center;
   cursor: pointer;
