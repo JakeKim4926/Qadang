@@ -78,20 +78,20 @@
       <p>{{ recentDrinkName }}와/과 비슷한 이 음료는 어때요?</p>
       <div class="recommend-box">
         <div class="recommend-info-left">
-          <img :src="recommendStore.getRecommendedSugar[0].drinkUrl" alt="Recommended Drink" class="photo" />
-          <button @click="goRecommedModal(recommendStore.getRecommendedSugar[0])" class="go-button">
+          <img :src="recommendOne.drinkUrl" alt="Recommended Drink" class="photo" />
+          <button @click="goRecommedModal(recommendOne)" class="go-button">
             <font-awesome-icon :icon="['fas', 'magnifying-glass']" style="color: #000000;"/>
           </button>
-          <p>{{ recommendStore.getRecommendedSugar[0].cafeName }}<br>
-          {{ recommendStore.getRecommendedSugar[0].drinkName }}</p>
+          <p>{{ recommendOne.cafeName }}<br>
+          {{ recommendOne.drinkName }}</p>
         </div>
         <div class="recommend-info-right">
-          <img :src="recommendStore.getRecommendedSugar[1].drinkUrl" alt="Recommended Drink" class="photo" />
-          <button @click="goRecommedModal(recommendStore.getRecommendedSugar[1])" class="go-button">
+          <img :src="recommendTwo.drinkUrl" alt="Recommended Drink" class="photo" />
+          <button @click="goRecommedModal(recommendTwo)" class="go-button">
             <font-awesome-icon :icon="['fas', 'magnifying-glass']" style="color: #000000;"/>
           </button>
-          <p>{{ recommendStore.getRecommendedSugar[1].cafeName }}<br>
-          {{ recommendStore.getRecommendedSugar[1].drinkName }}</p>
+          <p>{{ recommendTwo.cafeName }}<br>
+          {{ recommendTwo.drinkName }}</p>
         </div>
       </div>
     </div>
@@ -100,20 +100,20 @@
       <p>당 함량이 적은 이 음료는 어때요?</p>
       <div class="recommend-box">
         <div class="recommend-info-left">
-          <img :src="recommendStore.getRecommendedSugar[0].drinkUrl" alt="Recommended Drink" class="photo" />
-          <button @click="goRecommedModal(recommendStore.getRecommendedSugar[0])" class="go-button">
+          <img :src="recommendOne.drinkUrl" alt="Recommended Drink" class="photo" />
+          <button @click="goRecommedModal(recommendOne)" class="go-button">
             <font-awesome-icon :icon="['fas', 'magnifying-glass']" style="color: #000000;"/>
           </button>
-          <p>{{ recommendStore.getRecommendedSugar[0].cafeName }}<br>
-          {{ recommendStore.getRecommendedSugar[0].drinkName }}</p>
+          <p>{{ recommendOne.cafeName }}<br>
+          {{ recommendOne.drinkName }}</p>
         </div>
         <div class="recommend-info-right">
-          <img :src="recommendStore.getRecommendedSugar[1].drinkUrl" alt="Recommended Drink" class="photo" />
-          <button @click="goRecommedModal(recommendStore.getRecommendedSugar[1])" class="go-button">
+          <img :src="recommendTwo.drinkUrl" alt="Recommended Drink" class="photo" />
+          <button @click="goRecommedModal(recommendTwo)" class="go-button">
             <font-awesome-icon :icon="['fas', 'magnifying-glass']" style="color: #000000;"/>
           </button>
-          <p>{{ recommendStore.getRecommendedSugar[1].cafeName }}<br>
-          {{ recommendStore.getRecommendedSugar[1].drinkName }}</p>
+          <p>{{ recommendTwo.cafeName }}<br>
+          {{ recommendTwo.drinkName }}</p>
         </div>
       </div>
     </div>
@@ -140,6 +140,8 @@ const recordsStore = useRecordsStore()
 const recommendStore = useRecommendStore()
 
 const recentDrinkName = ref(null)
+const recommendOne = ref({})
+const recommendTwo = ref({})
 
 let cnt = ref(0)
 const getCnt = computed(() => {
@@ -176,6 +178,15 @@ onMounted(async () => {
       })
     }
   })
+
+  // 추천 음료 2개 가지고 옴
+  watch(() => recommendStore.getRecommendedSugar, (recommend) => {
+    if (recommend.length > 0) {
+      recommendOne.value = recommend[0]
+      recommendTwo.value = recommend[1]
+    }
+  })
+
 
   // 기록된 음료 중 가장 최근 것을 가지고 옴
   watch(() => recordsStore.getRecentDrinkName, (drink) => {
