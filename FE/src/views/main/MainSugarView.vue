@@ -74,8 +74,8 @@
       </div>
     </div>
 
-    <div v-if="recentDrinkName">
-      <p>{{ recentDrinkName }}와/과 비슷한 이 음료는 어때요?</p>
+    <div v-if="recommendStore.getRecentDrinkName">
+      <p>{{ recommendStore.getRecentDrinkName.drinkName }}와/과 비슷한 이 음료는 어때요?</p>
       <div class="recommend-box">
         <div class="recommend-info-left">
           <img :src="recommendOne.drinkUrl" alt="Recommended Drink" class="photo" />
@@ -139,7 +139,6 @@ const accumulateStore = useAccumulateStore()
 const recordsStore = useRecordsStore()
 const recommendStore = useRecommendStore()
 
-const recentDrinkName = ref(null)
 const recommendOne = ref({})
 const recommendTwo = ref({})
 
@@ -184,14 +183,6 @@ onMounted(async () => {
     if (recommend.length > 0) {
       recommendOne.value = recommend[0]
       recommendTwo.value = recommend[1]
-    }
-  })
-
-
-  // 기록된 음료 중 가장 최근 것을 가지고 옴
-  watch(() => recordsStore.getRecentDrinkName, (drink) => {
-    if (drink) {
-      recentDrinkName.value = drink
     }
   })
 
