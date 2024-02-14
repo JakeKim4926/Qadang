@@ -78,20 +78,20 @@
       <p>{{ recentDrinkName }}와/과 비슷한 이 음료는 어때요?</p>
       <div class="recommend-box">
         <div class="recommend-info-left">
-          <img :src="recommendStore.getRecommendedSugar.drinkUrl" alt="Recommended Drink" class="photo" />
-          <button @click="goRecommedModal(recommendStore.getRecommendedSugar)" class="go-button">
+          <img :src="recommendStore.getRecommendedSugar[0].drinkUrl" alt="Recommended Drink" class="photo" />
+          <button @click="goRecommedModal(recommendStore.getRecommendedSugar[0])" class="go-button">
             <font-awesome-icon :icon="['fas', 'magnifying-glass']" style="color: #000000;"/>
           </button>
-          <p>{{ recommendStore.getRecommendedSugar.cafeName }}<br>
-          {{ recommendStore.getRecommendedSugar.drinkName }}</p>
+          <p>{{ recommendStore.getRecommendedSugar[0].cafeName }}<br>
+          {{ recommendStore.getRecommendedSugar[0].drinkName }}</p>
         </div>
         <div class="recommend-info-right">
-          <img :src="recommendStore.getRecommendedSugar.drinkUrl" alt="Recommended Drink" class="photo" />
-          <button @click="goRecommedModal(recommendStore.getRecommendedSugar)" class="go-button">
+          <img :src="recommendStore.getRecommendedSugar[1].drinkUrl" alt="Recommended Drink" class="photo" />
+          <button @click="goRecommedModal(recommendStore.getRecommendedSugar[1])" class="go-button">
             <font-awesome-icon :icon="['fas', 'magnifying-glass']" style="color: #000000;"/>
           </button>
-          <p>{{ recommendStore.getRecommendedSugar.cafeName }}<br>
-          {{ recommendStore.getRecommendedSugar.drinkName }}</p>
+          <p>{{ recommendStore.getRecommendedSugar[1].cafeName }}<br>
+          {{ recommendStore.getRecommendedSugar[1].drinkName }}</p>
         </div>
       </div>
     </div>
@@ -100,20 +100,20 @@
       <p>당 함량이 적은 이 음료는 어때요?</p>
       <div class="recommend-box">
         <div class="recommend-info-left">
-          <img :src="recommendStore.getRecommendedSugar.drinkUrl" alt="Recommended Drink" class="photo" />
-          <button @click="goRecommedModal(recommendStore.getRecommendedSugar)" class="go-button">
+          <img :src="recommendStore.getRecommendedSugar[0].drinkUrl" alt="Recommended Drink" class="photo" />
+          <button @click="goRecommedModal(recommendStore.getRecommendedSugar[0])" class="go-button">
             <font-awesome-icon :icon="['fas', 'magnifying-glass']" style="color: #000000;"/>
           </button>
-          <p>{{ recommendStore.getRecommendedSugar.cafeName }}<br>
-          {{ recommendStore.getRecommendedSugar.drinkName }}</p>
+          <p>{{ recommendStore.getRecommendedSugar[0].cafeName }}<br>
+          {{ recommendStore.getRecommendedSugar[0].drinkName }}</p>
         </div>
         <div class="recommend-info-right">
-          <img :src="recommendStore.getRecommendedSugar.drinkUrl" alt="Recommended Drink" class="photo" />
-          <button @click="goRecommedModal(recommendStore.getRecommendedSugar)" class="go-button">
+          <img :src="recommendStore.getRecommendedSugar[1].drinkUrl" alt="Recommended Drink" class="photo" />
+          <button @click="goRecommedModal(recommendStore.getRecommendedSugar[1])" class="go-button">
             <font-awesome-icon :icon="['fas', 'magnifying-glass']" style="color: #000000;"/>
           </button>
-          <p>{{ recommendStore.getRecommendedSugar.cafeName }}<br>
-          {{ recommendStore.getRecommendedSugar.drinkName }}</p>
+          <p>{{ recommendStore.getRecommendedSugar[1].cafeName }}<br>
+          {{ recommendStore.getRecommendedSugar[1].drinkName }}</p>
         </div>
       </div>
     </div>
@@ -161,13 +161,13 @@ onMounted(async () => {
   const date = ref(null)
   date.value = year + month + day
 
-  await userStore.researchName()                // 닉네임
-  await userStore.researchAmount()              // 권장량
-  await accumulateStore.today()                    // 섭취량
-  await accumulateStore.duration()                // chart.js를 위한 기간별 섭취량
-  await recommendStore.researchRecommendSugar()     // 기록 기반 음료추천 당
-  await recordsStore.researchDayDrink(date)       // 방금 마신 음료 계산을 위한 일자별 기록
-  await accumulateStore.duration()                // 차트 표시 여부 결정
+  await userStore.researchName()                        // 닉네임
+  await userStore.researchAmount()                      // 권장량
+  await accumulateStore.today()                         // 섭취량
+  await recommendStore.researchRecommendSugar()        // 기록 기반 음료추천 당
+  await recordsStore.researchDayDrink(date)           // 방금 마신 음료 계산을 위한 일자별 기록
+  await accumulateStore.duration()                    // 차트 표시 여부 결정
+  await recommendStore.researchRecentDrinkName()      // 기록 기반 최근 마신 음료 이름
 
   watch(() => accumulateStore.getAccumulateList, (newData) => {
     if (newData.length > 0) {
@@ -178,9 +178,9 @@ onMounted(async () => {
   })
 
   // 기록된 음료 중 가장 최근 것을 가지고 옴
-  watch(() => recordsStore.getDayDrink, (newData) => {
-    if (newData.length > 0) {
-      recentDrinkName.value = newData[newData.length - 1].drinkName
+  watch(() => recordsStore.getRecentDrinkName, (drink) => {
+    if (drink) {
+      recentDrinkName.value = drink
     }
   })
 
