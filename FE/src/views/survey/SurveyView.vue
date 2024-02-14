@@ -13,15 +13,22 @@
                 </select>
                 <div class="div5">음료명</div>
                 <input type="text" v-model="searchText" class="rectangle-4272 select-font"
-                    style="text-align: center; position: absolute; border: none;  outline: none; margin-left: 7%; margin-top: 10%; z-index:1; width:40%; height: 10%;" placeholder="Search for drinks" :disabled="!cafeId">
-
+                    style="text-align: center; position: absolute; border: none;  outline: none; margin-left: 7%; margin-top: 10%; z-index:1; width:40%; height: 10%;"
+                    placeholder="음료 검색" :disabled="!cafeId" @click="autoSwitch">
+                <!-- 자동완성 결과 표시 영역 -->
+                <div v-if="filteredDrinks.length > 0 && searchText && showAutocomplete" class="autocomplete select-font">
+                    <div v-for="drink in filteredDrinks" :key="drink.drinkId" class="option" @click="selectAuto(drink)">
+                        {{ drink.drinkName }}
+                    </div>
+                </div>
                 <select id="drinkSelect" v-model="drinkTemp" class="rectangle-4272 select-font" @change="selectDrink"
-                    style="text-align: center; " :disabled="!cafeId">
-                    <option v-if="!searchText" key="if" v-for="drink in drinkStore.getCafeDrinkList" :key="drink.drinkId" :value="drink">
+                    style="text-align: center; " :disabled="!cafeId" >
+                    <option v-if="!searchText" class="option" key="if" v-for="drink in drinkStore.getCafeDrinkList" :key="drink.drinkId"
+                        :value="drink">
                         {{ drink.drinkName }}
                     </option>
 
-                    <option v-else v-for="drink in filteredDrinks" :key="drink.drinkId" :value="drink">
+                    <option v-else class="option" v-for="drink in filteredDrinks" :key="drink.drinkId" :value="drink">
                         {{ drink.drinkName }}
                     </option>
 
@@ -110,7 +117,11 @@ const sugar = ref(0);
 
 const searchText = ref('');
 const filteredDrinks = ref([]);
-const getFilteredDrinks = computed(() => filteredDrinks);
+const showAutocomplete = ref(true);
+
+function autoSwitch() {
+    showAutocomplete.value= true;
+}
 
 async function filterDrinks() {
     filteredDrinks.value = await drinkStore.getCafeDrinkList.filter(drink =>
@@ -120,7 +131,6 @@ async function filterDrinks() {
 
 // Call filterDrinks function whenever searchText changes
 watch(searchText, () => {
-
     filterDrinks();
 });
 
@@ -134,7 +144,15 @@ function selectDrink() {
     caffeine.value = drinkTemp.value.drinkCaffeine * drinkCount.value;
     sugar.value = drinkTemp.value.drinkSugar * drinkCount.value;
     searchText.value = drinkTemp.value.drinkName;
+    showAutocomplete.value = true;
 }
+
+function selectAuto(drink) {
+    drinkTemp.value = drink;
+    selectDrink();
+    showAutocomplete.value = false;
+}
+// 클릭한 경우 자동완성 목록을 보여주도록 토글합니다.
 
 function clickMinus() {
     if (drinkTemp.value.drinkCaffeine == undefined || drinkTemp.value.drinkSugar == undefined) {
@@ -620,15 +638,40 @@ onMounted(async () => {
 
 .select-font {
     font-family: "DmSans-Bold", sans-serif;
-    font-size: 18px;
+    font-size: 15 px;
     line-height: 15px;
-    font-weight: 700;
+    font-weight: 400;
+    padding: 10px 20px;
     text-align: center;
 }
 
 .select-cafe option {
     padding: 10px;
     /* Adjust padding as needed */
+}
+
+.autocomplete {
+    position: absolute;
+    max-height: 100px;
+    overflow-y: auto;
+    border: 1px solid #000000;
+    z-index: 1000;
+    width: 40%;
+    /* 조정 가능 */
+    left: 31.05%;
+    top: 83%;
+    background: #ffffff;
+    width: 56.03%;
+    height: fit-content;
+    max-height: 100.66%;
+}
+
+.option {
+    cursor: pointer;
+}
+
+.option:hover {
+    background-color: #ddd;
 }
 </style>
   

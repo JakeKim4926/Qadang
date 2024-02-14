@@ -217,7 +217,7 @@ async function sendMessage() {
 async function sendClose() {
   const chat = {
     messageType: messageType.QUIT,
-    chatRoomId: cafe.value.id,
+    chatRoomId: cafe.value.cafeId,
     senderId: userId.value,
     message: "QUIT",
   }
