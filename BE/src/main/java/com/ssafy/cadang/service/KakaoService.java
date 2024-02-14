@@ -424,16 +424,15 @@ public class KakaoService {
 
 
     public String revokeScopes(Long userid) {
-        String url = "https://kapi.kakao.com/v2/user/revoke/scopes";
+        String url = unlink_uri;
         String serviceAppAdminKey = admin_key;
         String targetId = String.valueOf(userid);
-        String scopes = "[\"account_email\"]";
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/x-www-form-urlencoded");
         headers.set("Authorization", "KakaoAK " + serviceAppAdminKey);
 
-        String requestBody = "target_id_type=user_id&target_id=" + targetId + "&scopes=" + scopes;
+        String requestBody = "target_id_type=user_id&target_id=" + targetId;
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
         RestTemplate restTemplate = new RestTemplate();
