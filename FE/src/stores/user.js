@@ -101,7 +101,8 @@ export const useUserStore = defineStore(
 
         router.push("/");
       } catch (err) {
-        
+        router.push('/');
+        window.alert("오류가 발생했습니다")
       }
     };
 
@@ -155,7 +156,7 @@ export const useUserStore = defineStore(
           localStorage.removeItem('userAccessToken');
           userAccessToken.value = null;
     
-          router.push('/login');
+          router.push('/');
         })
         .catch((err) => {          
         });
@@ -268,8 +269,12 @@ export const useUserStore = defineStore(
         .then(() => {
           localStorage.removeItem("userAccessToken");
           userAccessToken.value = null;
+          alert("사용자 정보가 성공적으로 업데이트되었습니다.");
+          router.push('/');
          })
         .catch((err) => {
+          router.push('/');
+          window.alert("오류가 발생했습니다")
           
         });
     };
