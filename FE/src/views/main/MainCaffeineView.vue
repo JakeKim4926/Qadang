@@ -35,7 +35,7 @@
           </div>
 
           <p class="today-title">하루 총합 섭취량 / 권장량</p>
-            <p v-if="accumulateStore.getAccumulateToday.accumulateCaffeine < userStore.getUserRDI.userCaffeine" class="today-info font_green">
+            <p v-if="accumulateStore.getAccumulateToday.accumulateCaffeine < userStore.getUserRDI.userCaffeine / 2.0" class="today-info font_green">
               {{ accumulateStore.getAccumulateToday.accumulateCaffeine }} / 
               {{ userStore.getUserRDICaffeine }}mg
             </p>
@@ -46,12 +46,12 @@
 
         </div>
 
-        <div class="right-info superbig-font">
+        <div class="right-info big-font">
           <div v-if="accumulateStore.getAccumulateToday.accumulateCaffeine < userStore.getUserRDI.userCaffeine * 1 / 2">
             <p>건강도장 쾅!</p>
           </div>
           <div v-else-if="accumulateStore.getAccumulateToday.accumulateCaffeine < userStore.getUserRDI.userCaffeine">
-            <p>카페인섭취를 오늘처럼 유지해보아요~</p>
+            <p>깊은 잠이 그립지 않으신가요?</p>
           </div>
           <div v-else="accumulateStore.getAccumulateToday.accumulateCaffeine >= userStore.getUserRDI.userCaffeine">
             <p>혈관에 커피가 흐르진 않나요?</p>
@@ -97,7 +97,7 @@ import { useAccumulateStore } from '@/stores/accumulate';
 import { useRecordsStore } from '@/stores/records';
 import { useRecommendStore } from '@/stores/recommend';
 
-import { isRecommedModal, recommedDrinkInfo } from '../../stores/util'
+import { isRecommedModal, recommedDrinkInfo, isInputModal, isInputNothingModal } from '../../stores/util'
 
 const userStore = useUserStore()
 const accumulateStore = useAccumulateStore()
@@ -108,6 +108,25 @@ let cnt = ref(0)
 const getCnt = computed(() => {
   return cnt.value
 })
+
+watch(isInputModal, (newValue, oldValue) => {
+  if (!newValue ) {
+    if(isInputNothingModal.value)
+      return;
+
+    router.go();
+  }
+});
+
+watch(isInputNothingModal, (newValue, oldValue) => {
+  if (!newValue ) {
+    if(isInputModal.value)
+      return;
+
+    router.go();
+  }
+});
+
 
 // 데이터를 가져오기 위한 함수
 onMounted(async () => {
@@ -257,6 +276,7 @@ p {
 
 .right-info {
   flex: 3;
+  margin-right: 30px;
 }
 
 .today-title {

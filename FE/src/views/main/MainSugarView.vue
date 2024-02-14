@@ -35,7 +35,7 @@
           </div>
 
           <p class="today-title">하루 총합 섭취량 / 권장량</p>
-            <p v-if="accumulateStore.getAccumulateToday.accumulateSugar < userStore.getUserRDI.userSugar" class="today-info font_green">
+            <p v-if="accumulateStore.getAccumulateToday.accumulateSugar < userStore.getUserRDI.userSugar / 2.0" class="today-info font_green">
               {{ accumulateStore.getAccumulateToday.accumulateSugar }} / 
               {{ userStore.userRDISugar }}g
             </p>
@@ -46,12 +46,12 @@
 
         </div>
 
-        <div class="right-info superbig-font">
+        <div class="right-info big-font">
           <div v-if="accumulateStore.getAccumulateToday.accumulateSugar < userStore.getUserRDI.userSugar * 1/2">
             <p>건강 상태 달달!</p>
           </div>
           <div v-else-if="accumulateStore.getAccumulateToday.accumulateSugar < userStore.getUserRDI.userSugar">
-            <p>적당한 당 생활을 유지해보아요~</p>
+            <p>몸이 달달해져가요</p>
           </div>
           <div v-else="accumulateStore.getAccumulateToday.accumulateSugar >= userStore.getUserRDI.userSugar">
             <p>혈관이 달달해요~</p>
