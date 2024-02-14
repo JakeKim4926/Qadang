@@ -1,5 +1,5 @@
 <template>
-    <div class="_1">
+    <div class="_1" @click="autoSwitchOff">
         <div class="component-5 ">
             <div class="rectangle-4273">
                 <div class="title01">카페에서 마시는 최애 음료는?</div>
@@ -14,17 +14,19 @@
                 <div class="div5">음료명</div>
                 <input type="text" v-model="searchText" class="rectangle-4272 select-font"
                     style="text-align: center; position: absolute; border: none;  outline: none; margin-left: 7%; margin-top: 10%; z-index:1; width:40%; height: 10%;"
-                    placeholder="음료 검색" :disabled="!cafeId" @click="autoSwitch">
+                    placeholder="음료 검색" :disabled="!cafeId" @click.stop="autoSwitch" >
                 <!-- 자동완성 결과 표시 영역 -->
-                <div v-if="filteredDrinks.length > 0 && searchText && showAutocomplete" class="autocomplete select-font">
-                    <div v-for="drink in filteredDrinks" :key="drink.drinkId" class="option" @click="selectAuto(drink)">
+                <div v-if="filteredDrinks.length > 0 && searchText && showAutocomplete" class="autocomplete "
+                    >
+                    <div v-for="drink in filteredDrinks" :key="drink.drinkId" class="option div-font"
+                        @click="selectAuto(drink)">
                         {{ drink.drinkName }}
                     </div>
                 </div>
                 <select id="drinkSelect" v-model="drinkTemp" class="rectangle-4272 select-font" @change="selectDrink"
-                    style="text-align: center; " :disabled="!cafeId" >
-                    <option v-if="!searchText" class="option" key="if" v-for="drink in drinkStore.getCafeDrinkList" :key="drink.drinkId"
-                        :value="drink">
+                    style="text-align: center; " :disabled="!cafeId">
+                    <option v-if="!searchText" class="option" key="if" v-for="drink in drinkStore.getCafeDrinkList"
+                        :key="drink.drinkId" :value="drink">
                         {{ drink.drinkName }}
                     </option>
 
@@ -120,7 +122,11 @@ const filteredDrinks = ref([]);
 const showAutocomplete = ref(true);
 
 function autoSwitch() {
-    showAutocomplete.value= true;
+    showAutocomplete.value = true;
+}
+
+function autoSwitchOff() {
+    showAutocomplete.value = false;
 }
 
 async function filterDrinks() {
@@ -151,6 +157,11 @@ function selectAuto(drink) {
     drinkTemp.value = drink;
     selectDrink();
     showAutocomplete.value = false;
+
+    // 자동완성 영역 클릭 시 document click 이벤트를 막는 함수
+    function stopClickPropagation(event) {
+        event.stopPropagation();
+    }
 }
 // 클릭한 경우 자동완성 목록을 보여주도록 토글합니다.
 
@@ -191,7 +202,6 @@ watch(cafeId, (newValue, oldValue) => {
     caffeine.value = 0;
     sugar.value = 0;
 });
-
 
 onMounted(async () => {
     await drinkStore.researchCafe();
@@ -638,12 +648,22 @@ onMounted(async () => {
 
 .select-font {
     font-family: "DmSans-Bold", sans-serif;
-    font-size: 15 px;
+    font-size: 15px;
     line-height: 15px;
     font-weight: 400;
-    padding: 10px 20px;
+    padding: 8px 15px;
     text-align: center;
 }
+
+.div-font {
+    font-family: "DmSans-Bold", sans-serif;
+    font-size: 15px;
+    line-height: 15px;
+    font-weight: 400;
+    padding: 5px 10px;
+    text-align: center;
+}
+
 
 .select-cafe option {
     padding: 10px;
@@ -652,7 +672,6 @@ onMounted(async () => {
 
 .autocomplete {
     position: absolute;
-    max-height: 100px;
     overflow-y: auto;
     border: 1px solid #000000;
     z-index: 1000;
@@ -663,7 +682,7 @@ onMounted(async () => {
     background: #ffffff;
     width: 56.03%;
     height: fit-content;
-    max-height: 100.66%;
+    max-height: 80.66%;
 }
 
 .option {
