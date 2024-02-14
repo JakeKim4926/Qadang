@@ -30,7 +30,7 @@
             {{ (recordsStore.getDayDrink[recordsStore.getDayDrink.length - 1].drinkCaffeine
               + 75 * recordsStore.getDayDrink[recordsStore.getDayDrink.length - 1].plusShot).toFixed(1) }}mg
           </div>
-          <div v-else class="drink-info">
+          <div v-else class="nothing-info">
             오늘 마신 음료가 없습니다!
           </div>
 
@@ -43,7 +43,6 @@
               {{ accumulateStore.getAccumulateToday.accumulateCaffeine }} / 
               {{ userStore.getUserRDICaffeine }}mg
             </p>
-
         </div>
 
         <div class="right-info big-font">
@@ -74,12 +73,47 @@
       </div>
     </div>
 
-    <div>
-      <p>당신이 즐겨 마시는 음료와 비슷한 음료 정보를 확인해보세요</p>
-      <div class="info-box">
-        <img :src="recommendStore.getRecommendedCaffeine.drinkUrl" alt="Recommended Drink" class="photo" />
-        <p>{{ recommendStore.getRecommendedCaffeine.cafeName }} {{ recommendStore.getRecommendedCaffeine.drinkName }}</p>
-        <button @click="goRecommedModal(recommendStore.getRecommendedCaffeine)" class="button_caffeine">상세보기</button>
+    <div v-if="recommendStore.getRecentDrinkName">
+      <p>{{ recommendStore.getRecentDrinkName.drinkName }}와/과 비슷한 이 음료는 어때요?</p>
+      <div class="recommend-box">
+        <div class="recommend-info-left">
+          <img :src="recommendOne.drinkUrl" alt="Recommended Drink" class="photo" />
+          <button @click="goRecommedModal(recommendOne)" class="go-button">
+            <font-awesome-icon :icon="['fas', 'magnifying-glass']" style="color: #000000;"/>
+          </button>
+          <p>{{ recommendOne.cafeName }}<br>
+          {{ recommendOne.drinkName }}</p>
+        </div>
+        <div class="recommend-info-right">
+          <img :src="recommendTwo.drinkUrl" alt="Recommended Drink" class="photo" />
+          <button @click="goRecommedModal(recommendTwo)" class="go-button">
+            <font-awesome-icon :icon="['fas', 'magnifying-glass']" style="color: #000000;"/>
+          </button>
+          <p>{{ recommendTwo.cafeName }}<br>
+          {{ recommendTwo.drinkName }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div v-else>
+      <p>카페인 함량이 적은 이 음료는 어때요?</p>
+      <div class="recommend-box">
+        <div class="recommend-info-left">
+          <img :src="recommendOne.drinkUrl" alt="Recommended Drink" class="photo" />
+          <button @click="goRecommedModal(recommendOne)" class="go-button">
+            <font-awesome-icon :icon="['fas', 'magnifying-glass']" style="color: #000000;"/>
+          </button>
+          <p>{{ recommendOne.cafeName }}<br>
+          {{ recommendOne.drinkName }}</p>
+        </div>
+        <div class="recommend-info-right">
+          <img :src="recommendTwo.drinkUrl" alt="Recommended Drink" class="photo" />
+          <button @click="goRecommedModal(recommendTwo)" class="go-button">
+            <font-awesome-icon :icon="['fas', 'magnifying-glass']" style="color: #000000;"/>
+          </button>
+          <p>{{ recommendTwo.cafeName }}<br>
+          {{ recommendTwo.drinkName }}</p>
+        </div>
       </div>
     </div>
   </div>
@@ -103,6 +137,9 @@ const userStore = useUserStore()
 const accumulateStore = useAccumulateStore()
 const recordsStore = useRecordsStore()
 const recommendStore = useRecommendStore()
+
+const recommendOne = ref({})
+const recommendTwo = ref({})
 
 let cnt = ref(0)
 const getCnt = computed(() => {
@@ -155,12 +192,13 @@ onMounted(async () => {
   const date = ref(null)
   date.value = year + month + day
 
-  await userStore.researchName()                // 닉네임
-  await userStore.researchAmount()              // 권장량
-  await accumulateStore.today()                    // 섭취량
+  await userStore.researchName()                        // 닉네임
+  await userStore.researchAmount()                      // 권장량
+  await accumulateStore.today()                         // 섭취량
   await recommendStore.researchRecommendCaffeine()     // 기록 기반 음료추천 카페인
-  await recordsStore.researchDayDrink(date)       // 방금 마신 음료 계산을 위한 일자별 기록
-  await accumulateStore.duration()                // 차트 표시 여부 결정
+  await recordsStore.researchDayDrink(date)           // 방금 마신 음료 계산을 위한 일자별 기록
+  await accumulateStore.duration()                    // 차트 표시 여부 결정
+  await recommendStore.researchRecentDrinkName()      // 기록 기반 최근 마신 음료 이름
 
   watch(() => accumulateStore.getAccumulateList, (newData) => {
     if (newData.length > 0) {
@@ -170,6 +208,14 @@ onMounted(async () => {
     }
   })
 
+  // 추천 음료 2개 가지고 옴
+  watch(() => recommendStore.getRecommendedCaffeine, (recommend) => {
+    if (recommend.length > 0) {
+      recommendOne.value = recommend[0]
+      recommendTwo.value = recommend[1]
+    }
+  })
+  
 })
 
 // 당 섭취량 메인페이지로 이동
@@ -259,6 +305,12 @@ p {
   font-weight: bold;
 }
 
+.nothing-info {
+  font-size: 20px;
+  color: #562B1A;
+  font-weight: bold;
+}
+
 .status-img {
   width: 130px;
   height: 130px;
@@ -299,21 +351,55 @@ p {
   align-items: center;
 }
 
+.recommend-box {
+  display: flex;
+  justify-content: center;
+}
+
+.recommend-info-left {
+  position: relative;
+  background: #ffffff;
+  border-radius: 30px;
+  border-style: solid;
+  border-color: #d9d9d9;
+  border-width: 1px;
+  text-align: center;
+  width: 330px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  margin-bottom: 10px;
+  margin-right: 20px;
+}
+
+.recommend-info-right {
+  position: relative;
+  background: #ffffff;
+  border-radius: 30px;
+  border-style: solid;
+  border-color: #d9d9d9;
+  border-width: 1px;
+  text-align: center;
+  width: 330px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  margin-bottom: 10px;
+  margin-left: 20px;
+}
+
 .photo {
-  width: 50px;
+  position: relative;
+  width: 150px;
   margin: 10px;
   border-radius: 20px;
 }
 
-.button_caffeine {
-  width: 75px;
-  height: 30px;
-  color: white;
-  font-weight: bold;
+.go-button {
+  position: absolute;
+  top: 30px;
+  right: 90px;
   border: none;
-  margin-left: auto;
-  margin-right: 15px;
+  background-color: transparent;
+  transform: translate(50%, -50%);
   cursor: pointer;
+  font-size: 18px;
 }
 
 .chat {
