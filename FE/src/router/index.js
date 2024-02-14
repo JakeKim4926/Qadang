@@ -137,6 +137,7 @@ const router = createRouter({
 
 // == navigationguard
 router.beforeEach((to, from, next) => {
+  window.scrollTo(0, 0);
   if (
     localStorage.getItem("userAccessToken") == "" ||
     localStorage.getItem("userAccessToken") == null
