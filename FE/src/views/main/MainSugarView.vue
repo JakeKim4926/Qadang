@@ -30,7 +30,7 @@
             {{ (recordsStore.getDayDrink[recordsStore.getDayDrink.length-1].drinkSugar
             + 6 * recordsStore.getDayDrink[recordsStore.getDayDrink.length-1].plusSyrup).toFixed(1) }}g
           </div>
-          <div v-else class="drink-info">
+          <div v-else class="nothing-info">
             오늘 마신 음료가 없습니다!
           </div>
 
@@ -97,7 +97,7 @@
     </div>
 
     <div v-else>
-      <p>카페인 함량이 적은 이 음료는 어때요?</p>
+      <p>당 함량이 적은 이 음료는 어때요?</p>
       <div class="recommend-box">
         <div class="recommend-info-left">
           <img :src="recommendStore.getRecommendedSugar.drinkUrl" alt="Recommended Drink" class="photo" />
@@ -269,6 +269,12 @@ p {
 
 .drink-info {
   font-size: 30px;
+  color: #374B59;
+  font-weight: bold;
+}
+
+.nothing-info {
+  font-size: 20px;
   color: #374B59;
   font-weight: bold;
 }

@@ -30,7 +30,7 @@
             {{ (recordsStore.getDayDrink[recordsStore.getDayDrink.length - 1].drinkCaffeine
               + 75 * recordsStore.getDayDrink[recordsStore.getDayDrink.length - 1].plusShot).toFixed(1) }}mg
           </div>
-          <div v-else class="drink-info">
+          <div v-else class="nothing-info">
             오늘 마신 음료가 없습니다!
           </div>
 
@@ -299,6 +299,12 @@ p {
 
 .drink-info {
   font-size: 30px;
+  color: #562B1A;
+  font-weight: bold;
+}
+
+.nothing-info {
+  font-size: 20px;
   color: #562B1A;
   font-weight: bold;
 }
