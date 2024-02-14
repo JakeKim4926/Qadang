@@ -106,6 +106,10 @@ public class UserController {
 
         User user = kakaoService.getUser(passAccess);
 
+        if(userInfo.userBirth<1900){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         user.setUserBirth(userInfo.userBirth);
         user.setUserHeight(userInfo.userHeight);
         user.setUserWeight(userInfo.userWeight);
