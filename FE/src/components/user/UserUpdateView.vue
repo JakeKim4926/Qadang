@@ -19,7 +19,7 @@
             <button type="button" :class="{ active: userInfo.userGender === 2 }" @click="userInfo.userGender = 2" class="shading2">여성</button>            
           </div>
           <div class="form-group half-width">
-            <label for="userBirth" class="label-margin tag-bold">출생년도</label>
+            <label for="userBirth" placeholder="1996" class="label-margin tag-bold">출생년도</label>
             <input type="number" v-model="userInfo.userBirth" class="input-field2" min="1900" max="2024"/>
           </div>
         </div>

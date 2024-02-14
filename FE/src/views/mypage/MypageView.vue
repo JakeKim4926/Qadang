@@ -46,7 +46,7 @@
     </div>
     
     <div class="user-actions">
-      <button @click="userWithdraw" class="button-withdraw">회원 탈퇴</button>
+      <button @click="store.deleteUser" class="button-withdraw">회원 탈퇴</button>
       <button @click="handleLogout" class="button-logout">로그아웃</button>
     </div>
   </div>
