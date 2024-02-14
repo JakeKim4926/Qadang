@@ -157,11 +157,6 @@ function selectAuto(drink) {
     drinkTemp.value = drink;
     selectDrink();
     showAutocomplete.value = false;
-
-    // 자동완성 영역 클릭 시 document click 이벤트를 막는 함수
-    function stopClickPropagation(event) {
-        event.stopPropagation();
-    }
 }
 // 클릭한 경우 자동완성 목록을 보여주도록 토글합니다.
 
