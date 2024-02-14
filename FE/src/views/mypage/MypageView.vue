@@ -58,7 +58,7 @@
 import { watch ,ref, onMounted,computed } from 'vue';
 import { useUserStore } from '../../stores/user'; 
 import router from '@/router';
-import { isUpdateModal } from '../../stores/util'
+import { isUpdateModal, isFooter } from '../../stores/util'
 import UserUpdateView from '@/components/user/UserUpdateView.vue'
 
 const store = useUserStore();
@@ -85,6 +85,7 @@ const userWithdraw = async () => {
 };
 
 const handleLogout = () => {
+  isFooter.value=false;
   store.logout();
 };
 
