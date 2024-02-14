@@ -53,7 +53,7 @@ export default {
                     display: "background",
                 },
             ],
-            height: "800px",
+            height: "600px",
         });
 
         function dayCellContentFunction(date) {

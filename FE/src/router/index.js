@@ -16,6 +16,7 @@ import SurveyCaffeineView from "@/views/survey/SurveyCaffeineView.vue";
 import SurveySugarView from "@/views/survey/SurveySugarView.vue";
 import SurveyHealthView from "@/views/survey/SurveyHealthView.vue";
 import SurveyUnHealthView from "@/views/survey/SurveyUnHealthView.vue";
+import ErrorView from "@/views/error/ErrorView.vue";
 
 import UserUpdateView from "@/components/user/UserUpdateView.vue";
 import { createRouter, createWebHistory } from "vue-router";
@@ -119,6 +120,11 @@ const router = createRouter({
       path: "/survey/unhealth",
       name: "surveyUnhealth",
       component: SurveyUnHealthView,
+    },
+    {
+      path: "/error",
+      name: "error",
+      component: ErrorView,
     },
     {
       path: "/api/kakao-login",
