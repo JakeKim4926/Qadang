@@ -62,7 +62,7 @@
           <td v-if="!activeButtons[drink.drinkId]">{{ drink.drinkName }}</td>
 
           <td v-if="!activeButtons[drink.drinkId]">
-            <template v-if="(parseFloat(drink.drinkSugar) + parseFloat(accumulateStore.getAccumulateToday.accumulateSugar)) >= parseFloat(userStore.getUserRDISugar)">
+            <template v-if="(parseFloat(drink.drinkSugar) + parseFloat(accumulateStore.getAccumulateToday.accumulateSugar)) >= parseFloat(userStore.getUserRDISugar)/2.0">
               <span class="font_red">{{ drink.drinkSugar }} g</span>
             </template>
             <template v-else>
@@ -70,7 +70,7 @@
             </template>
           </td>
           <td v-if="!activeButtons[drink.drinkId]">
-            <template v-if="(parseFloat(drink.drinkCaffeine) + parseFloat(accumulateStore.getAccumulateToday.accumulateCaffeine)) >= parseFloat(userStore.getUserRDICaffeine)">
+            <template v-if="(parseFloat(drink.drinkCaffeine) + parseFloat(accumulateStore.getAccumulateToday.accumulateCaffeine)) >= parseFloat(userStore.getUserRDICaffeine)/2.0">
               <span class="font_red">{{ drink.drinkCaffeine }} mg</span>
             </template>
             <template v-else>
