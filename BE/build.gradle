@@ -35,7 +35,6 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5' // jwt
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5' // jwt
 	implementation 'com.google.code.gson:gson:2.8.7' // 자바 object를 json으로 변환
-
 	implementation 'org.springframework.boot:spring-boot-starter-logging' // 로깅 라이브러리
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
@@ -49,4 +48,8 @@ tasks.named('bootBuildImage') {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+jar {
+	enabled = false
 }

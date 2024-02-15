@@ -31,9 +31,7 @@ public class SearchController {
 
         // 토큰 유효성 검사
         String passAccess = kakaoService.checkToken(token); // 통과한 access token
-        System.out.println(" 유효성검사 시작 "+passAccess);
         if (passAccess == null) {
-            System.out.println("유효성검사 실패");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
@@ -45,11 +43,8 @@ public class SearchController {
     // 음료 검색하기
     @GetMapping("/search/{keyword}")
     public ResponseEntity<?> searchList(@RequestHeader("Authorization") String token,@PathVariable String keyword ) {
-        // 토큰 유효성 검사
-        String passAccess = kakaoService.checkToken(token); // 통과한 access token
-        System.out.println(" 유효성검사 시작 "+passAccess);
+        String passAccess = kakaoService.checkToken(token);
         if (passAccess == null) {
-            System.out.println("유효성검사 실패");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 

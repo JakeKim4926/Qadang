@@ -72,7 +72,5 @@ public class SearchService {
                     .build());
         }
         return result;
-
-
     }
 }

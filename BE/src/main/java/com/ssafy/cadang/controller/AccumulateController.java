@@ -1,15 +1,12 @@
 package com.ssafy.cadang.controller;
 
-import com.ssafy.cadang.domain.AccumulatePK;
 import com.ssafy.cadang.domain.Accumulates;
-import com.ssafy.cadang.domain.Records;
 import com.ssafy.cadang.domain.User;
-import com.ssafy.cadang.repository.UserRepository;
 import com.ssafy.cadang.response.DayAccumulateResponseDTO;
 import com.ssafy.cadang.response.DurationAccumulateResponseDTO;
 import com.ssafy.cadang.response.TodayAccumulateResponseDTO;
 import com.ssafy.cadang.service.AccumulateService;
-import com.ssafy.cadang.service.UserService;
+import com.ssafy.cadang.service.KakaoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,16 +24,17 @@ import java.util.List;
 public class AccumulateController {
 
     private final AccumulateService accumulateService;
-    private final UserService userService;
+    private final KakaoService kakaoService;
     @GetMapping("/today")
-    public ResponseEntity<TodayAccumulateResponseDTO> readTodayAccumulate(){
+    public ResponseEntity<TodayAccumulateResponseDTO> readTodayAccumulate(@RequestHeader("Authorization") String token){
         //user check
-        Long userId = 1L;
-        User user = userService.findUser(userId);
-        if(user == null)
-            return new ResponseEntity<>(null,HttpStatus.UNAUTHORIZED);
+        String passAccess = kakaoService.checkToken(token); // 통과한 access token
+        if (passAccess == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        User user = kakaoService.getUser(passAccess);
 
-        Accumulates accumulate = accumulateService.readDate(userId);
+        Accumulates accumulate = accumulateService.readDate(user.getUserId());
         if(accumulate == null)
             return  new ResponseEntity<>(
                     TodayAccumulateResponseDTO.builder()
@@ -57,43 +55,49 @@ public class AccumulateController {
     }
 
     @GetMapping("/duration")
-    public List<DurationAccumulateResponseDTO> readDurationAccumulate(){
+    public ResponseEntity<List<DurationAccumulateResponseDTO>> readDurationAccumulate(@RequestHeader("Authorization") String token){
         //user check
-        Long userId = 1L;
-        if(userId == 0)
-            return null;
+        String passAccess = kakaoService.checkToken(token); // 통과한 access token
+        if (passAccess == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        User user = kakaoService.getUser(passAccess);
 
-        return accumulateService.readDuration(userId);
+        return new ResponseEntity<>(accumulateService.readDuration(user.getUserId()),HttpStatus.OK);
     }
 
     @GetMapping("/{ym}/month") //202303
-    public List<DurationAccumulateResponseDTO> readDurationAccumulate(@PathVariable String ym){
+    public ResponseEntity<List<DurationAccumulateResponseDTO>> readDurationAccumulate(@RequestHeader("Authorization") String token,@PathVariable String ym){
         //user check
-        Long userId = 1L;
-        if(userId == 0)
-            return null;
+        String passAccess = kakaoService.checkToken(token); // 통과한 access token
+        if (passAccess == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        User user = kakaoService.getUser(passAccess);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMM");
         YearMonth yearMonth = YearMonth.parse(ym, formatter);
 
-        return accumulateService.readMonth(userId,yearMonth);
+        return new ResponseEntity<>(accumulateService.readMonth(user.getUserId(),yearMonth),HttpStatus.OK);
     }
     @GetMapping("/{date}/day")
-    public DayAccumulateResponseDTO readDayAccumulate(@PathVariable String date){
+    public ResponseEntity<DayAccumulateResponseDTO> readDayAccumulate(@RequestHeader("Authorization") String token,@PathVariable String date){
         //user check
-        Long userId = 1L;
-        if(userId == 0)
-            return null;
+        String passAccess = kakaoService.checkToken(token); // 통과한 access token
+        if (passAccess == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        User user = kakaoService.getUser(passAccess);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         LocalDate day = LocalDate.parse(date, formatter);
 
-        Accumulates accumulate = accumulateService.readDay(userId,day);
+        Accumulates accumulate = accumulateService.readDay(user.getUserId(),day);
         if(accumulate == null)
-            return null;
-        return DayAccumulateResponseDTO.builder()
+            return new ResponseEntity<>(null,HttpStatus.OK);
+        return new ResponseEntity<>(DayAccumulateResponseDTO.builder()
                 .accumulateCaffeine(accumulate.getAccumulateCaffeine())
                 .accumulateSugar(accumulate.getAccumulateSugar())
-                .build();
+                .build(),HttpStatus.OK);
     }
 }

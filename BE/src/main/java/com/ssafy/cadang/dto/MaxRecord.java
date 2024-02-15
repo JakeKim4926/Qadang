@@ -10,7 +10,7 @@ import java.time.LocalDate;
 public class MaxRecord {
 
     public double maxSugarValue;
-    public double maxCaffenineValue;
+    public double maxCaffeineValue;
     public LocalDate maxSugarDate;
     public LocalDate maxCaffeineDate;
 }

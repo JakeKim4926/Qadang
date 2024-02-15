@@ -16,4 +16,6 @@ public interface RecordReporsitory extends JpaRepository<Records, Long> {
     @Query("SELECT r.drinkId FROM Records r WHERE r.drinkId IS NOT NULL " +
             "GROUP BY r.drinkId ORDER BY count(*) DESC LIMIT 10")
     List<Long> findByRank();
+
+    public void deleteByUserId(Long userId);
 }

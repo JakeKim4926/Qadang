@@ -1,15 +1,14 @@
 package com.ssafy.cadang.controller;
 
 import com.ssafy.cadang.domain.Drinks;
+import com.ssafy.cadang.domain.User;
 import com.ssafy.cadang.response.DrinkResponseDTO;
 import com.ssafy.cadang.service.DrinkService;
+import com.ssafy.cadang.service.KakaoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
 @RestController
@@ -17,9 +16,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/recommend")
 public class RecommendController {
     private final DrinkService drinkService;
+    private final KakaoService kakaoService;
 
     @GetMapping("caffeine")
-    public ResponseEntity<DrinkResponseDTO> recommendCaffeine(){
+    public ResponseEntity<DrinkResponseDTO> recommendCaffeine(@RequestHeader("Authorization") String token){
+        String passAccess = kakaoService.checkToken(token); // 통과한 access token
+        if (passAccess == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        User user = kakaoService.getUser(passAccess);
+        Long userId = user.getUserId();
+
         Drinks drink = drinkService.getCaffeineRecommend();
         return new ResponseEntity<>(
                 DrinkResponseDTO.builder()
@@ -42,7 +49,14 @@ public class RecommendController {
     }
 
     @GetMapping("sugar")
-    public ResponseEntity<DrinkResponseDTO> recommendSugar(){
+    public ResponseEntity<DrinkResponseDTO> recommendSugar(@RequestHeader("Authorization") String token){
+        String passAccess = kakaoService.checkToken(token); // 통과한 access token
+        if (passAccess == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        User user = kakaoService.getUser(passAccess);
+        Long userId = user.getUserId();
+
         Drinks drink = drinkService.getSugarRecommend();
         return new ResponseEntity<>(
                 DrinkResponseDTO.builder()
