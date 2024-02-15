@@ -280,7 +280,7 @@ export const useUserStore = defineStore(
         .then(() => {
           localStorage.removeItem("userAccessToken");
           userAccessToken.value = null;
-          alert("사용자 정보가 성공적으로 업데이트되었습니다.");
+          alert("회원탈퇴가 완료되었습니다.");
           router.push('/');
          })
         .catch((err) => {
