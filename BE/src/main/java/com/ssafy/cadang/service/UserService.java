@@ -3,6 +3,8 @@ package com.ssafy.cadang.service;
 import com.ssafy.cadang.domain.User;
 import com.ssafy.cadang.dto.MaxRecord;
 import com.ssafy.cadang.dto.UserAmount;
+import com.ssafy.cadang.repository.AccumulateRepository;
+import com.ssafy.cadang.repository.RecordReporsitory;
 import com.ssafy.cadang.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,6 +18,9 @@ import java.util.Date;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final KakaoService kakaoService;
+    private final AccumulateRepository accumulateRepository;
+    private final RecordReporsitory recordReporsitory;
 
     public User findUser(Long userId) {
         return userRepository.findByUserId(userId);
@@ -28,10 +33,6 @@ public class UserService {
     public String findUserName(Long userId) {
         User user = findUser(userId);
         return user.getUserName();
-    }
-
-    public void delete(Long userId) {
-        userRepository.deleteByUserId(userId);
     }
 
     // 유저 권장량 조회
@@ -50,7 +51,7 @@ public class UserService {
 
         MaxRecord max = MaxRecord.builder()
                 .maxSugarValue(user.getMaxSugarValue())
-                .maxCaffenineValue(user.getMaxCaffeineValue())
+                .maxCaffeineValue(user.getMaxCaffeineValue())
                 .maxSugarDate(user.getMaxSugarDate())
                 .maxCaffeineDate((user.getMaxCaffeineDate()))
                 .build();
@@ -60,19 +61,21 @@ public class UserService {
     // 권장량 계산
     public void detailInfo(User user) {
 
+        LocalDate now = LocalDate.now();
+        int age = now.getYear() - user.getUserBirth() + 1; // 나이계산
         // 카페인
-        if (user.getUserBirth() <= 11) { // 아동 : 0
+        if (age <= 11) { // 아동 : 0
             user.setUserCaffeine(0);
-        } else if (user.getUserBirth() > 11 && user.getUserBirth() < 20) { // 청소년 : 몸무게 * 2.5mg
+        } else if (age > 11 && age < 20) { // 청소년 : 몸무게 * 2.5mg
             user.setUserCaffeine(2.5 * user.getUserWeight());
+        } else {
+            user.setUserCaffeine(400); // 성인 최대 권장량 : 400
         }
 
         double health = 0; // 활동량 점수
-        LocalDate now = LocalDate.now();
-        int age = now.getYear() - user.getUserBirth() +1; // 나이계산
 
         // 당
-        if (user.getUserBirth() < 20) {
+        if (age < 20) {
             if (user.getUserGender() == 1) { // 청소년 & 남자
 
                 switch (user.getUserHealth()) {
@@ -91,9 +94,8 @@ public class UserService {
                 }
 
                 double energy = 88.5 - 61.9 * age + health * (26.7 * user.getUserWeight() + 903 * user.getUserHeight());
-                user.setUserSugar(energy * 0.1);
-
-            }else { // 청소년 & 여자
+                user.setUserSugar(energy * 0.1/4);
+            } else { // 청소년 & 여자
 
                 switch (user.getUserHealth()) {
                     case 1:
@@ -110,11 +112,10 @@ public class UserService {
                         break;
                 }
 
-                double energy = 135.3 - 30.8 * age + health * (10.0 * user.getUserWeight() + 934 * user.getUserHeight());
-                user.setUserSugar(energy * 0.1);
-
+                double energy = 135.3 - 30.8 * age + health * (10.0 * user.getUserWeight() + 934 * user.getUserHeight() / 100);
+                user.setUserSugar(energy * 0.1/4);
             }
-        }else{ // 성인
+        } else { // 성인
             if (user.getUserGender() == 1) { // 성인 & 남자
 
                 switch (user.getUserHealth()) {
@@ -132,10 +133,9 @@ public class UserService {
                         break;
                 }
 
-                double energy = 662 - 9.53 * age + health * (15.91 * user.getUserWeight() + 539.6 * user.getUserHeight());
-                user.setUserSugar(energy * 0.1);
-
-            }else { // 청소년 & 여자
+                double energy = 662 - 9.53 * age + health * (15.91 * user.getUserWeight() + 539.6 * user.getUserHeight() / 100);
+                user.setUserSugar(energy * 0.1/4);
+            } else { // 성인 & 여자
 
                 switch (user.getUserHealth()) {
                     case 1:
@@ -152,13 +152,24 @@ public class UserService {
                         break;
                 }
 
-                double energy = 354 - 6.91 * age + health * (9.36 * user.getUserWeight() + 726 * user.getUserHeight());
-                user.setUserSugar(energy * 0.1);
+                double energy = 354 - 6.91 * age + health * (9.36 * user.getUserWeight() + 726 * user.getUserHeight() / 100);
+                user.setUserSugar(energy * 0.1/4);
             }
         }
 
         update(user);
 
+    }
+
+    // 회원 탈퇴시 기록삭제
+    public void delete (Long id){
+
+        //accumulateRepository.deleteByAccumulatePKUserId(id); // 통계삭제
+        accumulateRepository.deleteByAccumulatePKUserId(id); // 통계삭제
+        recordReporsitory.deleteByUserId(id); // 기록삭제
+//        kakaoService.EndKakao(id); // 연결끊기
+        kakaoService.revokeScopes(id);
+        userRepository.deleteByUserId(id); // 유저삭제
     }
 
 
