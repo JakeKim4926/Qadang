@@ -2,25 +2,25 @@
   <UserUpdateView v-if="isUpdateModal" />
   <div class="mypage-container">    
     <div class="profile-section">
-      <div class="profile-image">
-        
-        <h2>{{ store.getUser.userName }}</h2>
+      <div class="profile-image">        
+        <h3 class="nickname">{{ store.getUser.userName }}</h3>
       </div>
       <div class="message">{{ message }}</div>
       <div class="user-actions">
         <button @click="openUpdateModal" class="button-edit-info">회원정보수정</button>        
       </div>
-      <div v-if="isInfoFilled" class="shading2">      
+      <div v-if="isInfoFilled" class="shading2">
+        <!-- <div class="shading2">        -->
         <div class="nutrition-info">
           <div class="nutrition-item">
             <h1> 
-              {{ rdiCaffeine }} mg
+              {{ formattedRDICaffeine  }} mg
             </h1>      
             <h3>하루 권장 카페인 섭취량</h3>
           </div>
           <div class="nutrition-item">
             <h1> 
-              {{ rdiSugar }} g
+              {{ formattedRDISugar }} g
             </h1>      
             <h3>하루 권장 설탕 섭취량</h3>
           </div>        
@@ -29,20 +29,24 @@
     </div>
     
     <div class="intake-section">
-      <div class="intake-card shading">
-        <h1>{{ maxCaffeine }} mg</h1>
+      <div class="intake-card shading">        
+        <h1 v-if="store.getUserMaxCaffeine">{{ store.getUserMaxCaffeine }} mg</h1>
+        <h1 v-else>계산중</h1>
         <h3>하루 최고 카페인 섭취량</h3>
-        <h4>{{ maxCaffeineDate }}2024-01-25</h4>
+        <h4 v-if="store.getUserMaxCaffeineDate">{{ store.getUserMaxCaffeineDate }}</h4>
+        <h4 v-else>아직 기록기간이 부족해요</h4>        
       </div>
       <div class="intake-card shading">
-        <h1>{{ maxSugar }} g</h1>
+        <h1 v-if="store.getUserMaxSugar">{{ store.getUserMaxSugar }} g</h1>
+        <h1 v-else>계산중</h1>        
         <h3>하루 최고 당 섭취량</h3>
-        <h4>{{ maxSugarDate }}2024-01-21</h4>
+        <h4 v-if="store.getUserMaxSugarDate">{{ store.getUserMaxSugarDate }}</h4>
+        <h4 v-else>아직 기록기간이 부족해요</h4>
       </div>
     </div>
     
     <div class="user-actions">
-      <button @click="userWithdraw" class="button-withdraw">회원 탈퇴</button>
+      <button @click="store.deleteUser" class="button-withdraw">회원 탈퇴</button>
       <button @click="handleLogout" class="button-logout">로그아웃</button>
     </div>
   </div>
@@ -51,64 +55,20 @@
 </template>
 
 <script setup>
-import { ref, onMounted,computed } from 'vue';
+import { watch ,ref, onMounted,computed } from 'vue';
 import { useUserStore } from '../../stores/user'; 
 import router from '@/router';
-import { RouterLink, RouterView } from 'vue-router';
-import { isUpdateModal } from '../../stores/util'
+import { isUpdateModal, isFooter } from '../../stores/util'
 import UserUpdateView from '@/components/user/UserUpdateView.vue'
 
 const store = useUserStore();
-const isInfoFilled = store.isInfoFilled;
-
-const maxCaffeine = ref(0);
-const maxCaffeineDate = ref('');
-const maxSugar = ref(0);
-const maxSugarDate = ref('');
-const userInfo = ref({});
-const rdiCaffeine = ref(0);
-const rdiSugar = ref(0);
-
+const isInfoFilled = computed(() => store.isInfoFilled);
 const openUpdateModal = () => {
   isUpdateModal.value = true
-  console.log('!',isUpdateModal.value)
 }
-
-const bringMaxintake = async () => {
-  try {
-    await store.researchMax();
-    maxCaffeine.value = store.userMaxCaffeine.value;
-    maxCaffeineDate.value = store.userMaxCaffeineDate.value;
-    maxSugar.value = store.userMaxSugar.value;
-    maxSugarDate.value = store.userMaxSugarDate.value;
-  } catch (error) {
-    console.error("데이터를 가져오지 못했습니다.", error);
-  }
-};
-
-
-const bringRDI = async () => {
-  try {
-    await store.researchAmount();    
-    rdiCaffeine.value = store.userRDICaffeine.value
-    rdiSugar.value = store.userRDISugar.value 
-  } catch (error) {
-    console.error("데이터를 가져오지 못했습니다.", error);
-  }
-};
-
-const bringUserInfo = async () => {
-  try { 
-    await store.researchUser();    
-    userInfo.value = store.user.value;
-  } catch (error) {    
-    console.error("데이터를 가져오지 못했습니다.", error);
-  }
-};
-
 const message = computed(() => {
-  return store.infoFilled.value
-    ? "오늘 하루는 어떠셨나요? \n 카페인 없는 하루 화이팅"
+  return store.isInfoFilled
+    ? "오늘 하루는 어떠셨나요? \n이제 개인별 맞춤 정보를 제공받을 수 있어요\n오늘도 건강한 하루 보내세요:)"
     : "추가정보를 입력하지 않았어요\n 추가정보를 입력하시면\n개인별 맞춤 정보를 제공받을 수 있어요";
 });
 
@@ -117,21 +77,37 @@ const userWithdraw = async () => {
     try {
       await store.deleteUser();      
       alert('회원 탈퇴가 완료되었습니다.');
-      router.push('/home');
+      router.push('/');
     } catch (error) {
-      console.error('회원 탈퇴 중 오류가 발생했습니다.', error);      
+         
     }
   }
 };
 
 const handleLogout = () => {
+  isFooter.value=false;
   store.logout();
 };
 
+watch(() => store.isInfoFilled, (newVal) => {
+  
+});
+
+const formattedRDICaffeine = computed(() => {
+  // return store.getUserRDICaffeine ? store.getUserRDICaffeine.toFixed(1) : '0.0';
+  return store.getUserRDICaffeine;
+});
+
+const formattedRDISugar = computed(() => {
+  // return store.getUserRDISugar ? store.getUserRDISugar.toFixed(1) : '0.0';
+  return store.getUserRDISugar;
+});
+
 onMounted(() => {
-  bringMaxintake();
-  bringUserInfo();
-  bringRDI();
+  store.researchMax();
+  store.researchUser();
+  store.researchName();
+  store.researchAmount();  
 });
 
 
@@ -167,24 +143,19 @@ onMounted(() => {
 }
 
 .profile-image {
-  background-color: #CB8A58;
+  /* background-color: #CB8A58; */
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 10px;  
-  width: 100px;
+  width: 150px;
   height: 100px;
-  color: #EFEFEF;
-  font-size: x-large;
+  color: #CB8A58;
+  
 }
 
-.profile-image h2 {
-  color: #562B1A;
-}
-.profile-image h2 {
-  margin-top: 0; 
-}
+
 
 .message {
   position: absolute;
@@ -250,7 +221,7 @@ onMounted(() => {
   border-radius: 22px;
   background: #FFF;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  width: 580px;
+  width: 97%;
   margin: auto;
   height: 150px;
 }
@@ -332,6 +303,12 @@ h4 {
 }
 .nutrition-item h1{
   color: #562B1A; 
+}
+.nickname{
+  margin-bottom: 2px;
+  text-align: center;
+  margin-right: 5px;
+  font-size: 23px;
 }
 
 </style>

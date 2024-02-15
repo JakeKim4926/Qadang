@@ -3,14 +3,15 @@ import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from '@fullcalendar/interaction'
 
-import { onMounted, ref, onUpdated } from "vue";
+import { onMounted, ref, watch } from "vue";
 import axios from "axios";
 import router from "@/router";
 import { useRecordsStore } from "@/stores/records";
 import { useAccumulateStore } from "@/stores/accumulate";
-import { isCalendarModal, isUpdateInputModal, isUpdateNothingModal, } from "@/stores/util"
+import { isCalendarModal, isUpdateInputModal, isUpdateNothingModal, isInputModal, isInputNothingModal } from "@/stores/util"
 
 export const callendarMonth = ref([]);
+export const calendarKey = ref(0);
 
 export default {
     components: {
@@ -19,6 +20,7 @@ export default {
     setup() {
         const recordStore = useRecordsStore();
         const accumulateStore = useAccumulateStore();
+
 
         const calendarOptions = ref({
             plugins: [dayGridPlugin, interactionPlugin,],
@@ -51,7 +53,7 @@ export default {
                     display: "background",
                 },
             ],
-            height: "800px",
+            height: "600px",
         });
 
         function dayCellContentFunction(date) {
@@ -62,7 +64,6 @@ export default {
             let day = date.date.getDate();
             day = day < 10 ? "0" + day.toString() : day.toString();
             const currentDate = year.toString() + '-' + month.toString() + '-' + day.toString();
-
             const sample = JSON.parse(sessionStorage.getItem('calendarMonth'));
             if (sample != undefined) {
                 let dataForDate = sample.find(item => item.accumulateDate === currentDate);
@@ -72,12 +73,13 @@ export default {
 
                     let caffeineHTML = `
                             <h5>
-                            <img src="src/components/icons/caffeine.png" alt="no" class="icons" /> x ${caffeine}
+                            <img src="/caffeine.png" alt="no" class="icons" /> x ${caffeine}
+                            
                             </h5>
                     `
                     let sugarHTML = `
                             <h5>
-                            <img src="src/components/icons/sugar.png" alt="no" class="icons" />
+                            <img src="/sugar.png" alt="no" class="icons" />
                             x ${sugar}
                             </h5>
                     `
@@ -90,7 +92,7 @@ export default {
                     return {
                         html: `
                         <div class="circle"></div>
-                        <div class="day-number-exist" style="text-align: right; font-weight:bold; z-index:1; right:2%"">${date.dayNumberText}</div>
+                        <div class="day-number-exist" style="text-align: right; font-weight:bold; z-index:1; right:3%"">${date.dayNumberText}</div>
                         <div style="text-align: center;
                                 justify-content: center;">` + caffeineHTML + sugarHTML +
 
@@ -106,27 +108,44 @@ export default {
             };
         }
         const updateCalendarOptions = async () => {
-        };
 
-        onMounted(() => {
-            updateCalendarOptions();
-            console.log("updated")
+            const handleDateSet = async (arg) => {
+                const accumulateStore = useAccumulateStore();
+
+                const year = arg.view.currentStart.getFullYear();
+                let month = arg.view.currentStart.getMonth() + 1;
+                month = month < 10 ? "0" + month.toString() : month.toString();
+                const now = ref(year.toString() + month.toString());
+                accumulateStore.month(now);
+                const asd = { date: arg.view.currentStart };
+                dayCellContentFunction(asd);
+            };
+            dateSet: handleDateSet;
+            dayCellContent: dayCellContentFunction;
+
+        };
+        const calendarKey = ref(0); // calendarKey를 선언
+        onMounted(async () => {
+
+            await updateCalendarOptions();
+
+            await rerenderFullCalendar();
         });
 
+        const rerenderFullCalendar = async () => {
+            calendarKey.value += 1;
+        };
 
         updateCalendarOptions();
 
         // FullCalendar의 dateSet 이벤트 핸들러
         const handleDateSet = async (arg) => {
-            console.log(arg);
             const accumulateStore = useAccumulateStore();
 
-            console.log("hello 2", arg.view.currentStart)
             const year = arg.view.currentStart.getFullYear();
             let month = arg.view.currentStart.getMonth() + 1; // Adding 1 to adjust for zero-based months
             month = month < 10 ? "0" + month.toString() : month.toString();
             const now = ref(year.toString() + month.toString());
-            console.log(now);
             accumulateStore.month(now);
             const asd = { date: arg.view.currentStart };
             dayCellContentFunction(asd);
@@ -138,6 +157,7 @@ export default {
             updateCalendarOptions,
             dayCellContentFunction,
             handleDateSet,
+            calendarKey,
         };
 
     },
@@ -150,7 +170,7 @@ export default {
 </script>
 
 <template>
-    <FullCalendar :options="calendarOptions" @dateSet="handleDateSet" />
+    <FullCalendar :options="calendarOptions" @dateSet="handleDateSet" :key="calendarKey" />
 </template>
 
 <style>
@@ -199,8 +219,8 @@ export default {
 
 .circle {
     position: absolute;
-    top: 10;
-    right: 0;
+    top: 1%;
+    right: 3%;
     width: 20px;
     height: 20px;
     border-radius: 50%;
@@ -209,7 +229,8 @@ export default {
 }
 
 .icons {
-    width: 20%;
+    width: 15%;
     height: 10%;
+    max-width: 120px;
 }
 </style>

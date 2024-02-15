@@ -24,9 +24,20 @@ export const isUpdateModal = ref(false)
 export const isUpdateInputModal = ref(false)
 export const isUpdateNothingModal = ref(false)
 
+export const isRecommedModal = ref(false)
+export const recommedDrinkInfo = ref({})
+
 export const isDetailModal = ref(false)
 export const isCompareModal = ref(false)
 
 export const tempRecord = ref({})
 
 export const userAccessToken = ref(null);
+
+export const isRankModal = ref(false)
+
+export const isFooter = ref(false);
+export const updateCalendar = ref(true);
+
+export const isSocketConnected = ref(false);
+export let socket = null;

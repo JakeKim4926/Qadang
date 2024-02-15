@@ -7,7 +7,7 @@
 
       <div class="input-container">
         <div>
-          <h2>오늘 마신 카페 음료를 직접 입력해주세요</h2>
+          <h2>당신만의 음료를 기록해보세요</h2>
         </div>
 
         <div>
@@ -37,13 +37,13 @@
         </div>
 
         <div class="item-container">
-          <button @click="goInputModal" class="button_input_color buttons">음료 선택</button>
+          <button @click="goInputModal" class="button_input_color buttons">목록선택</button>
           <span @mouseover="showToolTip = true" @mouseleave="showToolTip = false">
             <font-awesome-icon :icon="['fas', 'circle-question']" size="xl"/>
           </span>
           <div v-if="showToolTip" class="tip-container">
             <div class="tip">
-              <p>여기에 음료 선택에 대한 자세한 설명을 작성합니다</p>
+              <p>좌측 버튼을 누르면 오늘 마신 카페 음료를 목록에서 선택해 카페인과 당을 기록할 수 있어요</p>
             </div>
           </div>
           <button @click="makeSubmit" class="button_caffeine buttons">입력완료</button>
@@ -78,6 +78,11 @@ const openInputModal = () => {
   isInputModal.value = true
 }
 
+// 새로운 값을 갱신하기 위한 함수
+const updateInfo = () => {
+  closeInputNothingModal()
+}
+
 // 음료선택으로 이동하기 위한 함수
 const goInputModal = () => {
   closeInputNothingModal()
@@ -86,7 +91,6 @@ const goInputModal = () => {
 
 const makeSubmit = () => {
   if (isValid()) {
-    console.log('입력값이 올바릅니다. 데이터를 전송합니다.')
 
     const drink = {
       cafeName: cafeName.value,
@@ -95,15 +99,11 @@ const makeSubmit = () => {
       drinkSugar: drinkSugar.value.toFixed(1)
     }
 
-    console.log(drink)
-
     // 유효한 데이터를 백엔드로 전송 및 창 닫기
     store.createMyDrink(drink)
-    alert('입력값이 올바릅니다. 데이터를 전송합니다.')
-    closeInputNothingModal()
+    updateInfo()
 
     } else {
-      console.log('입력값이 올바르지 않습니다')
       alert('입력값이 올바르지 않습니다. 다시 확인해주세요.')
     }
   }

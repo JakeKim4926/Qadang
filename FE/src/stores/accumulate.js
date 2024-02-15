@@ -46,9 +46,15 @@ export const useAccumulateStore = defineStore("accumulate", () => {
     })
       .then((res) => {
         accumulateToday.value = res.data;
+        if(accumulateToday.value.accumulateCaffeine != undefined) {
+          accumulateToday.value.accumulateCaffeine = accumulateToday.value.accumulateCaffeine.toFixed(1);
+        }
+        if(accumulateToday.value.accumulateSugar != undefined) {
+          accumulateToday.value.accumulateSugar = accumulateToday.value.accumulateSugar.toFixed(1);
+        }
       })
       .catch((err) => {
-        console.log(err);
+        
       });
   };
 
@@ -61,7 +67,7 @@ export const useAccumulateStore = defineStore("accumulate", () => {
         accumulateList.value = res.data;
       })
       .catch((err) => {
-        console.log(err);
+        
       });
   };
 
@@ -73,14 +79,14 @@ export const useAccumulateStore = defineStore("accumulate", () => {
     })
       .then((res) => {
         if (res.status == responseState.SUCCESS) {
-          console.log("success ", res.data);
+          
           accumulateMonth.value = res.data;
           if(accumulateMonth != undefined)
             sessionStorage.setItem('calendarMonth', JSON.stringify(accumulateMonth.value));
         }
       })
       .catch((err) => {
-        console.log(err);
+        
       });
   };
 
@@ -93,10 +99,17 @@ export const useAccumulateStore = defineStore("accumulate", () => {
       .then((res) => {
         if (res.status == responseState.SUCCESS) {
           accumulateDay.value = res.data;
+
+          if(accumulateDay.value.accumulateCaffeine != undefined) {
+            accumulateDay.value.accumulateCaffeine = accumulateDay.value.accumulateCaffeine.toFixed(1);
+          }
+          if(accumulateDay.value.accumulateSugar != undefined) {
+            accumulateDay.value.accumulateSugar = accumulateDay.value.accumulateSugar.toFixed(1);
+          }
         }
       })
       .catch((err) => {
-        console.log(err);
+        
       });
   };
 

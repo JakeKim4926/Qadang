@@ -8,14 +8,14 @@
         <div class="text-block">
           <span class="div-2-span">당신은 슈가 러버</span>
           <br>
-          <span class="div-2-span2">이러다가 당뇨와요</span>
+          <span class="div-2-span2">혈액도 달달해질 것 같아요</span>
         </div>
       </div>
 
       <div class="div-2-span">처방전</div>
       <div class="_1">달달이 사랑을 줄여주세요</div>
       <div class="button-wrapper">
-        <img class="image-24" src="@/components/icons/doctor.png" alt="doctor" />
+        <img class="image-24" src="@/components/icons/logo_4.png" alt="doctor" />
         <router-link to="/mainCaffeine" class="rectangle-4270">시작하기</router-link>
       </div>
     </div>
@@ -104,7 +104,12 @@ import { ref, onMounted, watch } from 'vue'
   margin-top: 20px;
 }
 
-.image-21, .image-24 {
+.image-21 {
+  width: auto; /* Adjust width as needed */
+  height: auto; /* Adjust height as needed */
+  /* Additional styling as needed */
+}
+.image-24 {
   width: auto; /* Adjust width as needed */
   height: auto; /* Adjust height as needed */
   /* Additional styling as needed */

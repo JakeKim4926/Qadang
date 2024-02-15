@@ -16,10 +16,11 @@ import SurveyCaffeineView from "@/views/survey/SurveyCaffeineView.vue";
 import SurveySugarView from "@/views/survey/SurveySugarView.vue";
 import SurveyHealthView from "@/views/survey/SurveyHealthView.vue";
 import SurveyUnHealthView from "@/views/survey/SurveyUnHealthView.vue";
+import ErrorView from "@/views/error/ErrorView.vue";
 
 import UserUpdateView from "@/components/user/UserUpdateView.vue";
 import { createRouter, createWebHistory } from "vue-router";
-import { userAccessToken } from "@/stores/util";
+import { userAccessToken, isFooter, isSocketConnected, socket } from "@/stores/util";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -121,33 +122,59 @@ const router = createRouter({
       component: SurveyUnHealthView,
     },
     {
+      path: "/error",
+      name: "error",
+      component: ErrorView,
+    },
+    {
       path: "/api/kakao-login",
       name: "kakaoLogin",
       component: MainCaffeineView,
+      props: (route) => ({ code: route.query.code }), // Pass code as a prop
     },
   ],
 });
 
 // == navigationguard
-// router.beforeEach((to, from, next) => {
-//   if (userAccessToken.value === null) {
-//     if (to.name !== "home" ) {
-//       next({ name: "home" });
-//     } else if (to.name == "kakaoLogin" ) {
-//       next({ name: "kakaoLogin" });
-//     } else {
-//       next();
-//     }
+router.beforeEach((to, from, next) => {
+  window.scrollTo(0, 0);
+  if (
+    localStorage.getItem("userAccessToken") == "" ||
+    localStorage.getItem("userAccessToken") == null
+  ) {
+    if (to.path == "/api/kakao-login") {
+      next(); // Redirect to home if not logged in
+      isFooter.value = true;
+    } else if (to.name !== "home") {
+      window.alert("로그인이 필요합니다");
+      next({ name: "home" }); // Redirect to home if not logged in
+      isFooter.value = false;
+    } else {
+      next(); // Allow access to kakaoLogin route
+    }
+  } else if (localStorage.getItem("userAccessToken") != null) {
+    if (to.name == "home") {
+      window.alert("접근 불가");
+      next({ name: "mainCaffeine" }); // Redirect to home if not logged in
+    } else {
+      next(); // Allow access to other routes
+      if (!isFooter.value) isFooter.value = true;
+      
+      if(from.name == 'chat' && to.name != 'chat') {
+        
+      }
 
-
-//   } else {
-//     if (to.name === "home") {
-//       window.alert("로그인이 필요합니다");
-//       next(false); // 접근 금지
-//     } else {
-//       next(); // 허용
-//     }
-//   }
-// });
+      if (
+        to.name == "survey" ||
+        to.name == "surveyHealth" ||
+        to.name == "surveyCaffeine" ||
+        to.name == "surveySugar" ||
+        to.name == "surveyUnhealth" ||
+        to.name == "chat"
+      )
+        isFooter.value = false;
+    }
+  }
+});
 
 export default router;

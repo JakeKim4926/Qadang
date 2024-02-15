@@ -82,7 +82,7 @@ import { isDetailModal } from '../../stores/util'
 
 const closeDetailModal = () => {
   isDetailModal.value = false
-  console.log('!',isDetailModal.value)
+  
 }
 
 const drinksStore = useDrinksStore();
@@ -108,8 +108,8 @@ const addToBasket = () => {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  margin-top: 0.5px; /* 위 간격 설정 */
-  margin-bottom: 0.5px; /* 아래 간격 설정 */
+  margin-top: 0.1px; /* 위 간격 설정 */
+  margin-bottom: 0.1px; /* 아래 간격 설정 */
 }
 
 
@@ -138,7 +138,7 @@ const addToBasket = () => {
   border-width: 1px;
   position: absolute;
   width: 500px;
-  height: 650px;
+  height: 610px;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   margin-bottom: 50px;
 }
@@ -153,7 +153,7 @@ const addToBasket = () => {
 .drink-detail-container {
   margin-bottom: 10%;
   background-color: #fff;
-  padding: 5px;
+  padding: 0.1px;
   border-radius: 20px;
   text-align: center;
   font-family: Arial, sans-serif;
@@ -175,8 +175,8 @@ const addToBasket = () => {
 }
 
 .drink-image {
-  width: 100%;
-  height: auto;
+  width: 100px;
+  height: 130px;
   margin-bottom: 0px;
 }
 
@@ -192,6 +192,7 @@ const addToBasket = () => {
   align-items: center;
   width: 100%;
   max-width: 300px;
+  margin: -5px 0;
 }
 
 .fact-label {  

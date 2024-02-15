@@ -7,7 +7,7 @@
 
       <div class="update-container">
         <div>
-          <h2>카페 음료를 입력하여 수정해주세요</h2>
+          <h2>당신만의 음료 기록을 수정해보세요</h2>
         </div>
 
         <div>
@@ -65,7 +65,6 @@ const closeUpdateNothingModal = () => {
 // 음료 업데이트를 위한 함수
 const drinkUpdateSubmit = () => {
   if (isValid()) {
-    console.log('입력값이 올바릅니다. 데이터를 전송합니다.')
 
     const drink = {
       recordId: recordId,
@@ -75,7 +74,6 @@ const drinkUpdateSubmit = () => {
       drinkSugar: drinkSugar.value.toFixed(2)
     }
 
-    console.log(drink)
 
     // 유효한 데이터를 백엔드로 전송 및 창 닫기
     store.updateMyDrink(drink)
@@ -83,7 +81,6 @@ const drinkUpdateSubmit = () => {
     closeUpdateNothingModal()
 
     } else {
-      console.log('입력값이 올바르지 않습니다')
       alert('입력값이 올바르지 않습니다. 다시 확인해주세요.')
     }
   }

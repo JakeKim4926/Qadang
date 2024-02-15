@@ -17,7 +17,7 @@ export const useChatStore = defineStore("chat", () => {
   });
 
   const getChatList = computed(() => {
-    return chatList.value;
+    return chatList;
   });
 
   // =========== ACTION ===============
