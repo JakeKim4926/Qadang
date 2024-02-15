@@ -9,6 +9,7 @@ export const useSearchStore = defineStore("search", () => {
   const recordRanking = ref([]);
   const allDrinks = ref([]);
   const todayAccumulate = ref({});
+  const selectedrankDrink = ref({});
 
   // getters
   const getSearchDrinkList = computed(() => {
@@ -27,19 +28,32 @@ export const useSearchStore = defineStore("search", () => {
     return todayAccumulate.value;
   });
 
+ 
   // actions
-  const researchKeywordRank = function (word) {
-    axios({
-      url: `${import.meta.env.VITE_REST_SEARCH_API}/${word}`, 
-      method: "GET",
-    })
-    .then((res) => {
+  // const researchKeywordRank = function (word) {
+  //   axios({
+  //     url: `${import.meta.env.VITE_REST_SEARCH_API}/${word}`, 
+  //     method: "GET",
+  //   })
+  //   .then((res) => {
+  //     searchDrinkList.value = res.data;
+  //     console.log(res.data);
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
+  // };
+
+  const researchKeywordRank = async (word) => {
+    try {
+      const res = await axios.get(`${import.meta.env.VITE_REST_SEARCH_API}/${word}`);
       searchDrinkList.value = res.data;
-      console.log(res.data);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+      
+      return res.data.length > 0;
+    } catch (err) {
+      
+      return false;
+    }
   };
 
   const bringKeywordRanking = function () {
@@ -51,7 +65,7 @@ export const useSearchStore = defineStore("search", () => {
       keywordRanking.value = res.data;
     })
     .catch((err) => {
-      console.error(err);
+      
     });
   };
 
@@ -64,7 +78,7 @@ export const useSearchStore = defineStore("search", () => {
       recordRanking.value = res.data;
     })
     .catch((err) => {
-      console.error(err);
+      
     });
   };
 
@@ -77,7 +91,7 @@ export const useSearchStore = defineStore("search", () => {
       allDrinks.value = res.data;
     })
     .catch((err) => {
-      console.error(err);
+      
     });
   };
 
@@ -90,8 +104,13 @@ export const useSearchStore = defineStore("search", () => {
       todayAccumulate.value = res.data;
     })
     .catch((err) => {
-      console.error(err);
+      
     });
+  };
+
+  const setRankDrink = (drinkId) => {
+    const drink = getRecordRanking.value.find((d) => d.drinkId === drinkId);
+    selectedrankDrink.value = drink;
   };
 
   return {
@@ -103,11 +122,13 @@ export const useSearchStore = defineStore("search", () => {
     getKeywordRanking,
     getRecordRanking,
     getAllDrinks,
-    getTodayAccumulate,
+    getTodayAccumulate,    
+    selectedrankDrink,
     researchKeywordRank,
     bringKeywordRanking,
     bringRecordRanking,
     bringAllDrinks,
     bringTodayAccumulate,
+    setRankDrink,
   };
 });

@@ -1,38 +1,51 @@
 <template>
-  <div class="board-create-container">
+  <div class="board-create-container" @click="autoSwitchOff">
     <div class="input-box">
       <div class="close" @click="closeInputModal">
-        <font-awesome-icon :icon="['fas', 'circle-xmark']" style="color: #000000;" size="xl"/>
+        <font-awesome-icon :icon="['fas', 'circle-xmark']" style="color: #000000;" size="xl" />
       </div>
 
       <div class="input-container">
         <div>
-          <h2>오늘 마신 카페 음료를 선택해주세요</h2>
+          <h2>카페에서 마신 음료를 기록해보세요</h2>
         </div>
 
         <div>
           <label for="cafeSelect" class="big-font">카페명</label>
-          <select name="cafeSelect" id="cafeSelect"
-          v-model="cafeId" @change="changeCafeDrinkList" class="button_select select">
-            <option v-for="cafe in drinkStore.getCafeList"
-            :key="cafe.cafeId"
-            :value="cafe.cafeId">
+          <select name="cafeSelect" id="cafeSelect" v-model="cafeId" @change="changeCafeDrinkList"
+            class=" select">
+            <option v-for="cafe in drinkStore.getCafeList" :key="cafe.cafeId" :value="cafe.cafeId">
               {{ cafe.cafeName }}
             </option>
           </select>
         </div>
-        
+
 
         <div v-if="cafeId">
           <label for="drinkSelect" class="big-font">음료명</label>
-          <select name="drinkSelect" id="drinkSelect"
-          v-model="drinkInfo" @change="changeDrinkInfo" class="button_select select">
-          <option v-for="drink in drinkStore.getCafeDrinkList"
-          :key="drink.drinkId"
-          :value="drink">
-            {{ drink.drinkName }}
-          </option>
-        </select>
+          <input type="text" v-model="searchText" class="search-text-box" placeholder="음료명을 검색해주세요" 
+          @click.stop="autoSwitch">
+          <!-- 자동완성 결과 표시 영역 -->
+          <div v-if="filteredDrinks.length > 0 && searchText && showAutocomplete" class="autocomplete ">
+              <div v-for="drink in filteredDrinks" :key="drink.drinkId" class="option div-font"
+                @click="selectAuto(drink)">
+                {{ drink.drinkName }}
+              </div>
+            </div>
+          <select name="drinkSelect" id="drinkSelect" v-model="drinkInfo" @change="changeDrinkInfo"
+            class="select">
+
+            
+            <option v-if="!searchText" key="if-branch" class="option" v-for="drink in drinkStore.getCafeDrinkList" :key="drink.drinkId"
+              :value="drink">
+              {{ drink.drinkName }}
+            </option>
+
+
+            <option v-else key="else-branch" class="option" v-for="drink in filteredDrinks" :key="drink.drinkId" :value="drink">
+              {{ drink.drinkName }}
+            </option>
+          </select>
         </div>
 
         <div v-else>
@@ -41,7 +54,7 @@
             <option value="" disabled selected>카페를 먼저 선택해주세요</option>
           </select>
         </div>
-        
+
         <div class="item-container">
           <label for="plusShot" class="big-font">샷</label>
           <p class="mid-font">1샷 - 카페인 75mg</p>
@@ -66,27 +79,14 @@
           </button>
         </div>
 
-        <!-- {{ drinkInfo }}
-
-        {{ drinkCaffeine }}
-        {{ drinkSugar }}
-
-        {{ minusCaffeineButton }}
-        {{ plusCaffeineButton }}
-        {{ minusSugarButton }}
-        {{ plusSugarButton }}
-
-        {{ plusShot }}
-        {{ plusSyrup }} -->
-
         <div class="item-container">
-          <button @click="goInputNothingModal" class="button_input_color buttons">여기없어용</button>
+          <button @click="goInputNothingModal" class="button_input_color buttons">직접입력</button>
           <span @mouseover="showToolTip = true" @mouseleave="showToolTip = false">
-            <font-awesome-icon :icon="['fas', 'circle-question']" size="xl"/>
+            <font-awesome-icon :icon="['fas', 'circle-question']" size="xl" />
           </span>
           <div v-if="showToolTip" class="tip-container">
             <div class="tip">
-              <p>여기에 여기없어용에 대한 자세한 설명을 작성합니다</p>
+              <p>좌측 버튼을 누르면 목록에 없는 음료의 카페인과 당을 직접 입력할 수 있어요</p>
             </div>
           </div>
           <button @click="drinkSubmit" class="button_caffeine buttons">입력완료</button>
@@ -97,7 +97,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { onMounted } from 'vue';
 
 import { useDrinksStore } from "@/stores/drinks";
@@ -109,6 +109,30 @@ const recordsStore = useRecordsStore()
 
 // 음료 전체 정보
 const drinkInfo = ref({})
+
+// 음료 필터링
+const searchText = ref('')
+const filteredDrinks = ref([])
+const showAutocomplete = ref(true);
+
+function autoSwitch() {
+    showAutocomplete.value = true;
+}
+
+function autoSwitchOff() {
+    showAutocomplete.value = false;
+}
+
+
+const searchFilteredDrinks = () => {
+  filteredDrinks.value = drinkStore.getCafeDrinkList.filter(drink => {
+    return drink.drinkName.toLowerCase().includes(searchText.value.toLowerCase())
+  })
+}
+
+watch(searchText, () => {
+  searchFilteredDrinks()
+})
 
 // 음료 생성을 위해 보내줄 데이터
 const cafeName = ref(null)
@@ -142,6 +166,11 @@ const closeInputModal = () => {
 
 const openInputNothingModal = () => {
   isInputNothingModal.value = true
+}
+
+// 새로운 값을 갱신하기 위한 함수
+const updateInfo = () => {
+  closeInputModal()
 }
 
 // 여기없어용으로 이동하기 위한 함수
@@ -234,6 +263,7 @@ const changeDrinkInfo = () => {
     drinkName.value = drinkInfo.value.drinkName
     drinkCaffeine.value = drinkInfo.value.drinkCaffeine
     drinkSugar.value = drinkInfo.value.drinkSugar
+    searchText.value = drinkInfo.value.drinkName
 
     activeminusCaffeineButton()
     activminusSugarButton()
@@ -274,7 +304,6 @@ const plusSugar = () => {
 // 생성된 음료 데이터 전송
 const drinkSubmit = () => {
   if (cafeName.value && drinkName.value) {
-    console.log('입력값이 올바릅니다. 데이터를 전송합니다.')
 
     // 음료 생성을 위해 보내줄 데이터
     const drink = {
@@ -285,18 +314,23 @@ const drinkSubmit = () => {
       plusSyrup: plusSyrup.value,
     }
 
-    console.log(drink)
-
     // 데이터 전송 및 창 닫기
     recordsStore.createCafeDrink(drink)
     alert('입력값이 올바릅니다. 데이터를 전송합니다.')
-    closeInputModal()
+    updateInfo()
 
-    } else {
-      console.log('입력값이 올바르지 않습니다')
-      alert('입력값이 올바르지 않습니다. 다시 확인해주세요.')
-    }
+  } else {
+    alert('입력값이 올바르지 않습니다. 다시 확인해주세요.')
   }
+}
+
+function selectAuto(drink) {
+    drinkInfo.value = drink;
+    searchText.value = drink.drinkName;
+    showAutocomplete.value = false;
+
+    changeDrinkInfo();
+}
 </script>
 
 <style scoped>
@@ -379,7 +413,19 @@ div {
   border-radius: 22px;
   border: 2px solid #846046;
   padding: 10px 20px;
-  width: 353px;
+  width: 357px;
+  text-align: center;
+}
+
+.search-text-box {
+  border: none;
+  outline: none;
+  position: absolute;
+  margin-top: 12px;
+  z-index: 1;
+  width: 250px;
+  text-align: center;
+  left: 30%;
 }
 
 .button_input_color {
@@ -395,6 +441,7 @@ div {
   font-size: 20px;
   font-weight: bold;
 }
+
 .buttons {
   width: 150px;
   height: 60px;
@@ -415,6 +462,33 @@ div {
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   z-index: 100;
+}
+
+.autocomplete {
+    position: absolute;
+    overflow-y: auto;
+    border: 1px solid #000000;
+    z-index: 1000;
+    /* 조정 가능 */
+    left: 21.05%;
+    top:41.5%;
+    background: #ffffff;
+    width: 66.03%;
+    max-height: 60.66%;
+}
+
+.option {
+    cursor: pointer;
+    overflow-y: auto;
+}
+
+.option:hover {
+    background-color: #ddd;
+}
+
+.div-font {
+    font-size: 15px;
+    text-align: center;
 }
 
 </style>

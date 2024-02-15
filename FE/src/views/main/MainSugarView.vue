@@ -1,7 +1,10 @@
 <template>
   <div class="main-container">
     <div class="user-info">
-      <h2>{{ userStore.getUserName }} 님</h2>
+      <div class="user-set">
+        <h2>{{ userStore.getUserName }} 님</h2>
+        <font-awesome-icon :icon="['fas', 'comments']" style="color: #000000;" size="2xl" @click="goChat" class="chat"/>
+      </div>
       <div @click="goCaffeine">
         <img src="@/components/icons/su_toggle.png" alt="카페인 섭취량 메인페이지로 이동" class="toggle">
       </div>
@@ -27,114 +30,122 @@
             {{ (recordsStore.getDayDrink[recordsStore.getDayDrink.length-1].drinkSugar
             + 6 * recordsStore.getDayDrink[recordsStore.getDayDrink.length-1].plusSyrup).toFixed(1) }}g
           </div>
-          <div v-else class="drink-info">
+          <div v-else class="nothing-info">
             오늘 마신 음료가 없습니다!
           </div>
 
           <p class="today-title">하루 총합 섭취량 / 권장량</p>
-            <p v-if="accumulateStore.getAccumulateToday.accumulateSugar < userStore.getUserRDI.userSugar" class="today-info font_green">
+            <p v-if="accumulateStore.getAccumulateToday.accumulateSugar < userStore.getUserRDI.userSugar / 2.0" class="today-info font_green">
               {{ accumulateStore.getAccumulateToday.accumulateSugar }} / 
-              {{ userStore.getUserRDI.userSugar }}g
+              {{ userStore.userRDISugar }}g
             </p>
             <p v-else class="today-info font_red">
               {{ accumulateStore.getAccumulateToday.accumulateSugar }} / 
-              {{ userStore.getUserRDI.userSugar }}g
+              {{ userStore.userRDISugar }}g
             </p>
 
         </div>
 
-        <div class="right-info superbig-font">
+        <div class="right-info big-font">
           <div v-if="accumulateStore.getAccumulateToday.accumulateSugar < userStore.getUserRDI.userSugar * 1/2">
-            <p>양호 메시지</p>
+            <p>건강 상태 달달!</p>
           </div>
           <div v-else-if="accumulateStore.getAccumulateToday.accumulateSugar < userStore.getUserRDI.userSugar">
-            <p>보통 메시지</p>
+            <p>몸이 달달해져가요</p>
           </div>
           <div v-else="accumulateStore.getAccumulateToday.accumulateSugar >= userStore.getUserRDI.userSugar">
-            <p>나쁨 메시지</p>
+            <p>혈관이 달달해요~</p>
           </div>
         </div>
       </div>
     </div>
 
-    <div>
-      <div class="chart-container">
-        <p>최근에 마신 당을 한눈에 보아요</p>
-        <select name="selectDate" id="selectDate" v-model="seleteDate" class="button_select chart-date-button">
-          <option value="day" class="date-text">일</option>
-          <option value="week" class="date-text">주</option>
-        </select>
-      </div>
+    <div v-if="getCnt > 0">
+      <ChartSugar />
+    </div>
+
+    <div v-else>
+      <p>최근에 마신 당을 한눈에 보아요</p>
       <div class="info-box">
-        <canvas id="chartCanvas" width="500"></canvas>
+        <p class="chart-text-box">
+          최근 3개월 간 음료를 기록하지 않았거나<br>
+          당이 들어간 음료를 마시지 않았습니다.
+        </p>
       </div>
     </div>
 
-    <div>
-      <p>오늘은 이 음료 어때요?</p>
-      <div class="info-box">
-        <img :src="recommendStore.getRecommendedSugar.drinkUrl" alt="Recommended Drink" class="photo"/>
-        <p>{{ recommendStore.getRecommendedSugar.cafeName }} {{ recommendStore.getRecommendedSugar.drinkName }}</p>
-        <button @click="viewDetailsModal(recommendStore.getRecommendedSugar.drinkId)" class="button_sugar">상세보기</button>
+    <div v-if="recommendStore.getRecentDrinkName">
+      <p>{{ recommendStore.getRecentDrinkName.drinkName }}와/과 비슷한 이 음료는 어때요?</p>
+      <div class="recommend-box">
+        <div class="recommend-info-left">
+          <img :src="recommendOne.drinkUrl" alt="Recommended Drink" class="photo" />
+          <button @click="goRecommedModal(recommendOne)" class="go-button">
+            <font-awesome-icon :icon="['fas', 'magnifying-glass']" style="color: #000000;"/>
+          </button>
+          <p>{{ recommendOne.cafeName }}<br>
+          {{ recommendOne.drinkName }}</p>
+        </div>
+        <div class="recommend-info-right">
+          <img :src="recommendTwo.drinkUrl" alt="Recommended Drink" class="photo" />
+          <button @click="goRecommedModal(recommendTwo)" class="go-button">
+            <font-awesome-icon :icon="['fas', 'magnifying-glass']" style="color: #000000;"/>
+          </button>
+          <p>{{ recommendTwo.cafeName }}<br>
+          {{ recommendTwo.drinkName }}</p>
+        </div>
       </div>
     </div>
 
-    <div @click="goChat" class="chat">
-      <font-awesome-icon :icon="['fas', 'comments']" style="color: #000000;" size="2xl"/>
+    <div v-else>
+      <p>당 함량이 적은 이 음료는 어때요?</p>
+      <div class="recommend-box">
+        <div class="recommend-info-left">
+          <img :src="recommendOne.drinkUrl" alt="Recommended Drink" class="photo" />
+          <button @click="goRecommedModal(recommendOne)" class="go-button">
+            <font-awesome-icon :icon="['fas', 'magnifying-glass']" style="color: #000000;"/>
+          </button>
+          <p>{{ recommendOne.cafeName }}<br>
+          {{ recommendOne.drinkName }}</p>
+        </div>
+        <div class="recommend-info-right">
+          <img :src="recommendTwo.drinkUrl" alt="Recommended Drink" class="photo" />
+          <button @click="goRecommedModal(recommendTwo)" class="go-button">
+            <font-awesome-icon :icon="['fas', 'magnifying-glass']" style="color: #000000;"/>
+          </button>
+          <p>{{ recommendTwo.cafeName }}<br>
+          {{ recommendTwo.drinkName }}</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import ChartSugar from '@/components/main/ChartSugar.vue';
+
+import { computed, ref, watch } from 'vue';
 import { onMounted } from 'vue';
 import router from '@/router';
-
-import { Chart } from "chart.js/auto";
-import 'chartjs-adapter-date-fns';
 
 import { useUserStore } from '@/stores/user';
 import { useAccumulateStore } from '@/stores/accumulate';
 import { useRecordsStore } from '@/stores/records';
 import { useRecommendStore } from '@/stores/recommend';
-import { useDrinksStore } from '@/stores/drinks';
 
-import { isDetailModal } from '../../stores/util'
+import { isRecommedModal, recommedDrinkInfo } from '../../stores/util'
 
 const userStore = useUserStore()
 const accumulateStore = useAccumulateStore()
 const recordsStore = useRecordsStore()
 const recommendStore = useRecommendStore()
-const drinksStore = useDrinksStore()
 
-// 차트 날별로 선택하기 위한 변수
-const seleteDate = ref('day')
+const recommendOne = ref({})
+const recommendTwo = ref({})
 
-const chartData = {
-    type: 'bar',
-    data: {
-      labels: [], // 날짜
-      datasets: [{
-        label: '일별 당 섭취량',
-        data: [], // 날짜에 따른 데이터 기록 합산
-        backgroundColor: ['#374B59'],
-      }]
-    },
-    options: {
-      scales: {
-        x: {
-          type: 'time',
-          time: {
-            unit: seleteDate.value
-          }
-        },
-        y: {
-          beginAtZero:true
-        }
-      },
-      responsive: false,
-    }
-  }
+let cnt = ref(0)
+const getCnt = computed(() => {
+  return cnt.value
+})
 
 // 데이터를 가져오기 위한 함수
 onMounted(async () => {
@@ -151,52 +162,30 @@ onMounted(async () => {
   const date = ref(null)
   date.value = year + month + day
 
-  // await userStore.researchUser()                // 닉네임 <- 404 error
-  // await userStore.researchAmount()              // 권장량 <- 404 error
-  await accumulateStore.today()                    // 섭취량
-  await accumulateStore.duration()                // chart.js를 위한 기간별 섭취량
-  await recommendStore.researchRecommendSugar()     // 기록 기반 음료추천 당
-  await recordsStore.researchDayDrink(date)       // 방금 마신 음료 계산을 위한 일자별 기록
+  await userStore.researchName()                        // 닉네임
+  await userStore.researchAmount()                      // 권장량
+  await accumulateStore.today()                         // 섭취량
+  await recommendStore.researchRecommendSugar()        // 기록 기반 음료추천 당
+  await recordsStore.researchDayDrink(date)           // 방금 마신 음료 계산을 위한 일자별 기록
+  await accumulateStore.duration()                    // 차트 표시 여부 결정
+  await recommendStore.researchRecentDrinkName()      // 기록 기반 최근 마신 음료 이름
 
-  // chart.js
-  const chartElement = document.querySelector('#chartCanvas').getContext('2d');
-  const chartCanvas = new Chart(chartElement, chartData)
-
-  // 날짜가 바뀌면 데이터 변경
-  watch(() => seleteDate.value, (chartDate) => {
-    chartData.options.scales.x.time.unit = chartDate
-    chartCanvas.update()
-  })
-  
-  // 차트 데이터에 넣을 데이터가 생긴 뒤 데이터 삽입
   watch(() => accumulateStore.getAccumulateList, (newData) => {
     if (newData.length > 0) {
-      console.log('!!!', newData)
-
-      const tmpDayData = []
-      const tmpDataData = []
-
-      // 차트 데이터에 넣을 데이터 적절하게 삽입
       newData.forEach(data => {
-        tmpDayData.push(data.accumulateDate)
-        tmpDataData.push(data.accumulateSugar)
+        cnt.value += data.accumulateSugar
       })
-
-      // 오늘 날짜까지 갱신하기 위해 현재 날짜가 없으면 날짜 삽입
-      if (!tmpDayData.includes(`${year}-${month}-${day}`)) {        
-        tmpDayData.push(date.value)
-      }
-
-      // 다 끝난 뒤 차트에 대입
-      chartData.data.labels = tmpDayData
-      chartData.data.datasets[0].data = tmpDataData
-
-      console.log('@@@', chartData.data.labels, chartData.data.datasets[0].data)
     }
-
-    // 차트 업데이트
-    chartCanvas.update()
   })
+
+  // 추천 음료 2개 가지고 옴
+  watch(() => recommendStore.getRecommendedSugar, (recommend) => {
+    if (recommend.length > 0) {
+      recommendOne.value = recommend[0]
+      recommendTwo.value = recommend[1]
+    }
+  })
+
 })
 
 // 카페인 섭취량 메인페이지로 이동
@@ -205,15 +194,13 @@ const goCaffeine = () => {
 }
 
 // 추천 음료 상세페이지로 이동
-const selectedDrink = ref(null)
+const goRecommedModal = (recommendDrinkInfo) => {
+  recommedDrinkInfo.value = recommendDrinkInfo
 
-const viewDetailsModal = (drinkId) => {
-  const drink = drinksStore.getAllDrinkList.find(d => d.id === drinkId);
-  if (drink) {
-    selectedDrink.value = drink;
-    isDetailModal.value = true;
+  if (recommedDrinkInfo.value) {
+    isRecommedModal.value = true
   } else {
-    alert('해당 음료를 찾을 수 없습니다.');
+    alert('해당 음료를 찾을 수 없습니다.')
   }
 }
 
@@ -231,6 +218,7 @@ h2 {
   color: #374B59;
   font-weight: bold;
   text-align: left;
+  margin-right: 20px;
 }
 
 p {
@@ -238,9 +226,11 @@ p {
 }
 
 .main-container {
+  position: relative;
   display: flex;
-  flex-direction: column;
   align-items: center;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .toggle {
@@ -254,6 +244,11 @@ p {
   justify-content: space-between;
   align-items: center;
   width: 700px;
+}
+
+.user-set {
+  display: flex;
+  align-items: center;
 }
 
 .info-box {
@@ -276,6 +271,12 @@ p {
 
 .drink-info {
   font-size: 30px;
+  color: #374B59;
+  font-weight: bold;
+}
+
+.nothing-info {
+  font-size: 20px;
   color: #374B59;
   font-weight: bold;
 }
@@ -307,53 +308,70 @@ p {
   margin-top: 0;
 }
 
-.chart-date-button {
-  width: 50px;
-  height: 20px;
-  margin-top: 10px;
-}
-
-.date-text {
-  text-align: center;
-}
-
-#chartCanvas {
+.chart-text-box {
+  width: 500px;
+  height: 250px;
   margin: auto;
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-
-.chart-container {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
 }
 
-.button_select {
-  border: 2px solid #374B59;
+.recommend-box {
+  display: flex;
+  justify-content: center;
+}
+
+.recommend-info-left {
+  position: relative;
+  background: #ffffff;
+  border-radius: 30px;
+  border-style: solid;
+  border-color: #d9d9d9;
+  border-width: 1px;
+  text-align: center;
+  width: 330px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  margin-bottom: 10px;
+  margin-right: 20px;
+}
+
+.recommend-info-right {
+  position: relative;
+  background: #ffffff;
+  border-radius: 30px;
+  border-style: solid;
+  border-color: #d9d9d9;
+  border-width: 1px;
+  text-align: center;
+  width: 330px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  margin-bottom: 10px;
+  margin-left: 20px;
 }
 
 .photo {
-  width: 50px;
+  position: relative;
+  width: 150px;
   margin: 10px;
   border-radius: 20px;
 }
 
-.button_sugar {
-  width: 75px;
-  height: 30px;
-  color: white;
-  font-weight: bold;
+.go-button {
+  position: absolute;
+  top: 30px;
+  right: 90px;
   border: none;
-  border-radius: 20px;
-  margin-left: auto;
-  margin-right: 15px;
-  cursor:pointer;
+  background-color: transparent;
+  transform: translate(50%, -50%);
+  cursor: pointer;
+  font-size: 18px;
 }
 
 .chat {
-  width: 700px;
-  right: 20px;
-  margin-top: 15px;
-  margin-left: 1300px;
+  cursor: pointer;
 }
 </style>

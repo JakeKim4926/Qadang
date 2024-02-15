@@ -5,12 +5,7 @@
       <RouterView />
     </div>
   </div>
-  <div>
-    <template v-if="userAccessToken != null">
-      <TheFooter class="TheFooter" />
-    </template>
-    <!-- <TheFooter class="TheFooter" /> -->
-  </div>
+  <TheFooter v-if="isFooter" class="TheFooter" />
 </template>
 
 <script setup>
@@ -18,7 +13,7 @@ import TheFooter from './components/common/TheFooter.vue';
 import TheHeader from './components/common/TheHeader.vue';
 import router from '@/router';
 import { RouterLink, RouterView } from 'vue-router'
-import { userAccessToken } from "@/stores/util"
+import { userAccessToken, isFooter } from "@/stores/util"
 </script>
 
 <style scoped>
@@ -28,7 +23,7 @@ import { userAccessToken } from "@/stores/util"
   min-height: 100vh;
   position: relative;
 
-  z-index: 2;
+  z-index: 1;
   padding-bottom: 5%;
   margin-bottom: 5%;
 }

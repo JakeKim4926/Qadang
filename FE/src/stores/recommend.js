@@ -8,6 +8,7 @@ export const useRecommendStore = defineStore("recommend", () => {
 
   const recommendedCaffeine = ref({});
   const recommendedSugar = ref({});
+  const recentDrinkName = ref(null)
 
   // =========== GETTER ===============
 
@@ -18,6 +19,10 @@ export const useRecommendStore = defineStore("recommend", () => {
   const getRecommendedSugar = computed(() => {
     return recommendedSugar.value;
   });
+
+  const getRecentDrinkName = computed(() => {
+    return recentDrinkName.value
+  })
 
   // =========== ACTION ===============
 
@@ -30,7 +35,7 @@ export const useRecommendStore = defineStore("recommend", () => {
         recommendedSugar.value = res.data;
       })
       .catch((err) => {
-        console.log(err);
+        
       });
   };
 
@@ -40,20 +45,34 @@ export const useRecommendStore = defineStore("recommend", () => {
       method: "GET",
     })
       .then((res) => {
-        // console.log(res)
         recommendedCaffeine.value = res.data;
       })
       .catch((err) => {
-        console.log(err);
+        
       });
   };
+
+  const researchRecentDrinkName = function () {
+    axios({
+      url: `${import.meta.env.VITE_REST_RECOMMEND_API}/record`,
+      method: "GET",
+    })
+    .then((res) => {
+      recentDrinkName.value = res.data;
+    })
+    .catch((err) => {
+    })
+  }
   
   return {
     recommendedCaffeine,
     recommendedSugar,
+    recentDrinkName,
     getRecommendedCaffeine,
     getRecommendedSugar,
+    getRecentDrinkName,
     researchRecommendCaffeine,
     researchRecommendSugar,
+    researchRecentDrinkName,
   };
 });

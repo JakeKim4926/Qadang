@@ -5,11 +5,15 @@
         <div class="text-block">
           <span class="div-2-span">건강 그 잡채</span>
           <br>
+          <br>
           <span class="div-2-span2">콰당과 함께 건강한 음료 선정 시작해유~</span>
         </div>
       </div>
+      <br>
+      <br>
       <div class="button-wrapper">
-        <img class="image-24" src="@/components/icons/good.png" alt="doctor" />
+        <img class="image-24" src="@/components/icons/logo_4.png" alt="doctor" />
+        <br>
         <router-link to="/mainCaffeine" class="rectangle-4270">시작하기</router-link>
       </div>
     </div>
@@ -99,8 +103,8 @@ import { ref, onMounted, watch } from 'vue'
 }
 
 .image-21, .image-24 {
-  width: auto; /* Adjust width as needed */
-  height: auto; /* Adjust height as needed */
+  width: 50%; /* Adjust width as needed */
+  height: 50%; /* Adjust height as needed */
   /* Additional styling as needed */
 }
 

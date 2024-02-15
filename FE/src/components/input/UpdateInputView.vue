@@ -7,7 +7,7 @@
 
       <div class="update-container">
         <div>
-          <h2>수정할 카페 음료를 선택해주세요</h2>
+          <h2>카페에서 마신 음료 기록을 수정해보세요</h2>
         </div>
 
         <div>
@@ -24,11 +24,20 @@
 
         <div>
           <label for="drinkSelect" class="big-font">음료명</label>
-          <select name="drinkSelect" id="drinkSelect"
-          v-model="drinkInfo" @change="changeDrinkInfo" class="button_select select">
-          <option v-for="drink in drinkStore.getCafeDrinkList"
-          :key="drink.drinkId"
-          :value="drink">
+          <input type="text" v-model="searchText"
+          class="search-text-box" placeholder="음료명을 검색해주세요">
+          <select name="drinkSelect" id="drinkSelect" v-model="drinkInfo"
+          @change="changeDrinkInfo" class="button_select select">
+
+          <option v-if="searchText===tempRecord.drinkName || !searchText" key="if-branch"
+          v-for="drink in drinkStore.getCafeDrinkList"
+          :key="drink.drinkId" :value="drink">
+            {{ drink.drinkName }}
+          </option>
+
+          <option v-else key="else-branch"
+          v-for="drink in filteredDrinks"
+          :key="drink.drinkId" :value="drink">
             {{ drink.drinkName }}
           </option>
         </select>
@@ -58,19 +67,6 @@
           </button>
         </div>
 
-        <!-- {{ drinkInfo }}
-
-        {{ drinkCaffeine }}
-        {{ drinkSugar }}
-
-        {{ minusCaffeineButton }}
-        {{ plusCaffeineButton }}
-        {{ minusSugarButton }}
-        {{ plusSugarButton }}
-
-        {{ plusShot }}
-        {{ plusSyrup }} -->
-
         <div class="item-container">
           <button @click="drinkUpdateSubmit" class="button_caffeine buttons">수정완료</button>
         </div>
@@ -95,7 +91,6 @@ onMounted(() => {
   drinkStore.researchCafe()
 })
 
-console.log('가져온 데이터', tempRecord.value);
 
 // 음료 업데이트를 위해 보내줄 데이터
 // 초기값은 캘린더에서 받아오는 값으로 설정
@@ -133,6 +128,22 @@ watch(() => drinkStore.getCafeDrinkList, (drinkList) => {
   }
 })
 
+// 음료 필터링
+const searchText = ref(tempRecord.value.drinkName)
+const filteredDrinks = ref()
+
+const searchFilteredDrinks = () => {
+  filteredDrinks.value = drinkStore.getCafeDrinkList.filter(drink => {
+    return drink.drinkName.toLowerCase().includes(searchText.value.toLowerCase())
+  })
+}
+
+watch(searchText, () => {
+  if (searchText.value) {
+    searchFilteredDrinks()
+  }
+})
+
 const drinkId = ref(tempRecord.value.drinkId)
 const drinkCaffeine = ref(tempRecord.value.drinkCaffeine)
 const drinkSugar = ref(tempRecord.value.drinkSugar)
@@ -154,6 +165,7 @@ const reset = () => {
   drinkName.value = null
   plusShot.value = 0
   plusSyrup.value = 0
+  searchText.value = null
 
   drinkId.value = 0
   drinkCaffeine.value = 0
@@ -231,16 +243,17 @@ const changeDrinkInfo = () => {
     drinkName.value = drinkInfo.value.drinkName
     drinkCaffeine.value = drinkInfo.value.drinkCaffeine
     drinkSugar.value = drinkInfo.value.drinkSugar
+    searchText.value = drinkInfo.value.drinkName
+
+    // 기존 입력한 샷, 시럽 추가 초기화
+    plusShot.value = 0
+    plusSyrup.value = 0
 
     // 샷, 시럽 버튼 활성화
     activeminusCaffeineButton()
     activminusSugarButton()
     activeplusCaffeineButton()
     activeplusSugarButton()
-
-    // 기존 입력한 샷, 시럽 추가 초기화
-    plusShot.value = 0
-    plusSyrup.value = 0
   }
 }
 
@@ -276,7 +289,6 @@ const plusSugar = () => {
 // 업데이트된 음료 데이터 전송
 const drinkUpdateSubmit = () => {
   if (cafeName.value && drinkName.value) {
-    console.log('입력값이 올바릅니다. 데이터를 전송합니다.')
 
     // 음료 업데이트를 위해 보내줄 데이터
     const drink = {
@@ -288,15 +300,12 @@ const drinkUpdateSubmit = () => {
       plusSyrup: plusSyrup.value,
     }
 
-    console.log(drink)
-
     // 데이터 전송 및 창 닫기
     recordsStore.updateCafeDrink(drink)
     alert('입력값이 올바릅니다. 데이터를 전송합니다.')
     closeUpdateModal()
 
     } else {
-      console.log('입력값이 올바르지 않습니다')
       alert('입력값이 올바르지 않습니다. 다시 확인해주세요.')
     }
   }
@@ -383,6 +392,16 @@ div {
   border: 2px solid #846046;
   padding: 10px 20px;
   width: 353px;
+}
+
+.search-text-box {
+  border: none;
+  outline: none;
+  position: absolute;
+  margin-top: 12px;
+  margin-left: 25px;
+  z-index: 1;
+  width: 250px;
 }
 
 .button_input_color {

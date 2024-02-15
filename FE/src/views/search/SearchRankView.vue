@@ -1,4 +1,5 @@
 <template>
+  <rankDetailView v-if="isRankModal" :drink="selectedrankDrink" />
   <div class="search-frame">    
     <searchTopView />
     
@@ -6,31 +7,30 @@
       <h4 @click="goToFullList"> < 전체보기 </h4>
     </div>
 
-    
+   
     <div class="rankings">
       <div class="shading">
         <h2 class="ranking-title search">많이 <span class="highlight">검색</span>한 순위</h2>
         <div class="ranking-rows">
           <div class="ranking-column rank-text">     
-            <div v-for="(keyword, index) in firstFourKeywords" :key="`first-${index}`" class="ranking-item">
+            <div v-for="(keyword, index) in firstFourKeywords" :key="`first-${index}`" class="ranking-item" @click="performSearch(keyword)">
               {{ index + 1 }}. {{ keyword }} 
             </div>
           </div>
           <div class="ranking-column rank-text">          
-            <div v-for="(keyword, index) in nextFourKeywords" :key="`next-${index}`" class="ranking-item">
+            <div v-for="(keyword, index) in nextFourKeywords" :key="`next-${index}`" class="ranking-item" @click="performSearch(keyword)">
               {{ index + 5 }}. {{ keyword }}
             </div>
           </div>
         </div>
       </div>
-
+      
       <div class="shading">
         <h2 class="ranking-title search">많이 <span class="highlight">기록</span>한 음료 순위</h2>
         <div class="ranking-rows">
           <div class="ranking-column rank-text">     
-            <div v-for="(drink, index) in firstFiveRecords" :key="`record-first-${index}`" class="ranking-item2">
-              {{ index + 1 }}. {{ drink.cafeName }} {{ drink.drinkName }} 
-             
+            <div v-for="(drink, index) in firstFiveRecords" :key="`record-first-${index}`" class="ranking-item2">              
+              {{ index + 1 }}. {{ drink.cafeName }} {{ drink.drinkName }}              
             </div>
           </div>
        
@@ -50,27 +50,31 @@
 <script setup>
 import { ref, computed,onMounted } from 'vue';
 import { useSearchStore } from '../../stores/search';
-import { useDrinksStore} from '../../stores/drinks'
 import router from '@/router';
 import '../../components/color/color.css';
 import searchTopView from './SearchTopView.vue';
-import drinkDetailView from '@/views/search/drinkDetailView.vue'
-import { isCompareModal, isDetailModal } from '../../stores/util'
+import rankDetailView from '@/views/search/drinkDetailView.vue'
+import { isRankModal } from '../../stores/util'
 const searchStore = useSearchStore();
-const drinkStore = useDrinksStore();
-const searchResults = computed(() => searchStore.getSearchDrinkList);
 const keywordRanking = computed(() => searchStore.getKeywordRanking);
 const recordRanking = computed(() => searchStore.getRecordRanking);
 
+const selectedrankDrink = ref({});
 
-const viewDetailsModal = (drinkId) => {
-  drinkStore.setSelectedDrink(drinkId); 
-  if (drinkStore.selectedDrink) {
-    isDetailModal.value = true; 
-  } else {
-    alert('해당 음료를 찾을 수 없습니다.');
+const performSearch = async (keyword) => {
+  const trimmedKeyword = keyword.trim();
+  if (trimmedKeyword) {
+    const hasResults = await searchStore.researchKeywordRank(trimmedKeyword);
+    if (hasResults) {      
+      router.push({ name: 'searchDetail', params: { keyword: trimmedKeyword } });
+    } else {
+      alert('검색 결과가 없습니다.');
+    }
+  } else {   
+    window.location.reload();
   }
 };
+
 
 const goToFullList = () => {
   router.push({ name: 'searchDetail' });
@@ -88,7 +92,7 @@ const nextFourKeywords = computed(() => {
 
 
 const firstFiveRecords = computed(() => {
-  return recordRanking.value.slice(0, 5);
+  return recordRanking.value.slice(0, 3);
 });
 
 // const nextThreeRecords = computed(() => {
@@ -151,6 +155,7 @@ onMounted(() => {
 .ranking-item {
   margin-bottom: 5px; 
   text-align: left; 
+  cursor: pointer;
 }
 .ranking-item2 {
   margin-bottom: 5px; 

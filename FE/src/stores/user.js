@@ -89,93 +89,83 @@ export const useUserStore = defineStore(
         redirectUri: `${import.meta.env.VITE_REST_KAKAO_LOGIN_API}`,
       });
     };
+  
     const logout = async () => {
       try {
         await axios({
-          url: `${import.meta.env.REST_USER_API}/logout`,
-          method: "POST",
+          url: `${import.meta.env.VITE_REST_API}/logout`,
+          method: "PUT",
         });
         localStorage.removeItem("userAccessToken");
         userAccessToken.value = null;
 
-        router.push("/login");
+        router.push("/");
       } catch (err) {
-        console.error("에러", err);
+        router.push('/');
+        window.alert("오류가 발생했습니다")
       }
     };
 
-    const sendKakaoToken = function (token) {
-      axios({
+
+    const sendKakaoToken = async function (token) {
+      await axios({
         url: `${import.meta.env.VITE_REST_KAKAO_API}`,
         method: "GET",
         params: { code: token },
       })
-        .then((res) => {
-          // 카카오 에서 받아온 토큰을 백으로 전달
-          console.log("결과", res);
+        .then((res) => {          // 카카오 에서 받아온 토큰을 백으로 전달
+          
 
           // 스토어에 액세스 토큰 업데이트
           // userAccessToken.value = accessToken;
 
           const success = res.data.isLogin;
-          console.log(success, " ? ");
           if (success == 1) {
             const getToken = res.data.accesstoken;
+
+             // 헤더 설정
+             axios.defaults.headers.common["Authorization"] = getToken;
+             userAccessToken.value = getToken;
+ 
             if (res.data.isUser == 0) {
               router.push("/survey");
+            } else {
+              router.push('/mainCaffeine');
             }
-            // 헤더 설정
-            axios.defaults.headers.common["Authorization"] = getToken;
-            userAccessToken.value = getToken;
-
+           
             // 로컬 스토리지에 액세스 토큰 저장
             localStorage.setItem("userAccessToken", getToken);
           }
 
-
-          console.log("헤더 체크", axios.defaults.headers);
+          
         })
         .catch((err) => {
-          console.log("에러", err);
+          console.log(err);
+          window.alert("로그인 실패");
+          
+          router.push("/");
         });
     };
 
     const createUser = function (user) {
-      axios({
-        url: import.meta.env.VITE_REST_USER_API,
-        method: "POST",
-      });      
-      localStorage.removeItem('userAccessToken');      
-      userAccessToken.value = null;
-      
-      router.push('/login');
-    } catch (err) {
-      console.error('에러',err);
-    }
-  };
-  
-
-  const sendKakaoToken = function (token) {
-    axios({
-      url: `${import.meta.env.VITE_REST_KAKAO_API}`,
-      method: "GET",
-      params: { code : token },
-    })
-      .then((res) => {
-        // 카카오 에서 받아온 토큰을 백으로 전달
-        console.log('결과', res.data);
-        
-        // 헤더 설정
-        axios.defaults.headers.common['Authorization'] = res.data.accessToken; 
-        const result = ref({});
-        result.value = res.data;
-
-        userAccessToken.value = res.data;
-      })
-        .then(() => {})
-        .catch((err) => {
-          console.log(err);
+      try {
+        axios({
+          url: import.meta.env.VITE_REST_USER_API,
+          method: "POST",
+          data: user, // 서버에 전송할 사용자 데이터
+        })
+        .then((response) => {
+          // 성공적으로 사용자 생성 후 로직
+          localStorage.removeItem('userAccessToken');
+          userAccessToken.value = null;
+    
+          router.push('/');
+        })
+        .catch((err) => {          
         });
+      } catch (err) {
+        
+      }
     };
 
     const researchUser = function () {
@@ -185,6 +175,19 @@ export const useUserStore = defineStore(
       })
         .then((res) => {
           user.value = res.data;
+        })
+        .catch((err) => {          
+        });
+    };
+
+    const researchName = function () {
+      axios({
+        url: `${import.meta.env.VITE_REST_USER_API}/name`,
+        method: "GET",
+      })
+        .then((res) => {
+          userName.value = res.data;
+          
         })
         .catch((err) => {
           console.log(err);
@@ -198,12 +201,19 @@ export const useUserStore = defineStore(
       })
         .then((res) => {
           userRDI.value = res.data;
-          userRDICaffeine.value = userRDI.value.userCaffeine;
-          userRDISugar.value = userRDI.value.userSugar;
+
+          if (userRDICaffeine.value !== undefined) {
+            userRDICaffeine.value = userRDI.value.userCaffeine.toFixed(1);
+          }
+          
+          if (userRDISugar.value !== undefined) {
+            userRDISugar.value = userRDI.value.userSugar.toFixed(1);
+          }
+          
           console.log('amount', res.data);
         })
         .catch((err) => {
-          console.log(err);
+          
         });
     };
 
@@ -218,26 +228,40 @@ export const useUserStore = defineStore(
           userMaxCaffeineDate.value = userMax.value.maxCaffeineDate;
           userMaxSugar.value = userMax.value.maxSugarValue;
           userMaxSugarDate.value = userMax.value.maxSugarDate;
-          console.log(res.data, 'Max');
+          
         })
         .catch((err) => {
-          console.log(err);
+          
         });
     };
 
-    const updateUser = function (updateData) {
-      axios({
-        url: import.meta.env.VITE_REST_USER_API,
-        method: "PUT",
-        data: updateData,
-      })
-        .then(() => {
-          alert("사용자 정보가 성공적으로 업데이트되었습니다.");
-          router.push("/mypage");
-        })
-        .catch((err) => {
-          console.error("Error updating user:", err);
-        });
+    // const updateUser = function (updateData) {
+    //   axios({
+    //     url: import.meta.env.VITE_REST_USER_API,
+    //     method: "PUT",
+    //     data: updateData,
+    //   })
+    //     .then(() => {
+    //       alert("사용자 정보가 성공적으로 업데이트되었습니다.");
+    //       router.push("/mypage");
+    //     })
+    //     .catch((err) => {
+    //       console.error("Error updating user:", err);
+    //     });
+    // };
+
+    const updateUser = async function (updateData) {
+      try {
+        const response = await axios.put(import.meta.env.VITE_REST_USER_API, updateData);        
+        for (const key in updateData) {
+          if (updateData.hasOwnProperty(key)) {
+            user.value[key] = updateData[key];
+          }
+        }
+        alert("사용자 정보가 성공적으로 업데이트되었습니다.");
+      } catch (err) {
+        
+      }
     };
 
     const deleteUser = function () {
@@ -245,9 +269,16 @@ export const useUserStore = defineStore(
         url: import.meta.env.VITE_REST_USER_API,
         method: "DELETE",
       })
-        .then(() => {})
+        .then(() => {
+          localStorage.removeItem("userAccessToken");
+          userAccessToken.value = null;
+          alert("사용자 정보가 성공적으로 업데이트되었습니다.");
+          router.push('/');
+         })
         .catch((err) => {
-          console.log(err);
+          router.push('/');
+          window.alert("오류가 발생했습니다")
+          
         });
     };
 
@@ -260,7 +291,7 @@ export const useUserStore = defineStore(
           recommendedSugar.value = res.data;
         })
         .catch((err) => {
-          console.log(err);
+          
         });
     };
 
@@ -273,23 +304,22 @@ export const useUserStore = defineStore(
           recommendedCaffeine.value = res.data;
         })
         .catch((err) => {
-          console.log(err);
+          
         });
     };
 
-    const infoFilled = computed(() => {
-      const userInfo = user.value;
+    const isInfoFilled = computed(() => {
+      const userInfo = getUser.value;
       if (!userInfo) {
         return false;
       }
       // 모든 필요한 속성이 존재하는지 확인
       return (
-        userInfo.hasOwnProperty("userHeight") &&
-        userInfo.userHeight !== 0 &&
-        userInfo.hasOwnProperty("userWeight") &&
-        userInfo.userWeight !== 0 &&
-        userInfo.hasOwnProperty("userHealth") &&
-        userInfo.userHealth !== 0
+        userInfo.userGender > 0 &&
+        userInfo.userBirth > 0 &&
+        userInfo.userHeight > 0 &&
+        userInfo.userWeight > 0 &&
+        userInfo.userHealth > 0
       );
     });
 
@@ -324,6 +354,7 @@ export const useUserStore = defineStore(
       sendKakaoToken,
       logout,
       createUser,
+      researchName,
       researchUser,
       researchAmount,
       researchMax,
@@ -331,8 +362,6 @@ export const useUserStore = defineStore(
       deleteUser,
       researchRecommendSugar,
       researchRecommendCaffeine,
-      infoFilled,
+      isInfoFilled,
     };
-  },
-  { persist: true }
-);
+  }, { persist: true });

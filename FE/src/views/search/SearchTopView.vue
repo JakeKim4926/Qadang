@@ -1,6 +1,6 @@
 <template>
-  <div class="search-container">        
-    <input v-model="searchQuery" placeholder="Search for..." class="search-input">
+  <div class="search-container">       
+    <input v-model="searchQuery" placeholder="Search for..." class="search-input" @keyup.enter="doSearch">
     <button @click="doSearch" class="search-button">
       <font-awesome-icon :icon="['fas', 'search']" />
     </button>
@@ -16,13 +16,19 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 const searchStore = useSearchStore();
 const searchQuery = ref('');
 
-const doSearch = () => {
-  if (searchQuery.value.trim()) {
-    searchStore.researchKeywordRank(searchQuery.value.trim());
-    router.push({ name: 'searchDetail', params: { keyword: searchQuery.value.trim() } });
-  }else {
-    // 검색어가 비어있을 경우 페이지 새로고침
-    // router.push({ name: 'searchDetail'});
+const doSearch = async () => {
+  const query = searchQuery.value.trim();
+  if (query) {
+    const hasResults = await searchStore.researchKeywordRank(query);
+    if (hasResults) {
+      // 검색 결과가 있을 때 검색 세부 페이지로 라우팅합니다.
+      router.push({ name: 'searchDetail', params: { keyword: query } });
+    } else {
+      // 검색 결과가 없을 때 사용자에게 알림을 표시합니다.
+      alert('검색 결과가 없습니다.');
+    }
+  } else {
+    // 검색어가 비어있을 경우 페이지 새로고침을 합니다.
     window.location.reload();
   }
 };

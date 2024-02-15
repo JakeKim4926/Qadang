@@ -1,5 +1,5 @@
 <template >
-  <footer class="footer" v-if="userAccessToken != null">
+  <footer class="footer">
     <div class="footer-content">
 
       <InputView v-if="isInputModal" />
@@ -7,6 +7,8 @@
 
       <UpdateInputView v-if="isUpdateInputModal" />
       <UpdateInputNothingView v-if="isUpdateNothingModal" />
+
+      <RecommedDetail v-if="isRecommedModal" />
 
       <div class="empty-space"></div> <!-- 왼쪽 끝의 빈 공간 -->
       <RouterLink :to="{name:'mainCaffeine'}" class="footer-link">
@@ -44,8 +46,9 @@
   import InputNothingView from '@/components/input/InputNothingView.vue';
   import UpdateInputView from '@/components/input/UpdateInputView.vue';
   import UpdateInputNothingView from '@/components/input/UpdateInputNothingView.vue';
+  import RecommedDetail from '@/components/main/RecommendDetail.vue';
 
-  import { isInputModal, isInputNothingModal, isUpdateInputModal, isUpdateNothingModal, userAccessToken } from '@/stores/util';
+  import { isInputModal, isInputNothingModal, isUpdateInputModal, isUpdateNothingModal, isRecommedModal } from '@/stores/util';
 
   // open input modal
   const openInputModal = () => {
