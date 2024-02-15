@@ -386,7 +386,7 @@ p {
 
 .photo {
   position: relative;
-  width: 150px;
+  height: 150px;
   margin: 10px;
   border-radius: 20px;
 }
