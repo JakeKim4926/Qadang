@@ -88,4 +88,8 @@ public class RecordService {
         }
         return result;
     }
+
+    public Records readLastRecord(Long userId) {
+        return recordReporsitory.findUserRecent(userId);
+    }
 }
