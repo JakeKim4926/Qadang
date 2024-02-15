@@ -386,7 +386,7 @@ p {
 
 .photo {
   position: relative;
-  width: 150px;
+  height: 150px;
   margin: 10px;
   border-radius: 20px;
 }
@@ -394,7 +394,7 @@ p {
 .go-button {
   position: absolute;
   top: 30px;
-  right: 90px;
+  right: 70px;
   border: none;
   background-color: transparent;
   transform: translate(50%, -50%);
