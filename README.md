@@ -1,6 +1,6 @@
 
 <p align="center">
-<img src="image-1.png">
+<img src="./RMimg/image-1.png">
 </p>
 
 # 📕 목차 
