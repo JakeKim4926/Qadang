@@ -127,7 +127,7 @@ const router = createRouter({
       component: ErrorView,
     },
     {
-      path: "/api/kakao-login",
+      path: "/kakao-login",
       name: "kakaoLogin",
       component: MainCaffeineView,
       props: (route) => ({ code: route.query.code }), // Pass code as a prop
@@ -142,7 +142,7 @@ router.beforeEach((to, from, next) => {
     localStorage.getItem("userAccessToken") == "" ||
     localStorage.getItem("userAccessToken") == null
   ) {
-    if (to.path == "/api/kakao-login") {
+    if (to.path == "/kakao-login") {
       next(); // Redirect to home if not logged in
       isFooter.value = true;
     } else if (to.name !== "home") {
