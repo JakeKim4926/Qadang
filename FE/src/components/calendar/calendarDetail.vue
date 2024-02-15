@@ -252,7 +252,7 @@ onMounted(() => {
   background-color: rgba(128, 128, 128, 0.863) !important;
   top: 0;
   left: 0;
-  z-index: 99 !important;
+  z-index: 103 !important;
   display: flex;
   justify-content: center;
   align-items: center;
