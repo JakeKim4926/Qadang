@@ -224,10 +224,18 @@ export const useUserStore = defineStore(
       })
         .then((res) => {
           userMax.value = res.data;
-          userMaxCaffeine.value = userMax.value.maxCaffeineValue;
+          // userMaxCaffeine.value = userMax.value.maxCaffeineValue;
           userMaxCaffeineDate.value = userMax.value.maxCaffeineDate;
-          userMaxSugar.value = userMax.value.maxSugarValue;
+          // userMaxSugar.value = userMax.value.maxSugarValue;
           userMaxSugarDate.value = userMax.value.maxSugarDate;
+
+          if (userMaxCaffeine.value !== undefined) {
+            userMaxCaffeine.value = userMax.value.maxCaffeineValue.toFixed(1);
+          }
+
+          if (userMaxSugar.value !== undefined) {
+            userMaxSugar.value = userMax.value.maxSugarValue.toFixed(1);
+          }
           
         })
         .catch((err) => {
