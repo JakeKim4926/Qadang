@@ -18,4 +18,11 @@ public interface RecordReporsitory extends JpaRepository<Records, Long> {
     List<Long> findByRank();
 
     public void deleteByUserId(Long userId);
+
+    @Query("SELECT r " +
+            "FROM Records r " +
+            "where r.drinkId is not null " +
+            "and r.userId =:userId " +
+            "order by r.recordId DESC LIMIT 1")
+    Records findUserRecent(Long userId);
 }
