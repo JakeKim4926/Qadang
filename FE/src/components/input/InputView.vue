@@ -316,7 +316,7 @@ const drinkSubmit = () => {
 
     // 데이터 전송 및 창 닫기
     recordsStore.createCafeDrink(drink)
-    alert('입력값이 올바릅니다. 데이터를 전송합니다.')
+    alert('입력이 완료되었습니다.')
     updateInfo()
 
   } else {
