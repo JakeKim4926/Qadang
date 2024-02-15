@@ -154,7 +154,7 @@ const basket = comparisonStore.basket;
 
 .drink-image {
   max-width: 100px;
-  height: auto;
+  height: 100px;
 }
 
 .coffee-name {

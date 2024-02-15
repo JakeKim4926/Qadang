@@ -77,7 +77,7 @@ const drinkUpdateSubmit = () => {
 
     // 유효한 데이터를 백엔드로 전송 및 창 닫기
     store.updateMyDrink(drink)
-    alert('입력값이 올바릅니다. 데이터를 전송합니다.')
+    alert('입력이 완료되었습니다.')
     closeUpdateNothingModal()
 
     } else {

@@ -126,7 +126,7 @@ export default {
         };
         const calendarKey = ref(0); // calendarKey를 선언
         onMounted(async () => {
-
+            
             await updateCalendarOptions();
 
             await rerenderFullCalendar();

@@ -316,7 +316,7 @@ const drinkSubmit = () => {
 
     // 데이터 전송 및 창 닫기
     recordsStore.createCafeDrink(drink)
-    alert('입력값이 올바릅니다. 데이터를 전송합니다.')
+    alert('입력이 완료되었습니다.')
     updateInfo()
 
   } else {
@@ -465,16 +465,18 @@ div {
 }
 
 .autocomplete {
-    position: absolute;
-    overflow-y: auto;
-    border: 1px solid #000000;
-    z-index: 1000;
-    /* 조정 가능 */
-    left: 21.05%;
-    top:41.5%;
-    background: #ffffff;
-    width: 66.03%;
-    max-height: 60.66%;
+  position: absolute;
+  overflow-y: auto;
+  border: 1px solid #000000;
+  z-index: 1000;
+  /* 조정 가능 */
+  left: 21.05%;
+  top:41.5%;
+  background: #ffffff;
+  width: 66.03%;
+  max-height: 60.66%;
+  font-family: initial;
+  font-size: initial;
 }
 
 .option {
@@ -487,8 +489,9 @@ div {
 }
 
 .div-font {
-    font-size: 15px;
-    text-align: center;
+  font-size: 13.5px;
+  text-align: center;
+  margin: 5px;
 }
 
 </style>
