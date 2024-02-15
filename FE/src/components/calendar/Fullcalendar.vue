@@ -126,7 +126,18 @@ export default {
         };
         const calendarKey = ref(0); // calendarKey를 선언
         onMounted(async () => {
+            const handleDateSet = async (arg) => {
+                const accumulateStore = useAccumulateStore();
 
+                const year = arg.view.currentStart.getFullYear();
+                let month = arg.view.currentStart.getMonth() + 1;
+                month = month < 10 ? "0" + month.toString() : month.toString();
+                const now = ref(year.toString() + month.toString());
+                accumulateStore.month(now);
+                const asd = { date: arg.view.currentStart };
+                dayCellContentFunction(asd);
+            };
+            calendarOptions.value.datesSet = handleDateSet;
             await updateCalendarOptions();
 
             await rerenderFullCalendar();
