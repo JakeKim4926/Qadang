@@ -1,8 +1,11 @@
 package com.ssafy.cadang.service;
 
+import com.ssafy.cadang.domain.Drinks;
 import com.ssafy.cadang.domain.Records;
+import com.ssafy.cadang.repository.DrinkRepository;
 import com.ssafy.cadang.repository.RecordReporsitory;
 import com.ssafy.cadang.response.DayRecordListResponseDTO;
+import com.ssafy.cadang.response.DrinkResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +20,7 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 public class RecordService {
 
     private final RecordReporsitory recordReporsitory;
+    private final DrinkRepository drinkRepository;
     public void create(Records record) {
         recordReporsitory.save(record);
     }
@@ -59,5 +63,33 @@ public class RecordService {
             }
         }
         return result;
+    }
+
+    public List<DrinkResponseDTO> readRank() {
+        List<Long> rank = recordReporsitory.findByRank();
+        List<DrinkResponseDTO> result = new ArrayList<>();
+        for(Long id : rank){
+            Drinks drink = drinkRepository.findByDrinkId(id);
+            result.add(DrinkResponseDTO.builder()
+                    .drinkId(drink.getDrinkId())
+                    .drinkCaffeine(drink.getDrinkCaffeine())
+                    .drinkSugar(drink.getDrinkSugar())
+                    .drinkName(drink.getDrinkName())
+                    .cafeName(drink.getCafeName())
+                    .drinkUrl(drink.getDrinkUrl())
+                    .drinkMl(drink.getDrinkMl())
+                    .drinkOz(drink.getDrinkOz())
+                    .drinkCalorie(drink.getDrinkCalorie())
+                    .drinkNatrium(drink.getDrinkNatrium())
+                    .drinkProtein(drink.getDrinkProtein())
+                    .drinkFat(drink.getDrinkFat())
+                    .drinkAllergy(drink.getDrinkAllergy())
+                    .build());
+        }
+        return result;
+    }
+
+    public Records readLastRecord(Long userId) {
+        return recordReporsitory.findUserRecent(userId);
     }
 }

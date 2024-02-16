@@ -14,10 +14,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MessageService {
     private final ChatMessageRepository chatMessageRepository;
-    private final UserService userService;
 
-    public ChatForwardDTO sendMessage(ChatMessageDTO chatMessageDTO) {
-        String userName = userService.findUserName(chatMessageDTO.getSenderId());
+
+    public ChatForwardDTO sendMessage(ChatMessageDTO chatMessageDTO, String userName) {
         ChatMessages chatMessage = ChatMessages.builder()
                 .chatRoomId(chatMessageDTO.getChatRoomId())
                 .senderId(chatMessageDTO.getSenderId())

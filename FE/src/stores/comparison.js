@@ -5,13 +5,16 @@ export const useComparisonStore = defineStore('comparison', {
     basket: [],
   }),
   actions: {
-    addToBasket(drink) {
-      if (this.basket.length < 3) {
+    addToBasket(drink) {      
+      const isAlreadyInBasket = this.basket.some(item => item.drinkId === drink.drinkId);
+      if (!isAlreadyInBasket && this.basket.length < 3) {
         this.basket.push(drink);
+        this.saveBasketToSession();
       }
     },
     removeFromBasket(index) {
       this.basket.splice(index, 1);
+      this.saveBasketToSession();
     },
     saveBasketToSession() {
       sessionStorage.setItem('comparisonBasket', JSON.stringify(this.basket));

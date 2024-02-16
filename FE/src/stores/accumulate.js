@@ -7,28 +7,33 @@ import axios from "axios";
 export const useAccumulateStore = defineStore("accumulate", () => {
   // =========== STATE ===============
 
-  const acuumulateList = ref([]);
-  const acuumulateMonth = ref([]);
+  const accumulateList = ref([]);
+  const accumulateMonth = ref([]);
+  const accumulateTemp = ref([]);
 
-  const acuumulateToday = ref({});
-  const acuumulateDay = ref({});
+  const accumulateToday = ref({});
+  const accumulateDay = ref({});
 
   // =========== GETTER ===============
 
-  const getAcuumulateList = computed(() => {
-    return acuumulateList.value;
+  const getAccumulateList = computed(() => {
+    return accumulateList.value;
   });
 
-  const getAcuumulateMonth = computed(() => {
-    return acuumulateMonth.value;
+  const getAccumulateMonth = computed(() => {
+    return accumulateMonth.value;
   });
 
-  const getAcuumulateToday = computed(() => {
-    return acuumulateToday.value;
+  const getAccumulateToday = computed(() => {
+    return accumulateToday.value;
   });
 
-  const getAcuumulateDay = computed(() => {
-    return acuumulateDay.value;
+  const getAccumulateDay = computed(() => {
+    return accumulateDay.value;
+  });
+
+  const getAccumulateTemp = computed(() => {
+    return accumulateTemp.value;
   });
 
   // =========== ACTION ===============
@@ -40,10 +45,16 @@ export const useAccumulateStore = defineStore("accumulate", () => {
       method: "GET",
     })
       .then((res) => {
-        acuumulateToday.value = res.data;
+        accumulateToday.value = res.data;
+        if(accumulateToday.value.accumulateCaffeine != undefined) {
+          accumulateToday.value.accumulateCaffeine = accumulateToday.value.accumulateCaffeine.toFixed(1);
+        }
+        if(accumulateToday.value.accumulateSugar != undefined) {
+          accumulateToday.value.accumulateSugar = accumulateToday.value.accumulateSugar.toFixed(1);
+        }
       })
       .catch((err) => {
-        console.log(err);
+        
       });
   };
 
@@ -53,58 +64,66 @@ export const useAccumulateStore = defineStore("accumulate", () => {
       method: "GET",
     })
       .then((res) => {
-        acuumulateList.value = res.data;
+        accumulateList.value = res.data;
       })
       .catch((err) => {
-        console.log(err);
+        
       });
   };
 
   // date example) 202401 (연도+월)
-  const month = function (date) {
-    console.log(date.value);
-    axios({
-      url: `${import.meta.env.VITE_REST_ACCUMULATE_API}/month`,
+  const month = async function (ym) {
+    await axios({
+      url: `${import.meta.env.VITE_REST_ACCUMULATE_API}/${ym.value}/month`,
       method: "GET",
-      params: { ym: date.value },
     })
       .then((res) => {
-        if(res.status == responseState.SUCCESS) {
-          console.log("success ", res.data );
+        if (res.status == responseState.SUCCESS) {
+          
+          accumulateMonth.value = res.data;
+          if(accumulateMonth != undefined)
+            sessionStorage.setItem('calendarMonth', JSON.stringify(accumulateMonth.value));
         }
-        acuumulateMonth.value = res.data;
       })
       .catch((err) => {
-        console.log(err);
+        
       });
   };
 
   // date example) 20240123 (연도+월일)
   const day = function (date) {
     axios({
-      url: `${import.meta.env.VITE_REST_ACCUMULATE_API}/day`,
+      url: `${import.meta.env.VITE_REST_ACCUMULATE_API}/${date.value}/day`,
       method: "GET",
-      params: { date: date.value },
     })
       .then((res) => {
-        console.log('get it : ', parseFloat(res.data.accumulateCaffeine));
-        console.log(date.value);
-        acuumulateDay.value = res.data;
+        if (res.status == responseState.SUCCESS) {
+          accumulateDay.value = res.data;
+
+          if(accumulateDay.value.accumulateCaffeine != undefined) {
+            accumulateDay.value.accumulateCaffeine = accumulateDay.value.accumulateCaffeine.toFixed(1);
+          }
+          if(accumulateDay.value.accumulateSugar != undefined) {
+            accumulateDay.value.accumulateSugar = accumulateDay.value.accumulateSugar.toFixed(1);
+          }
+        }
       })
       .catch((err) => {
-        console.log(err);
+        
       });
   };
 
   return {
-    acuumulateList,
-    acuumulateMonth,
-    acuumulateToday,
-    acuumulateDay,
-    getAcuumulateList,
-    getAcuumulateMonth,
-    getAcuumulateToday,
-    getAcuumulateDay,
+    accumulateTemp,
+    accumulateList: accumulateList,
+    accumulateMonth: accumulateMonth,
+    accumulateToday: accumulateToday,
+    accumulateDay: accumulateDay,
+    getAccumulateList: getAccumulateList,
+    getAccumulateMonth: getAccumulateMonth,
+    getAccumulateToday: getAccumulateToday,
+    getAccumulateDay: getAccumulateDay,
+    getAccumulateTemp,
     today,
     duration,
     month,
